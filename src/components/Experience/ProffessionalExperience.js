@@ -45,10 +45,10 @@ function ExperienceSection({ title, experiences }) {
                                 </p>
 
                                 {/* 5. Number of Merged PRs */}
-                                {exp.mergedPRs > 0 && 
-                                (<p style={{ color: "white" }}>
-                                    <strong>Merged PRs:</strong> {exp.mergedPRs}
-                                </p>)}
+                                {exp.mergedPRs > 0 &&
+                                    (<p style={{ color: "white" }}>
+                                        <strong>Merged PRs:</strong> {exp.mergedPRs}
+                                    </p>)}
 
                                 {/* 6. Product Links */}
                                 {exp.productLinks.length > 0 && (
@@ -82,107 +82,130 @@ function ExperienceSection({ title, experiences }) {
 // Main Experience Component
 function Experience() {
     const technicalExperiences = [
-  {
-    company: "Mifos Initiative",
-    currentlyWorking: true,
-    position: "Open Source Android Developer",
-    timeframe: "Nov 2024 – Present",
-    roleDescription:
-      "Contributing to a Kotlin multi-modular Jetpack Compose project migration to CMP & KMP. Merged 19+ PRs involving architecture changes, UI enhancements, and documentation updates. Collaborating with open-source teams via standup calls.",
-    mergedPRs: 19,
-    productLinks: [
-      { text: "Mifos Mobile Github", url: "https://github.com/revanthkumarJ/mifos-mobile" },
-      { text: "Android Client Github", url: "https://github.com/revanthkumarJ/android-client" },
-      { text: "Mobile Wallet Github", url: "https://github.com/revanthkumarJ/mobile-wallet" },
-      
-    ],
-  },
-  {
-  company: "Mobile Byte Sensei",
-  currentlyWorking: true,
-  position: "Kotlin Developer (KMP & CMP)",
-  timeframe: "May 2025 – Present",
-  roleDescription:
-    "Working at a startup focused on enhancing real-time KMP (Kotlin Multiplatform) applications already deployed on the Play Store. Contributing to Kotlin codebases using Jetpack Compose, KMP, and CMP to deliver cross-platform feature improvements.",
-  mergedPRs: 4,
-  productLinks: [
-    { text: "Project Repo", url: "https://github.com/yourproject" },
-  ],
-},
-  {
-    company: "Abhiyanth 2K25",
-    currentlyWorking: false,
-    position: "Frontend Lead & Social Media Manager",
-    timeframe: "Dec 2024 – Feb 2025",
-    roleDescription:
-      "Led frontend development using React, handled Firebase deployment, and maintained the GitHub repo. Collaborated with UI/UX team and ensured timely PR reviews and merges.",
-    mergedPRs: 88,
-    productLinks: [
-      { text: "GitHub Repo", url: "https://github.com/revanthkumarJ/Abhiyanth-Client" },
-      { text: "Live Site", url: "https://abhiyanthrkv.in/" },
-    ],
-  },
-  {
-    company: "GeeksforGeeks",
-    currentlyWorking: false,
-    position: "Campus Ambassador",
-    timeframe: "Apr 2024 – Apr 2025",
-    roleDescription:
-      "Promoted GFG initiatives, shared resources like premium MongoDB course, organized coding contests, and improved peer engagement with GFG platforms.",
-    mergedPRs: 0,
-    productLinks: [
-      { text: "GFG DSA 160-Day Challenge", url: "https://example.com/gfg-dsa-challenge" },
-    ],
-  },
-  
-];
+        {
+            company: "Mifos Initiative",
+            currentlyWorking: true,
+            position: "Open Source Android Developer",
+            timeframe: "Nov 2024 – Present",
+            roleDescription:
+                "Contributing to a Kotlin multi-modular Jetpack Compose project migration to CMP & KMP. Merged 19+ PRs involving architecture changes, UI enhancements, and documentation updates. Collaborating with open-source teams via standup calls.",
+            mergedPRs: 19,
+            productLinks: [
+                { text: "Mifos Mobile Github", url: "https://github.com/revanthkumarJ/mifos-mobile" },
+                { text: "Android Client Github", url: "https://github.com/revanthkumarJ/android-client" },
+                { text: "Mifos Pay Github", url: "https://github.com/revanthkumarJ/mobile-wallet" },
+                { text: "Mifos Mobile App", url: "https://play.google.com/store/apps/details?id=org.mifos.mobile" },
+                { text: "Android Client App", url: "https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid" },
+                { text: "Mifos Pay App", url: "https://play.google.com/store/apps/details?id=org.mifospay" },
+
+            ],
+        },
+        {
+            company: "Mobile Byte Sensei",
+            currentlyWorking: true,
+            position: "Kotlin Developer (KMP & CMP)",
+            timeframe: "May 2025 – Present",
+            roleDescription:
+                "Working at a startup focused on enhancing real-time KMP (Kotlin Multiplatform) applications already deployed on the Play Store. Contributing to Kotlin codebases using Jetpack Compose, KMP, and CMP to deliver cross-platform feature improvements.",
+            mergedPRs: 4,
+            productLinks: [
+                { text: "Reels Downloader App", url: "https://play.google.com/store/apps/details?id=com.sensei.social" },
+                { text: "Byte Wallpaper App", url: "https://play.google.com/store/apps/details?id=org.mobilebytesensei.wallpaper" },
+            ],
+        },
+        {
+            company: "Abhiyanth 2K25",
+            currentlyWorking: false,
+            position: "Frontend Lead & Social Media Manager",
+            timeframe: "Dec 2024 – Feb 2025",
+            roleDescription:
+                "Led frontend development using React, handled Firebase deployment, and maintained the GitHub repo. Collaborated with UI/UX team and ensured timely PR reviews and merges.",
+            mergedPRs: 88,
+            productLinks: [
+                { text: "GitHub Repo", url: "https://github.com/revanthkumarJ/Abhiyanth-Client" },
+                { text: "Live Site", url: "https://abhiyanthrkv.in/" },
+            ],
+        },
+        {
+            company: "GeeksforGeeks",
+            currentlyWorking: false,
+            position: "Campus Ambassador",
+            timeframe: "Apr 2024 – Apr 2025",
+            roleDescription:
+                "Promoted GFG initiatives, shared resources like premium MongoDB course, organized coding contests, and improved peer engagement with GFG platforms.",
+            mergedPRs: 0,
+            productLinks: [
+                
+            ],
+        },
+
+    ];
 
 
     const leadershipExperiences = [
-  {
-    company: "SRC Student Club",
-    currentlyWorking: false,
-    position: "DSA Coordinator and Mentor",
-    timeframe: "Apr 2024 – Mar 2025",
-    roleDescription:
-      "Led weekly coding contests and mentoring sessions to uplift peers’ DSA performance. Fostered active learning in the department.",
-    mergedPRs: 0,
-    productLinks: [
-      
-    ],
-  },
-  {
-    company: "Dept. of CSE, RGUKT RK Valley",
-    currentlyWorking: false,
-    position: "Social Media Manager",
-    timeframe: "Apr 2024 – Mar 2025",
-    roleDescription:
-      "Handled department's social media presence. Created regular updates, tracked analytics, and collaborated with club members to highlight achievements.",
-    mergedPRs: 0,
-    productLinks: [],
-  },
-  {
-    company: "National Service Scheme (NSS)",
-    currentlyWorking: true,
-    position: "Volunteer",
-    timeframe: "Jan 2024 – Present",
-    roleDescription:
-      "Engaged in social outreach and volunteering activities under NSS to serve the community and support institutional initiatives.",
-    mergedPRs: 0,
-    productLinks: [],
-  },
-  {
-  company: "Dept. of CSE, RGUKT RK Valley",
-  currentlyWorking: false,
-  position: "Class Representative",
-  timeframe: "E3 Sem 1",
-  roleDescription:
-    "Acted as Class Representative for E3 Sem 1, serving as a bridge between faculty and students, coordinating classes, and strengthening leadership and communication skills.",
-  mergedPRs: 0,
-  productLinks: [],
-}
+        {
+            company: "SRC Student Club",
+            currentlyWorking: false,
+            position: "DSA Coordinator and Mentor",
+            timeframe: "Apr 2024 – Mar 2025",
+            roleDescription:
+                "Led weekly coding contests and mentoring sessions to uplift peers’ DSA performance. Fostered active learning in the department.",
+            mergedPRs: 0,
+            productLinks: [
+                {
+                    text:"Conducted DSA Contest by GFG",url:"https://www.linkedin.com/posts/src-rgukt-rkvalley_abhiyanth2k25-geeksforgeeks-codingcontest-activity-7308086683910959105-5zJw?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
+                },
+                {
+                    text:"App Development Session",url:"https://www.linkedin.com/posts/src-rgukt-rkvalley_share-and-grow-session-5-app-development-activity-7230602791776309250-xbXg?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
+                },
+                {
+                    text:"Career Guidance to E1 Students",url:"https://www.linkedin.com/posts/src-rgukt-rkvalley_todays-learn-and-grow-session-4-with-newly-activity-7222986989250207746-phrZ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
+                },
+                {
+                    text:"DSA Session",url:"https://www.linkedin.com/posts/src-rgukt-rkvalley_as-a-part-of-share-and-grow-session-3-we-activity-7220446663411216384-NSHt?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
+                }
+                
+            ],
+        },
+        {
+            company: "Dept. of CSE, RGUKT RK Valley",
+            currentlyWorking: false,
+            position: "Social Media Manager",
+            timeframe: "Apr 2024 – Mar 2025",
+            roleDescription:
+                "Handled department's social media presence. Created regular updates, tracked analytics, and collaborated with club members to highlight achievements.",
+            mergedPRs: 0,
+            productLinks: [
+                {
+                    text:"Dept LinkdeIn Page",url:"https://www.linkedin.com/company/src-rgukt-rkvalley"
+                }
+            ],
+        },
+        {
+            company: "National Service Scheme (NSS)",
+            currentlyWorking: true,
+            position: "Unit Coordinator & LinkedIn Page Maintainer (Unit-2)",
+            timeframe: "Jan 2024 – Present",
+            roleDescription:
+                "Serving as NSS Unit Coordinator, organizing and leading social outreach activities. Also managing the LinkedIn page for NSS Unit-2, sharing updates, and promoting events to enhance public engagement.",
+            mergedPRs: 0,
+            productLinks: [
+                { text: "NSS Unit-2 LinkedIn", url: "https://www.linkedin.com/showcase/nss-unit2" }
+            ],
+        },
 
-];
+        {
+            company: "Dept. of CSE, RGUKT RK Valley",
+            currentlyWorking: false,
+            position: "Class Representative",
+            timeframe: "E3 Sem 1 (June 2024 - Nov 2024)",
+            roleDescription:
+                "Acted as Class Representative for E3 Sem 1, serving as a bridge between faculty and students, coordinating classes, and strengthening leadership and communication skills.",
+            mergedPRs: 0,
+            productLinks: [],
+        }
+
+    ];
 
     return (
         <Container fluid className="project-section">

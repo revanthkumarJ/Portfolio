@@ -13,28 +13,35 @@ function ProjectCards(props) {
         <Card.Text style={{ textAlign: "justify" }}>
           {props.description}
         </Card.Text>
-        <Button variant="primary" href={props.ghLink} target="_blank">
-          <BsGithub /> &nbsp;
-          {props.isBlog ? "Blog" : "GitHub"}
-        </Button>
-        {"\n"}
-        {"\n"}
 
-        {/* If the component contains Demo link and if it's not a Blog then, it will render the below component  */}
-
-        {!props.isBlog && props.demoLink && (
+        {/* GitHub Links */}
+        {props.ghLinks && props.ghLinks.map((linkObj, index) => (
           <Button
+            key={`gh-${index}`}
             variant="primary"
-            href={props.demoLink}
+            href={linkObj.link}
             target="_blank"
-            style={{ marginLeft: "10px" }}
+            className="me-2 mt-2"
           >
-            <CgWebsite /> &nbsp;
-            {"Demo"}
+            <BsGithub /> &nbsp;{linkObj.text}
           </Button>
-        )}
+        ))}
+
+        {/* Demo/Live Links */}
+        {props.demoLinks && props.demoLinks.map((linkObj, index) => (
+          <Button
+            key={`demo-${index}`}
+            variant="primary"
+            href={linkObj.link}
+            target="_blank"
+            className="me-2 mt-2"
+          >
+            <CgWebsite /> &nbsp;{linkObj.text}
+          </Button>
+        ))}
       </Card.Body>
     </Card>
   );
 }
+
 export default ProjectCards;

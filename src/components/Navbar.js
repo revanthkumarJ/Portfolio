@@ -4,13 +4,10 @@ import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import logo from "../Assets/logo.png";
 import { Link } from "react-router-dom";
-import {
-  AiOutlineHome,
-  AiOutlineFundProjectionScreen,
-  AiOutlineUser,
-} from "react-icons/ai";
-
+import { AiOutlineHome, AiOutlineFundProjectionScreen, AiOutlineUser } from "react-icons/ai";
 import { CgFileDocument } from "react-icons/cg";
+import { FaMedal } from "react-icons/fa";
+import { BsFillFileEarmarkTextFill } from "react-icons/bs";
 
 function NavBar() {
   const [expand, updateExpanded] = useState(false);
@@ -84,7 +81,7 @@ function NavBar() {
                 to="/experience"
                 onClick={() => updateExpanded(false)}
               >
-                <CgFileDocument style={{ marginBottom: "2px" }} /> Experience
+                <CgFileDocument  style={{ marginBottom: "2px" }} /> Experience
               </Nav.Link>
             </Nav.Item>
 
@@ -94,7 +91,7 @@ function NavBar() {
                 to="/achievements"
                 onClick={() => updateExpanded(false)}
               >
-                <CgFileDocument style={{ marginBottom: "2px" }} /> Achievements
+                <FaMedal  style={{ marginBottom: "2px" }} /> Achievements
               </Nav.Link>
             </Nav.Item>
           
@@ -105,7 +102,7 @@ function NavBar() {
                 to="/resume"
                 onClick={() => updateExpanded(false)}
               >
-                <CgFileDocument style={{ marginBottom: "2px" }} /> Resume
+                <BsFillFileEarmarkTextFill  style={{ marginBottom: "2px" }} /> Resume
               </Nav.Link>
             </Nav.Item>
           </Nav>
