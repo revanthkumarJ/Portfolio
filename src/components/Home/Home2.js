@@ -8,55 +8,60 @@ import {
   AiFillInstagram,
 } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
+import CodingProfiles from "../About/CodingProfiles";
 
 function Home2() {
   return (
     <Container fluid className="home-about-section" id="about">
       <Container>
-      <Row>
-  <Col md={8} className="home-about-description">
-    <h1 style={{ fontSize: "2.6em" }}>
-      LET ME <span className="purple"> INTRODUCE </span> MYSELF
-    </h1>
-    <p className="home-about-body">
-      I'm passionate about <b className="purple">software development</b> and have a strong foundation in
-      <i>
-        <b className="purple"> Java, JavaScript, and Kotlin</b>
-      </i>
-      .
-      <br />
-      <br />
-      My interests lie in building scalable and responsive{" "}
-      <i>
-        <b className="purple">web and mobile applications</b>
-      </i>
-      , and I enjoy solving complex problems through
-      <b className="purple"> Data Structures and Algorithms</b>.
-      <br />
-      <br />
-      I’ve worked with technologies like{" "}
-      <b className="purple">React, Node.js, Express, Jetpack Compose,</b> and databases like{" "}
-      <b className="purple">MongoDB</b>. I'm also exploring{" "}
-      <b className="purple">Firebase</b> integration in mobile apps.
-      <br />
-      <br />
-      Currently exploring{" "}
-      <i>
-        <b className="purple">KMP (Kotlin Multiplatform)</b>
-      </i>{" "}
-      and{" "}
-      <i>
-        <b className="purple">CMP (Compose Multiplatform) </b>
-      </i>{" "}
-       to build cross-platform experiences with modern UI practices.
-    </p>
-  </Col>
-  <Col md={4} className="myAvtar">
-    <Tilt>
-      <img src={myImg} className="img-fluid" alt="avatar" />
-    </Tilt>
-  </Col>
-</Row>
+        <Row>
+          <Col md={8} className="home-about-description">
+            <h1 style={{ fontSize: "2.6em" }}>
+              LET ME <span className="purple"> INTRODUCE </span> MYSELF
+            </h1>
+            <p className="home-about-body">
+              I'm passionate about <b className="purple">software development</b> and have a strong foundation in
+              <i>
+                <b className="purple"> Java, JavaScript, and Kotlin</b>
+              </i>
+              .
+              <br />
+              <br />
+              My interests lie in building scalable and responsive{" "}
+              <i>
+                <b className="purple">web and mobile applications</b>
+              </i>
+              , and I enjoy solving complex problems through
+              <b className="purple"> Data Structures and Algorithms</b>.
+              <br />
+              <br />
+              I’ve worked with technologies like{" "}
+              <b className="purple">React, Node.js, Express, Jetpack Compose,</b> and databases like{" "}
+              <b className="purple">MongoDB</b>. I'm also exploring{" "}
+              <b className="purple">Firebase</b> integration in mobile apps.
+              <br />
+              <br />
+              Currently exploring{" "}
+              <i>
+                <b className="purple">KMP (Kotlin Multiplatform)</b>
+              </i>{" "}
+              and{" "}
+              <i>
+                <b className="purple">CMP (Compose Multiplatform) </b>
+              </i>{" "}
+              to build cross-platform experiences with modern UI practices.
+            </p>
+          </Col>
+          <Col md={4} className="myAvtar">
+            <Tilt>
+              <img src={myImg} className="img-fluid" alt="avatar" />
+            </Tilt>
+          </Col>
+        </Row>
+        <h1 className="project-heading">
+          <strong className="purple">My Coding Profiles</strong>
+        </h1>
+        <CodingProfiles />
 
         <Row>
           <Col md={12} className="home-about-social">

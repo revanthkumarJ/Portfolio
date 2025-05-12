@@ -1,6 +1,13 @@
 import React from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import Particle from "../Particle";
+import mifosLogo from "../../Assets/mifos.jpg"
+import MBSLogo from "../../Assets/MBS.avif"
+import gfg from "../../Assets/GFG.png"
+import nss from "../../Assets/nss.webp"
+import abhiyanth from "../../Assets/Abhiyanthlogo2.png"
+import SRC from "../../Assets/src_logo_white.jpeg"
+
 
 // Reusable section component
 function ExperienceSection({ title, experiences }) {
@@ -15,9 +22,33 @@ function ExperienceSection({ title, experiences }) {
                         <Card className="project-card-view">
                             <Card.Body>
                                 {/* 1. Company Name */}
-                                <Card.Title style={{ color: "white", fontWeight: "bold" }}>
-                                    {exp.company}
-                                </Card.Title>
+                                <Card.Title
+    style={{
+        color: "white",
+        fontWeight: "bold",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center", // Centers the content horizontally
+        textAlign: "center", // Ensures text is centered
+        flexDirection: "row", // Default flex direction, can be omitted
+    }}
+>
+    {/* Conditionally render the logo if present */}
+    {exp.logo && (
+        <img
+            src={exp.logo}
+            alt={exp.company}
+            style={{
+                width: "30px",
+                height: "30px",
+                marginRight: "10px",
+                borderRadius: "50%",
+            }}
+        />
+    )}
+    {exp.company}
+</Card.Title>
+
 
                                 {/* 2. Current Status */}
                                 {exp.currentlyWorking && (
@@ -84,6 +115,7 @@ function Experience() {
     const technicalExperiences = [
         {
             company: "Mifos Initiative",
+            logo:mifosLogo,
             currentlyWorking: true,
             position: "Open Source Android Developer",
             timeframe: "Nov 2024 – Present",
@@ -102,6 +134,7 @@ function Experience() {
         },
         {
             company: "Mobile Byte Sensei",
+            logo:MBSLogo,
             currentlyWorking: true,
             position: "Kotlin Developer (KMP & CMP)",
             timeframe: "May 2025 – Present",
@@ -115,6 +148,7 @@ function Experience() {
         },
         {
             company: "Abhiyanth 2K25",
+            logo:abhiyanth,
             currentlyWorking: false,
             position: "Frontend Lead & Social Media Manager",
             timeframe: "Dec 2024 – Feb 2025",
@@ -128,6 +162,7 @@ function Experience() {
         },
         {
             company: "GeeksforGeeks",
+            logo:gfg,
             currentlyWorking: false,
             position: "Campus Ambassador",
             timeframe: "Apr 2024 – Apr 2025",
@@ -145,6 +180,7 @@ function Experience() {
     const leadershipExperiences = [
         {
             company: "SRC Student Club",
+            logo:SRC,
             currentlyWorking: false,
             position: "DSA Coordinator and Mentor",
             timeframe: "Apr 2024 – Mar 2025",
@@ -169,6 +205,7 @@ function Experience() {
         },
         {
             company: "Dept. of CSE, RGUKT RK Valley",
+            logo:SRC,
             currentlyWorking: false,
             position: "Social Media Manager",
             timeframe: "Apr 2024 – Mar 2025",
@@ -183,6 +220,7 @@ function Experience() {
         },
         {
             company: "National Service Scheme (NSS)",
+            logo:nss,
             currentlyWorking: true,
             position: "Unit Coordinator & LinkedIn Page Maintainer (Unit-2)",
             timeframe: "Jan 2024 – Present",
@@ -196,6 +234,7 @@ function Experience() {
 
         {
             company: "Dept. of CSE, RGUKT RK Valley",
+            logo:SRC,
             currentlyWorking: false,
             position: "Class Representative",
             timeframe: "E3 Sem 1 (June 2024 - Nov 2024)",
@@ -207,6 +246,7 @@ function Experience() {
 
     ];
 
+
     return (
         <Container fluid className="project-section">
             <Particle />
@@ -217,6 +257,7 @@ function Experience() {
                 <p style={{ color: "white" }}>
                     These are the organizations I’ve worked with and the impact I’ve made.
                 </p>
+                
 
                 <ExperienceSection
                     title="Technical Experience"

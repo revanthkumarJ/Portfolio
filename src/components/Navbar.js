@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { AiOutlineHome, AiOutlineFundProjectionScreen, AiOutlineUser } from "react-icons/ai";
 import { CgFileDocument } from "react-icons/cg";
 import { FaMedal } from "react-icons/fa";
-import { BsFillFileEarmarkTextFill } from "react-icons/bs";
+import { BsFillFileEarmarkTextFill,BsPatchCheckFill } from "react-icons/bs";
 
 function NavBar() {
   const [expand, updateExpanded] = useState(false);
@@ -33,7 +33,7 @@ function NavBar() {
       <Container>
         <Navbar.Brand href="/" className="d-flex">
           {/* <img src={logo} className="img-fluid logo" alt="brand" /> */}
-          Revanth Kumar J - Portfolio
+          Revanth Kumar J
         </Navbar.Brand>
         <Navbar.Toggle
           aria-controls="responsive-navbar-nav"
@@ -76,6 +76,7 @@ function NavBar() {
               </Nav.Link>
             </Nav.Item>
 
+
             <Nav.Item>
               <Nav.Link
                 as={Link}
@@ -96,7 +97,15 @@ function NavBar() {
               </Nav.Link>
             </Nav.Item>
           
-
+            {/* <Nav.Item>
+  <Nav.Link
+    as={Link}
+    to="/certificates"
+    onClick={() => updateExpanded(false)}
+  >
+    <BsPatchCheckFill style={{ marginBottom: "2px" }} /> Certificates
+  </Nav.Link>
+</Nav.Item> */}
             <Nav.Item>
               <Nav.Link
                 as={Link}

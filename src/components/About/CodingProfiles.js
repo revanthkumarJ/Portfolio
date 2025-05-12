@@ -1,51 +1,57 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { SiLeetcode, SiCodechef, SiGeeksforgeeks, SiHackerrank } from "react-icons/si";
-import { FaGithub } from "react-icons/fa";
+import {
+  SiLeetcode,
+  SiCodechef,
+  SiGeeksforgeeks,
+  SiHackerrank,
+} from "react-icons/si";
+import { GiNinjaHead } from "react-icons/gi";
 
 function CodingProfiles() {
+  const platforms = [
+    {
+      name: "LeetCode",
+      icon: <SiLeetcode title="LeetCode" />,
+      link: "https://leetcode.com/u/RevanthKumarJ/",
+    },
+    {
+      name: "CodeChef",
+      icon: <SiCodechef title="CodeChef" />,
+      link: "https://www.codechef.com/users/revanthkumarj1",
+    },
+    {
+      name: "GeeksforGeeks",
+      icon: <SiGeeksforgeeks title="GeeksforGeeks" />,
+      link: "https://www.geeksforgeeks.org/user/jrevanth/",
+    },
+    {
+      name: "HackerRank",
+      icon: <SiHackerrank  title="HackerRank" />,
+      link: "https://www.hackerrank.com/jrevanth101",
+    },
+    {
+      name: "Coding Ninjas",
+      icon: <GiNinjaHead  title="Coding Ninjas" />,
+      link: "https://www.naukri.com/code360/profile/revanthKumarJ",
+    },
+  ];
+
   return (
     <Row style={{ justifyContent: "center", paddingBottom: "50px" }}>
-      <Col xs={6} md={2} className="tech-icons">
-        <a
-          href="https://leetcode.com/your_username"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "white", textDecoration: "none" }}
-        >
-          <SiLeetcode  title="LeetCode" />
-        </a>
-      </Col>
-      <Col xs={6} md={2} className="tech-icons">
-        <a
-          href="https://www.codechef.com/users/your_username"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "white", textDecoration: "none" }}
-        >
-          <SiCodechef  title="CodeChef" />
-        </a>
-      </Col>
-      <Col xs={6} md={2} className="tech-icons">
-        <a
-          href="https://auth.geeksforgeeks.org/user/your_username"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "white", textDecoration: "none" }}
-        >
-          <SiGeeksforgeeks  title="GeeksforGeeks" />
-        </a>
-      </Col>
-      <Col xs={6} md={2} className="tech-icons">
-        <a
-          href="https://www.hackerrank.com/your_username"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "white", textDecoration: "none" }}
-        >
-          <SiHackerrank  title="HackerRank" />
-        </a>
-      </Col>
+      {platforms.map((platform, index) => (
+        <Col xs={6} md={2} className="tech-icons text-center" key={index}>
+          <a
+            href={platform.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "white", textDecoration: "none" }}
+          >
+            {platform.icon}
+            <div style={{ marginTop: "8px", fontSize: "18px" }}>{platform.name}</div>
+          </a>
+        </Col>
+      ))}
     </Row>
   );
 }
