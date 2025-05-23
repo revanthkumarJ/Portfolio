@@ -133,20 +133,6 @@ function Experience() {
             ],
         },
         {
-            company: "Mobile Byte Sensei",
-            logo:MBSLogo,
-            currentlyWorking: true,
-            position: "Kotlin Developer (KMP & CMP)",
-            timeframe: "May 2025 – Present",
-            roleDescription:
-                "Working at a startup focused on enhancing real-time KMP (Kotlin Multiplatform) applications already deployed on the Play Store. Contributing to Kotlin codebases using Jetpack Compose, KMP, and CMP to deliver cross-platform feature improvements.",
-            mergedPRs: 11,
-            productLinks: [
-                { text: "Reels Downloader App", url: "https://play.google.com/store/apps/details?id=com.sensei.social" },
-                { text: "Byte Wallpaper App", url: "https://play.google.com/store/apps/details?id=org.mobilebytesensei.wallpaper" },
-            ],
-        },
-        {
             company: "Abhiyanth 2K25",
             logo:abhiyanth,
             currentlyWorking: false,

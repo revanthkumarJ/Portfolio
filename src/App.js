@@ -18,6 +18,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Achievements from "./components/Achievements/Achievements";
 import Experience from "./components/Experience/ProffessionalExperience";
+import Certificates from "./components/Certificates/Certficates";
 
 function App() {
   const [load, upadateLoad] = useState(true);
@@ -42,6 +43,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/resume" element={<Resume />} />
           <Route path="/achievements" element={<Achievements/>} />
+          <Route path="/certificates" element={<Certificates/>} />
           <Route path="/experience" element={<Experience/>} />
           <Route path="*" element={<Navigate to="/"/>} />
         </Routes>
