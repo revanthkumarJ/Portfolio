@@ -23,31 +23,31 @@ function ExperienceSection({ title, experiences }) {
                             <Card.Body>
                                 {/* 1. Company Name */}
                                 <Card.Title
-    style={{
-        color: "white",
-        fontWeight: "bold",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center", // Centers the content horizontally
-        textAlign: "center", // Ensures text is centered
-        flexDirection: "row", // Default flex direction, can be omitted
-    }}
->
-    {/* Conditionally render the logo if present */}
-    {exp.logo && (
-        <img
-            src={exp.logo}
-            alt={exp.company}
-            style={{
-                width: "30px",
-                height: "30px",
-                marginRight: "10px",
-                borderRadius: "50%",
-            }}
-        />
-    )}
-    {exp.company}
-</Card.Title>
+                                    style={{
+                                        color: "white",
+                                        fontWeight: "bold",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center", // Centers the content horizontally
+                                        textAlign: "center", // Ensures text is centered
+                                        flexDirection: "row", // Default flex direction, can be omitted
+                                    }}
+                                >
+                                    {/* Conditionally render the logo if present */}
+                                    {exp.logo && (
+                                        <img
+                                            src={exp.logo}
+                                            alt={exp.company}
+                                            style={{
+                                                width: "30px",
+                                                height: "30px",
+                                                marginRight: "10px",
+                                                borderRadius: "50%",
+                                            }}
+                                        />
+                                    )}
+                                    {exp.company}
+                                </Card.Title>
 
 
                                 {/* 2. Current Status */}
@@ -115,13 +115,40 @@ function Experience() {
     const technicalExperiences = [
         {
             company: "Mifos Initiative",
-            logo:mifosLogo,
+            logo: mifosLogo, // Use the Mifos Initiative logo
+            currentlyWorking: true,
+            position: "Mifos Summer of Code 2025 Intern",
+            timeframe: "June 2025 – Present",
+            roleDescription:
+    "Contributing to the migration of the Mifos Android Field Officer app to Kotlin Multiplatform (KMP) with Jetpack Compose. Working on shared code for Android, iOS, Desktop, and Web, rewriting the network layer, adding offline sync, role-based navigation, and setting up CI/CD pipelines. Collaborating with global open-source teams as part of Mifos Summer of Code 2025.",
+
+            productLinks: [
+                { text: "Android Client GitHub", url: "https://github.com/revanthkumarJ/android-client" },
+                { text: "Android Client App", url: "https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid" },
+            ],
+        },
+        {
+            company: "Mobile Byte Sensei",
+            logo: MBSLogo,
+            currentlyWorking: true,
+            position: "Kotlin Developer (KMP & CMP)",
+            timeframe: "May 2025 – Present",
+            roleDescription:
+                "Working at a startup focused on enhancing real-time KMP (Kotlin Multiplatform) applications already deployed on the Play Store. Contributing to Kotlin codebases using Jetpack Compose, KMP, and CMP to deliver cross-platform feature improvements.",
+            productLinks: [
+                { text: "Reels Downloader App", url: "https://play.google.com/store/apps/details?id=com.sensei.social" },
+                { text: "Byte Wallpaper App", url: "https://play.google.com/store/apps/details?id=org.mobilebytesensei.wallpaper" },
+            ],
+        },
+        {
+            company: "Mifos Initiative",
+            logo: mifosLogo,
             currentlyWorking: true,
             position: "Open Source Android Developer",
             timeframe: "Nov 2024 – Present",
             roleDescription:
                 "Contributing to a Kotlin multi-modular Jetpack Compose project migration to CMP & KMP. Merged 19+ PRs involving architecture changes, UI enhancements, and documentation updates. Collaborating with open-source teams via standup calls.",
-            mergedPRs: 19,
+            mergedPRs: 29,
             productLinks: [
                 { text: "Mifos Mobile Github", url: "https://github.com/revanthkumarJ/mifos-mobile" },
                 { text: "Android Client Github", url: "https://github.com/revanthkumarJ/android-client" },
@@ -134,7 +161,7 @@ function Experience() {
         },
         {
             company: "Abhiyanth 2K25",
-            logo:abhiyanth,
+            logo: abhiyanth,
             currentlyWorking: false,
             position: "Frontend Lead & Social Media Manager",
             timeframe: "Dec 2024 – Feb 2025",
@@ -148,7 +175,7 @@ function Experience() {
         },
         {
             company: "GeeksforGeeks",
-            logo:gfg,
+            logo: gfg,
             currentlyWorking: false,
             position: "Campus Ambassador",
             timeframe: "Apr 2024 – Apr 2025",
@@ -156,7 +183,7 @@ function Experience() {
                 "Promoted GFG initiatives, shared resources like premium MongoDB course, organized coding contests, and improved peer engagement with GFG platforms.",
             mergedPRs: 0,
             productLinks: [
-                
+
             ],
         },
 
@@ -166,7 +193,7 @@ function Experience() {
     const leadershipExperiences = [
         {
             company: "SRC Student Club",
-            logo:SRC,
+            logo: SRC,
             currentlyWorking: false,
             position: "DSA Coordinator and Mentor",
             timeframe: "Apr 2024 – Mar 2025",
@@ -175,23 +202,23 @@ function Experience() {
             mergedPRs: 0,
             productLinks: [
                 {
-                    text:"Conducted DSA Contest by GFG",url:"https://www.linkedin.com/posts/src-rgukt-rkvalley_abhiyanth2k25-geeksforgeeks-codingcontest-activity-7308086683910959105-5zJw?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
+                    text: "Conducted DSA Contest by GFG", url: "https://www.linkedin.com/posts/src-rgukt-rkvalley_abhiyanth2k25-geeksforgeeks-codingcontest-activity-7308086683910959105-5zJw?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
                 },
                 {
-                    text:"App Development Session",url:"https://www.linkedin.com/posts/src-rgukt-rkvalley_share-and-grow-session-5-app-development-activity-7230602791776309250-xbXg?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
+                    text: "App Development Session", url: "https://www.linkedin.com/posts/src-rgukt-rkvalley_share-and-grow-session-5-app-development-activity-7230602791776309250-xbXg?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
                 },
                 {
-                    text:"Career Guidance to E1 Students",url:"https://www.linkedin.com/posts/src-rgukt-rkvalley_todays-learn-and-grow-session-4-with-newly-activity-7222986989250207746-phrZ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
+                    text: "Career Guidance to E1 Students", url: "https://www.linkedin.com/posts/src-rgukt-rkvalley_todays-learn-and-grow-session-4-with-newly-activity-7222986989250207746-phrZ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
                 },
                 {
-                    text:"DSA Session",url:"https://www.linkedin.com/posts/src-rgukt-rkvalley_as-a-part-of-share-and-grow-session-3-we-activity-7220446663411216384-NSHt?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
+                    text: "DSA Session", url: "https://www.linkedin.com/posts/src-rgukt-rkvalley_as-a-part-of-share-and-grow-session-3-we-activity-7220446663411216384-NSHt?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY"
                 }
-                
+
             ],
         },
         {
             company: "Dept. of CSE, RGUKT RK Valley",
-            logo:SRC,
+            logo: SRC,
             currentlyWorking: false,
             position: "Social Media Manager",
             timeframe: "Apr 2024 – Mar 2025",
@@ -200,13 +227,13 @@ function Experience() {
             mergedPRs: 0,
             productLinks: [
                 {
-                    text:"Dept LinkdeIn Page",url:"https://www.linkedin.com/company/src-rgukt-rkvalley"
+                    text: "Dept LinkdeIn Page", url: "https://www.linkedin.com/company/src-rgukt-rkvalley"
                 }
             ],
         },
         {
             company: "National Service Scheme (NSS)",
-            logo:nss,
+            logo: nss,
             currentlyWorking: true,
             position: "Unit Coordinator & LinkedIn Page Maintainer (Unit-2)",
             timeframe: "Jan 2024 – Present",
@@ -220,7 +247,7 @@ function Experience() {
 
         {
             company: "Dept. of CSE, RGUKT RK Valley",
-            logo:SRC,
+            logo: SRC,
             currentlyWorking: false,
             position: "Class Representative",
             timeframe: "E3 Sem 1 (June 2024 - Nov 2024)",
@@ -243,7 +270,7 @@ function Experience() {
                 <p style={{ color: "white" }}>
                     These are the organizations I’ve worked with and the impact I’ve made.
                 </p>
-                
+
 
                 <ExperienceSection
                     title="Technical Experience"
