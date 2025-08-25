@@ -148,7 +148,7 @@ function Experience() {
             timeframe: "Nov 2024 – Present",
             roleDescription:
                 "Contributing to a Kotlin multi-modular Jetpack Compose project migration to CMP & KMP. Merged 19+ PRs involving architecture changes, UI enhancements, and documentation updates. Collaborating with open-source teams via standup calls.",
-            mergedPRs: 29,
+            mergedPRs: 90,
             productLinks: [
                 { text: "Mifos Mobile Github", url: "https://github.com/revanthkumarJ/mifos-mobile" },
                 { text: "Android Client Github", url: "https://github.com/revanthkumarJ/android-client" },
