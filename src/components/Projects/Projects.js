@@ -19,9 +19,10 @@ const projectList = [
     imgPath: mifosMobile,
     title: "Migration of Mifos-Mobile to KMP and CMP",
     description:
-      "Migrated 7 modules in Mifos-Mobile to KMP and CMP, supporting Android, iOS, Web, WASMJS, and Desktop. Merged a total of 11 PRs, handling migration and resolving bugs in a production-level application.",
+      "Migrated 7 modules in Mifos-Mobile to KMP and CMP, supporting Android, iOS, Web, WASMJS, and Desktop. Merged a total of 39 PRs, handling migration and resolving bugs in a production-level application.",
     ghLinks: [
-      { text: "GitHub", link: "https://github.com/revanthkumarJ/mifos-mobile" }
+      { text: "GitHub", link: "https://github.com/openMF/mifos-mobile" },
+      { text: "My Contributions", link: "https://github.com/openMF/mifos-mobile/pulls?q=is%3Amerged+is%3Apr+author%3ArevanthkumarJ+" }
     ],
     demoLinks: [
       { text: "Play Store", link: "https://play.google.com/store/apps/details?id=org.mifos.mobile" }
@@ -36,16 +37,17 @@ const projectList = [
       { text: "Client", link: "https://github.com/revanthkumarJ/abhiyanth-client" },
     ],
     demoLinks: [
-      { text: "Live", link: "https://abhiyanthrkv.in/" }
+      
     ]
   },
   {
     imgPath: androidClient,
     title: "Migration of Android-Client to KMP and CMP",
     description:
-      "Migrated 5 modules in Android-Client to KMP and CMP, supporting multiple platforms. Merged 7 PRs, resolving production-level bugs.",
+      "Migrated 5 modules in Android-Client to KMP and CMP, supporting multiple platforms. Merged 52 PRs, resolving production-level bugs and creating new ui screens , enhancing screens.",
     ghLinks: [
-      { text: "GitHub", link: "https://github.com/revanthkumarJ/android-client" }
+      { text: "GitHub", link: "https://github.com/openMF/android-client" },
+      { text: "My Contributions", link: "https://github.com/openMF/android-client/pulls?q=is%3Amerged+is%3Apr+author%3ArevanthkumarJ+" }
     ],
     demoLinks: [
       { text: "Play Store", link: "https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid" }
