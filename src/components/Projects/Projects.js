@@ -7,12 +7,14 @@ import Particle from "../Particle";
 import netflix from "../../Assets/Projects/netflix.png";
 import abhiyanth from "../../Assets/Projects/abhiyanth.png";
 import insta from "../../Assets/Projects/insta.png";
-import mifosMobile from "../../Assets/Projects/mifosMobile.png";
-import androidClient from "../../Assets/Projects/androidClient.png";
+import mifosMobile from "../../Assets/mifos_mobile.png";
+import androidClient from "../../Assets/android_studio.png";
 import kisan from "../../Assets/Projects/kisan.png";
 import finance from "../../Assets/Projects/Finance.png";
 import ipl from "../../Assets/Projects/ipl.png";
 import department from "../../Assets/Projects/department.png";
+import meme from "../../Assets/meme.png"
+import swipeAssignment from "../../Assets/swipe_assign.png"
 
 const projectList = [
   {
@@ -29,6 +31,28 @@ const projectList = [
     ]
   },
   {
+    imgPath: swipeAssignment,
+    title: "Swipe – Android Assignment App",
+    description:
+      "A complete Android application built with modern Android practices. Includes onboarding screens for first-time users, product listing using a public API with search and loading indicators, and an Add Product BottomSheet for creating new products with validations and POST API submission. Features offline support using Room—unsynced products are saved locally and synced automatically when the network is available. Includes a Settings screen with theme switching, About Us, App Info, FAQ, and Help & Support.",
+    ghLinks: [
+      { text: "GitHub", link: "https://github.com/revanthkumarJ/swipe-assignment" }
+    ],
+    demoLinks: []
+  }
+  ,
+  {
+    imgPath: meme,
+    title: "Meme Studio – KMP Meme Editor",
+    description:
+      "A Kotlin Multiplatform meme editor application where users can choose from templates and create custom memes. Built using Compose Multiplatform (CMP) to support cross-platform UI. Implements clean architecture, reusable components, and delivers a smooth editing experience across platforms.",
+    ghLinks: [
+      { text: "GitHub", link: "https://github.com/revanthkumarJ/MemeStudio" }
+    ],
+    demoLinks: []
+  }
+  ,
+  {
     imgPath: abhiyanth,
     title: "Abhiyanth-Fest Website (Team Lead)",
     description:
@@ -37,7 +61,7 @@ const projectList = [
       { text: "Client", link: "https://github.com/revanthkumarJ/abhiyanth-client" },
     ],
     demoLinks: [
-      
+
     ]
   },
   {
@@ -52,7 +76,7 @@ const projectList = [
     demoLinks: [
       { text: "Play Store", link: "https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid" }
     ]
-  },{
+  }, {
     imgPath: department,
     title: "Departmental Resource Management App",
     description:
@@ -84,7 +108,7 @@ const projectList = [
       { text: "GitHub API", link: "https://github.com/revanthkumarJ/Finance-API" },
     ],
     demoLinks: [
-      
+
     ]
   },
   {
