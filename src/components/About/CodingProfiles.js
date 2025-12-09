@@ -30,11 +30,6 @@ function CodingProfiles() {
       icon: <SiHackerrank  title="HackerRank" />,
       link: "https://www.hackerrank.com/jrevanth101",
     },
-    {
-      name: "Coding Ninjas",
-      icon: <GiNinjaHead  title="Coding Ninjas" />,
-      link: "https://www.naukri.com/code360/profile/revanthKumarJ",
-    },
   ];
 
   return (

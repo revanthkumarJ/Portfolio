@@ -4,6 +4,10 @@ import homeLogo from "../../Assets/revanth.png";
 import Particle from "../Particle";
 import Home2 from "./Home2";
 import Type from "./Type";
+import Experience from "../Experience/ProffessionalExperience";
+import Achievements from "../Achievements/Achievements";
+import ResumeNew from "../Resume/ResumeNew";
+import Github from "../About/Github";
 
 function Home() {
   return (
@@ -48,6 +52,9 @@ function Home() {
         </Container>
       </Container>
       <Home2 />
+      <Experience/>
+      <Achievements/>
+      <ResumeNew/>
     </section>
   );
 }

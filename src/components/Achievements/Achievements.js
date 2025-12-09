@@ -4,6 +4,16 @@ import Particle from "../Particle";
 
 function Achievements() {
     const achievements = [
+      {
+  title: "Mifos Summer of Code 2025 Intern",
+  description:
+    "Selected for the prestigious Mifos Summer of Code 2025 program, contributing to open-source fintech applications and cross-platform development."
+},
+      {
+  title: "100+ Open Source Contributions",
+  description:
+    "Made over 100 pull requests across multiple open-source projects, resolving critical bugs, improving architecture, and contributing to production-grade apps."
+},
   {
     title: "Qualified GATE CS 2025",
     description:
