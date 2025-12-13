@@ -126,6 +126,23 @@ function Experience() {
             "Working on real-world Android applications using Kotlin, Jetpack Compose, and modern Android architecture. Contributing to feature development, UI implementation, and performance improvements while learning production-level Android development practices.",
         productLinks: [],
     },
+    {
+        company: "Mifos Initiative",
+        logo: mifosLogo,
+        currentlyWorking: false,
+        position: "Open Source Mobile Developer",
+        timeframe: "Nov 2024 – Dec 2025",
+        roleDescription:
+            "Contributed across three mobile apps — Mifos Mobile, Android Client, and Mifos Pay — along with kmp-project-template. Migrated 20+ modules to KMP & CMP, redesigned full UI flows, implemented new features, and fixed bugs. Authored 100+ PRs, co-authored 20+ PRs, and reviewed 150+ PRs. Set up CI/CD, Firebase Distribution, improved documentation, and actively engaged in open-source standups and mentorship.",
+        mergedPRs: 102,
+        productLinks: [
+            { text: "Mifos All Merged Prs", url: "https://github.com/pulls?q=is%3Apr+is%3Amerged+author%3ArevanthKumarJ+org%3AopenMF+" },
+            { text: "Mifos All Reviwed Prs", url: "" },
+            { text: "Mifos Mobile App", url: "https://play.google.com/store/apps/details?id=org.mifos.mobile" },
+            { text: "Android Client App", url: "https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid" },
+            { text: "Mifos Pay App", url: "https://play.google.com/store/apps/details?id=org.mifospay" },
+        ],
+    },
 
     {
         company: "Tlde Technologies",
@@ -152,25 +169,6 @@ function Experience() {
             { text: "Byte Wallpaper App", url: "https://play.google.com/store/apps/details?id=org.mobilebytesensei.wallpaper" },
         ],
     },
-
-    {
-        company: "Mifos Initiative",
-        logo: mifosLogo,
-        currentlyWorking: false,
-        position: "Cross-Platform Mobile Developer",
-        timeframe: "Nov 2024 – Dec 2025",
-        roleDescription:
-            "Contributed across three mobile apps — Mifos Mobile, Android Client, and Mifos Pay — along with kmp-project-template. Migrated 20+ modules to KMP & CMP, redesigned full UI flows, implemented new features, and fixed bugs. Authored 100+ PRs, co-authored 20+ PRs, and reviewed 150+ PRs. Set up CI/CD, Firebase Distribution, improved documentation, and actively engaged in open-source standups and mentorship.",
-        mergedPRs: 102,
-        productLinks: [
-            { text: "Mifos All Merged Prs", url: "https://github.com/pulls?q=is%3Apr+is%3Amerged+author%3ArevanthKumarJ+org%3AopenMF+" },
-            { text: "Mifos All Reviwed Prs", url: "" },
-            { text: "Mifos Mobile App", url: "https://play.google.com/store/apps/details?id=org.mifos.mobile" },
-            { text: "Android Client App", url: "https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid" },
-            { text: "Mifos Pay App", url: "https://play.google.com/store/apps/details?id=org.mifospay" },
-        ],
-    },
-
     {
         company: "Mifos Initiative",
         logo: mifosLogo,
