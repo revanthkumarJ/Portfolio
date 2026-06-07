@@ -21,32 +21,43 @@ function Home2() {
               LET ME <span className="purple"> INTRODUCE </span> MYSELF
             </h1>
             <p className="home-about-body">
-              I'm a passionate <b className="purple">Android Developer </b>
-              focused on building modern, scalable, and user-centric applications.
-              <br /><br />
+              I'm a passionate <b className="purple">Android Developer</b> focused on
+              building scalable, high-quality mobile applications and delivering impactful
+              user experiences.
+              <br />
+              <br />
+
               I primarily work with
-              <b className="purple"> Kotlin, Java, and JavaScript</b>, and I enjoy solving
-              complex problems through
+              <b className="purple"> Kotlin, Jetpack Compose, Kotlin Multiplatform (KMP) </b>
+              and modern Android development practices, while maintaining a strong
+              foundation in
               <b className="purple"> Data Structures and Algorithms</b>.
-              <br /><br />
-              I’ve contributed to <b className="purple">10+ production Android apps</b> and
-              <b className="purple"> 100+ open-source PRs</b>, working on real-world
-              applications across Android, KMP, and cross-platform environments.
-              <br /><br />
-              My technical toolkit includes{" "}
+              <br />
+              <br />
+
+              I've contributed to
+              <b className="purple"> 10+ production applications </b>,
+              authored
+              <b className="purple"> 110+ open-source pull requests </b>,
+              reviewed
+              <b className="purple"> 230+ community contributions </b>,
+              and mentored contributors through open-source programs such as
+              <b className="purple"> GSoC and C4GT</b>.
+              <br />
+              <br />
+
+              My experience spans
               <b className="purple">
-                Jetpack Compose, Kotlin Multiplatform (KMP), Compose Multiplatform (CMP),
-                React, Node.js, Express
-              </b>{" "}
-              and databases like{" "}
-              <b className="purple">MongoDB, SQL, SQLite, Firebase & Firestore</b>.
-              <br /><br />
-              Currently, I’m working as an{" "}
-              <b className="purple">Android Developer Intern at Swipe (YC S21)</b> and
-              previously interned at 
-              <b className="purple"> Mifos Initiative</b> ,
-              <b className="purple"> MobileByteSensei</b>  , and the
-              <b className="purple"> TLDE Technologies</b>.
+                {" "}Android, Kotlin Multiplatform, Compose Multiplatform,
+                Clean Architecture, MVI, React, Node.js </b>
+               and modern backend integrations.
+              <br />
+              <br />
+
+              Currently, I am working as an
+              <b className="purple"> SDE 1 - Android Developer at Swipe (YC S21) </b>
+              while actively contributing to and mentoring within the
+              <b className="purple"> Mifos open-source community</b>.
             </p>
           </Col>
 
@@ -56,7 +67,7 @@ function Home2() {
             </Tilt>
           </Col>
         </Row>
-        <Github/>
+        <Github />
         <h1 className="project-heading">
           <strong className="purple">My Coding Profiles</strong>
         </h1>

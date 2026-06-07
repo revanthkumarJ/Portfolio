@@ -20,24 +20,28 @@ import {
 } from "react-icons/si";
 
 function Techstack() {
-  const techs = [
-    { name: "Java", icon: <DiJava /> },
-    { name: "JavaScript", icon: <DiJavascript1 /> },
-    { name: "Kotlin", icon: <SiKotlin  /> },
-    { name: "Firebase", icon: <SiFirebase  /> },
-    { name: "Git", icon: <DiGit  /> },
-    { name: "React", icon: <DiReact  /> },
-    { name: "Node.js", icon: <DiNodejs s/> },
-    { name: "Express", icon: <SiExpress  /> },
-    { name: "MongoDB", icon: <DiMongodb  /> },
-    { name: "MySQL", icon: <SiMysql  /> },
-    
-    
-    { name: "Jetpack Compose", icon: <MdViewModule  /> },
-    { name: "Compose Multi Platform", icon: <MdPhoneIphone /> },
-    { name: "Kotlin Multi Platform", icon: <MdDevices /> },
-    { name: "Python", icon: <DiPython /> },
-  ];
+const techs = [
+  { name: "Kotlin", icon: <SiKotlin /> },
+  { name: "Android", icon: <MdPhoneIphone /> },
+  { name: "Jetpack Compose", icon: <MdViewModule /> },
+  { name: "Kotlin Multiplatform", icon: <MdDevices /> },
+  { name: "Compose Multiplatform", icon: <MdPhoneIphone /> },
+
+  { name: "Java", icon: <DiJava /> },
+  { name: "Firebase", icon: <SiFirebase /> },
+  { name: "Git", icon: <DiGit /> },
+  { name: "GitHub", icon: <SiGithub /> },
+
+  { name: "JavaScript", icon: <DiJavascript1 /> },
+  { name: "React", icon: <DiReact /> },
+  { name: "Node.js", icon: <DiNodejs /> },
+  { name: "Express", icon: <SiExpress /> },
+
+  { name: "MongoDB", icon: <DiMongodb /> },
+  { name: "MySQL", icon: <SiMysql /> },
+
+  { name: "Python", icon: <DiPython /> },
+];
 
   return (
     <Row style={{ justifyContent: "center", paddingBottom: "50px" }}>

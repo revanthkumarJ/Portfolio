@@ -11,9 +11,12 @@ function AboutCard() {
             Hi Everyone, I am <span className="purple">Jilakara Revanth Kumar</span>{" "}
             from <span className="purple">Andhra Pradesh, India.</span>
             <br />
-            I am currently pursuing my B.Tech in Computer Science and Engineering at RGUKT, RK Valley.
+            Currently, I am working as an <span className="purple">SDE 1 - Android Developer at Swipe</span>.
             <br />
-            I'm passionate about building software solutions and actively improving my skills through real-world projects and coding challenges.
+            I have completed my B.Tech in Computer Science and Engineering from RGUKT, RK Valley.
+            <br />
+
+            I am passionate about building mobile applications, exploring Kotlin Multiplatform (KMP), working on new projects, and contributing to open source.
             <br />
             <br />
             Apart from coding, here are some things I love doing:

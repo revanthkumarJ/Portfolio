@@ -5,14 +5,24 @@ import Particle from "../Particle";
 function Achievements() {
     const achievements = [
       {
+  title: "C4GT 2026 Mentor",
+  description:
+    "Selected as a mentor for the Mifos Pay project under Code for GovTech (C4GT) 2026, guiding contributors and supporting the development of open-source fintech solutions."
+},
+{
+  title: "Mifos Open Source Mentor",
+  description:
+    "Mentoring aspiring open-source contributors, conducting GSoC and C4GT interviews, reviewing contributions, and helping developers navigate the Mifos ecosystem."
+},
+      {
   title: "Mifos Summer of Code 2025 Intern",
   description:
     "Selected for the prestigious Mifos Summer of Code 2025 program, contributing to open-source fintech applications and cross-platform development."
 },
       {
-  title: "100+ Open Source Contributions",
+  title: "120+ Open Source Contributions",
   description:
-    "Made over 100 pull requests across multiple open-source projects, resolving critical bugs, improving architecture, and contributing to production-grade apps."
+    "Made over 120+ pull requests across multiple open-source projects, resolving critical bugs, improving architecture, and contributing to production-grade apps."
 },
   {
     title: "Qualified GATE CS 2025",

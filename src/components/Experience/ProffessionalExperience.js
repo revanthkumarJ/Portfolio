@@ -116,109 +116,178 @@ function ExperienceSection({ title, experiences }) {
 // Main Experience Component
 function Experience() {
     const technicalExperiences = [
-    {
-        company: "Swipe (YC S21)",
-        logo: swipe,
-        currentlyWorking: true,
-        position: "Android Developer Intern",
-        timeframe: "Dec 2025 – Present",
-        roleDescription:
-            "Working on real-world Android applications using Kotlin, Jetpack Compose, and modern Android architecture. Contributing to feature development, UI implementation, and performance improvements while learning production-level Android development practices.",
-        productLinks: [],
-    },
-    {
-        company: "Mifos Initiative",
-        logo: mifosLogo,
-        currentlyWorking: false,
-        position: "Open Source Mobile Developer",
-        timeframe: "Nov 2024 – Dec 2025",
-        roleDescription:
-            "Contributed across three mobile apps — Mifos Mobile, Android Client, and Mifos Pay — along with kmp-project-template. Migrated 20+ modules to KMP & CMP, redesigned full UI flows, implemented new features, and fixed bugs. Authored 100+ PRs, co-authored 20+ PRs, and reviewed 150+ PRs. Set up CI/CD, Firebase Distribution, improved documentation, and actively engaged in open-source standups and mentorship.",
-        mergedPRs: 102,
-        productLinks: [
-            { text: "Mifos All Merged Prs", url: "https://github.com/pulls?q=is%3Apr+is%3Amerged+author%3ArevanthKumarJ+org%3AopenMF+" },
-            { text: "Mifos All Reviwed Prs", url: "" },
-            { text: "Mifos Mobile App", url: "https://play.google.com/store/apps/details?id=org.mifos.mobile" },
-            { text: "Android Client App", url: "https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid" },
-            { text: "Mifos Pay App", url: "https://play.google.com/store/apps/details?id=org.mifospay" },
-        ],
-    },
+  {
+    company: "Swipe (YC S21)",
+    logo: swipe,
+    currentlyWorking: true,
+    position: "SDE 1 - Android Developer",
+    timeframe: "Jun 2026 – Present",
+    roleDescription:
+      "Promoted from Android Developer Intern to SDE 1. Continuing to modernize production Android experiences, scale multi-module architecture, improve application reliability, and deliver high-impact features used by thousands of businesses.",
+    productLinks: [
+      {
+        text: "Swipe App",
+        url: "https://play.google.com/store/apps/details?id=com.swipe.bill"
+      }
+    ],
+  },
 
-    {
-        company: "Tlde Technologies",
-        logo: tlde,
-        currentlyWorking: false,
-        position: "Software Engineer Intern",
-        timeframe: "Nov 2025 – Dec 2025",
-        roleDescription:
-            "Worked on a Kotlin Multiplatform application using Jetpack Compose. Implemented cross-platform features, UI screens, and contributed to CMP/KMP architecture improvements.",
-        productLinks: [],
-    },
+  {
+    company: "Swipe (YC S21)",
+    logo: swipe,
+    currentlyWorking: false,
+    position: "Android Developer Intern",
+    timeframe: "Dec 2025 – Jun 2026",
+    roleDescription:
+      "Modernized 10 production flows comprising 70+ screens by migrating legacy XML-based UI to Jetpack Compose, redesigning user experiences, upgrading backend API integrations, and implementing scalable multi-module MVI architecture. Refactored features into independent modules using Kotlin, Coroutines, Flow, Hilt, Retrofit, Room, and Clean Architecture. Investigated and resolved production crashes, UI defects, and customer-reported issues using Firebase Crashlytics and Intercom.",
+    productLinks: [
+      {
+        text: "Swipe App",
+        url: "https://play.google.com/store/apps/details?id=com.swipe.bill"
+      }
+    ],
+  },
 
-    {
-        company: "Mobile Byte Sensei",
-        logo: MBSLogo,
-        currentlyWorking: false,
-        position: "Mobile Development Intern (KMP & CMP)",
-        timeframe: "Apr 2025 – Nov 2025",
-        roleDescription:
-            "Developed production-grade KMP applications across 7+ real Play Store apps. Built UI using Jetpack Compose, implemented WhatsApp Status Downloader feature, improved app performance, integrated Firebase Analytics, resolved crash reports, and collaborated through Jira, Slack, and GitHub in an Agile environment.",
-        productLinks: [
-            { text: "Reels Downloader App", url: "https://play.google.com/store/apps/details?id=com.sensei.social" },
-            { text: "Stories Downloader App", url: "https://play.google.com/store/apps/details?id=com.sensei.stories" },
-            { text: "Byte Wallpaper App", url: "https://play.google.com/store/apps/details?id=org.mobilebytesensei.wallpaper" },
-        ],
-    },
-    {
-        company: "Mifos Initiative",
-        logo: mifosLogo,
-        currentlyWorking: false,
-        position: "Mifos Summer of Code 2025 Intern",
-        timeframe: "Jun 2025 – Sep 2025",
-        roleDescription:
-            "Completed a 4-month paid internship with a $2500 stipend. Migrated Android Client modules to CMP, revamped full UI for Mifos Mobile, and implemented UI/UX enhancements across all apps. Authored 75+ PRs, co-authored 10+ PRs, and reviewed 100+ PRs while collaborating with global open-source teams.",
-        productLinks: [
-            { text: "My MSOC Work", url: "https://gist.github.com/revanthkumarJ/133c9e8ce0abb111fb19873ad902cb70" },
-            { text: "MSOC Final Presentation", url: "https://www.linkedin.com/in/jilakararevanthkumar/overlay/experience/2645463333/multiple-media-viewer?profileId=ACoAAEctTzYBhihGV9nORrzokaSCEYL9d3vTebY&treasuryMediaId=1758647096505&type=DOCUMENT&lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3B93Gn0rr8RWiDvwvN97GE4w%3D%3D" },
-            { text: "MSOC Weekly Progress", url: "https://github.com/revanthkumarJ/MSOC_progress" },
-        ],
-    },
-    {
-        company: "Abhiyanth 2K25",
-        logo: abhiyanth,
-        currentlyWorking: false,
-        position: "Frontend Team Lead & Developer + Social Media Manager",
-        timeframe: "Dec 2024 – Mar 2025",
-        roleDescription:
-            "Led frontend development using React, integrated Firebase, built most of the admin panel, managed GitHub repo, reviewed & merged PRs, coordinated with UI/UX, and managed social media promotions.",
-        productLinks: [
-            { text: "GitHub Repo", url: "https://github.com/revanthkumarJ/Abhiyanth-Client" },
-        ],
-    },
-        {
-        company: "DevDisplay",
-        logo: devDisplay,
-        currentlyWorking: false,
-        position: "Open Source Contributor – React",
-        timeframe: "Jan 2025 – Feb 2025",
-        roleDescription:
-            "Contributed to UI enhancements and page development using React and Tailwind CSS. Worked on Sponsors, About Us, and Journey pages. Merged 10+ PRs with visual and layout fixes.",
-        mergedPRs: 10,
-        productLinks: [
-            { text: "GitHub Merged Prs", url: "https://github.com/codeaashu/DevDisplay/pulls?q=is%3Apr+is%3Amerged+author%3ArevanthkumarJ" },
-        ],
-    },
-    {
-        company: "GeeksforGeeks",
-        logo: gfg,
-        currentlyWorking: false,
-        position: "Campus Ambassador",
-        timeframe: "Apr 2024 – Apr 2025",
-        roleDescription:
-            "Selected as GFG Campus Mantri, shared resources, promoted GFG MongoDB course, coordinated contests, improved coding culture, and was recognized among Top 15 performers.",
-        productLinks: [],
-    },
+  {
+    company: "Mifos Initiative",
+    logo: mifosLogo,
+    currentlyWorking: false,
+    position: "Mentor",
+    timeframe: "Mar 2026 – Present",
+    roleDescription:
+      "Mentoring and supporting open-source contributors by reviewing pull requests, conducting standups, and guiding discussions on Kotlin Multiplatform and mobile architecture. Conducting interviews for Google Summer of Code (GSoC) and Code4GovTech (C4GT), helping contributors onboard successfully, and reviewing 230+ pull requests across community projects.",
+    productLinks: [],
+  },
+
+  {
+    company: "Mifos Initiative",
+    logo: mifosLogo,
+    currentlyWorking: false,
+    position: "Open Source Mobile Developer",
+    timeframe: "Nov 2024 – Present",
+    roleDescription:
+      "Contributed to 5 production repositories focused on financial inclusion. Authored 110+ pull requests with a 98% merge rate, migrated 20+ modules from Android-native implementations to Kotlin Multiplatform, and reviewed 230+ contributor pull requests while driving architectural consistency across the organization's mobile ecosystem.",
+    mergedPRs: 110,
+    productLinks: [
+      {
+        text: "All Merged PRs",
+        url: "https://github.com/pulls?q=is%3Apr+is%3Amerged+author%3ArevanthKumarJ+org%3AopenMF+"
+      },
+      {
+        text: "Mifos Mobile App",
+        url: "https://play.google.com/store/apps/details?id=org.mifos.mobile"
+      },
+      {
+        text: "Android Client App",
+        url: "https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid"
+      },
+      {
+        text: "Mifos Pay App",
+        url: "https://play.google.com/store/apps/details?id=org.mifospay"
+      }
+    ],
+  },
+
+  {
+    company: "Mifos Initiative",
+    logo: mifosLogo,
+    currentlyWorking: false,
+    position: "Mifos Summer of Code 2025 Intern",
+    timeframe: "Jun 2025 – Sep 2025",
+    roleDescription:
+      "Selected for the competitive Mifos Summer of Code 2025 program with a $2,500 stipend. Led UI modernization across 100+ screens in the Mifos Android Client and Mifos Mobile applications and contributed to the migration from MVVM to MVI architecture, improving scalability, maintainability, and user experience.",
+    productLinks: [
+      {
+        text: "MSOC Work",
+        url: "https://gist.github.com/revanthkumarJ/133c9e8ce0abb111fb19873ad902cb70"
+      },
+      {
+        text: "MSOC Weekly Progress",
+        url: "https://github.com/revanthkumarJ/MSOC_progress"
+      }
+    ],
+  },
+
+  {
+    company: "Mobile Byte Sensei",
+    logo: MBSLogo,
+    currentlyWorking: false,
+    position: "Mobile Development Intern (KMP & CMP)",
+    timeframe: "Apr 2025 – Nov 2025",
+    roleDescription:
+      "Delivered 7 production-grade Kotlin Multiplatform applications integrating Firebase, Compose Multiplatform, and CI/CD pipelines. Built reusable UI components, implemented file management features, integrated Firebase Analytics, and resolved critical Crashlytics-reported issues while collaborating in an Agile development environment.",
+    productLinks: [
+      {
+        text: "Reels Downloader App",
+        url: "https://play.google.com/store/apps/details?id=com.sensei.social"
+      },
+      {
+        text: "Stories Downloader App",
+        url: "https://play.google.com/store/apps/details?id=com.sensei.stories"
+      },
+      {
+        text: "Byte Wallpaper App",
+        url: "https://play.google.com/store/apps/details?id=org.mobilebytesensei.wallpaper"
+      }
+    ],
+  },
+
+  {
+    company: "TLDE Technologies",
+    logo: tlde,
+    currentlyWorking: false,
+    position: "Software Development Intern",
+    timeframe: "Nov 2025 – Dec 2025",
+    roleDescription:
+      "Worked on a Kotlin Multiplatform application, focusing on UI development and onboarding experiences using Compose Multiplatform and Lottie animations.",
+    productLinks: [],
+  },
+
+  {
+    company: "Abhiyanth 2K25",
+    logo: abhiyanth,
+    currentlyWorking: false,
+    position: "Frontend Team Lead & Developer + Social Media Manager",
+    timeframe: "Dec 2024 – Mar 2025",
+    roleDescription:
+      "Led frontend development using React, integrated Firebase, built major parts of the admin panel, managed repositories, reviewed pull requests, coordinated with UI/UX teams, and handled social media promotions.",
+    productLinks: [
+      {
+        text: "GitHub Repo",
+        url: "https://github.com/revanthkumarJ/Abhiyanth-Client"
+      }
+    ],
+  },
+
+  {
+    company: "DevDisplay",
+    logo: devDisplay,
+    currentlyWorking: false,
+    position: "Open Source Contributor – React",
+    timeframe: "Jan 2025 – Feb 2025",
+    roleDescription:
+      "Contributed UI enhancements and page development using React and Tailwind CSS. Worked on Sponsors, About Us, and Journey pages while delivering multiple visual and layout improvements.",
+    mergedPRs: 10,
+    productLinks: [
+      {
+        text: "Merged PRs",
+        url: "https://github.com/codeaashu/DevDisplay/pulls?q=is%3Apr+is%3Amerged+author%3ArevanthkumarJ"
+      }
+    ],
+  },
+
+  {
+    company: "GeeksforGeeks",
+    logo: gfg,
+    currentlyWorking: false,
+    position: "Campus Ambassador",
+    timeframe: "Apr 2024 – Apr 2025",
+    roleDescription:
+      "Promoted coding culture within the institute, coordinated contests and events, shared learning resources, and was recognized among the top-performing campus ambassadors.",
+    productLinks: [],
+  },
 ];
+
 
 
 
@@ -266,9 +335,9 @@ function Experience() {
         {
             company: "National Service Scheme (NSS)",
             logo: nss,
-            currentlyWorking: true,
+            currentlyWorking: false,
             position: "Unit Coordinator & LinkedIn Page Maintainer (Unit-2)",
-            timeframe: "Jan 2024 – Present",
+            timeframe: "Jan 2024 – Jan 2026",
             roleDescription:
                 "Serving as NSS Unit Coordinator, organizing and leading social outreach activities. Also managing the LinkedIn page for NSS Unit-2, sharing updates, and promoting events to enhance public engagement.",
             mergedPRs: 0,

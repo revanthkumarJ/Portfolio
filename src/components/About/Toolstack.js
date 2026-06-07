@@ -19,21 +19,23 @@ import {
   SiVisualstudio,
 } from "react-icons/si";
 import { FaJira, FaDiscord, FaTrello } from "react-icons/fa";
+import { SiIntercom } from "react-icons/si";
+import { FaEye } from "react-icons/fa";
 
 function Toolstack() {
-  const tools = [
-    { name: "VS Code", icon: <SiVisualstudiocode /> },
-    { name: "Android Studio", icon: <SiAndroid /> },
-    { name: "Slack", icon: <SiSlack /> },
-    { name: "Postman", icon: <SiPostman /> },
-    { name: "Discord", icon: <FaDiscord /> },
-    { name: "Jira", icon: <FaJira /> },
-    { name: "GitHub", icon: <SiGithub /> },
-    { name: "NPM", icon: <SiNpm /> },
-    { name: "Figma", icon: <SiFigma /> },
-    { name: "Vercel", icon: <SiVercel /> },
-    
-  ];
+const tools = [
+  { name: "Android Studio", icon: <SiAndroid /> },
+  { name: "GitHub", icon: <SiGithub /> },
+  { name: "Postman", icon: <SiPostman /> },
+  { name: "VS Code", icon: <SiVisualstudiocode /> },
+
+  { name: "Jira", icon: <FaJira /> },
+  { name: "Slack", icon: <SiSlack /> },
+  { name: "Intercom", icon: <SiIntercom /> },
+
+  { name: "Figma", icon: <SiFigma /> },
+  { name: "NPM", icon: <SiNpm /> },
+];
 
   return (
     <Row style={{ justifyContent: "center", paddingBottom: "50px" }}>
