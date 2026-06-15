@@ -6,7 +6,6 @@ import {
   SiGeeksforgeeks,
   SiHackerrank,
 } from "react-icons/si";
-import { GiNinjaHead } from "react-icons/gi";
 
 function CodingProfiles() {
   const platforms = [

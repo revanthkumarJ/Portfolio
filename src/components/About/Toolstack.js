@@ -6,21 +6,11 @@ import {
   SiPostman,
   SiAndroid,
   SiGithub,
-  SiDocker,
-  SiWebpack,
   SiNpm,
-  SiKubernetes,
   SiFigma,
-  SiVercel,
-  SiPostgresql,
-  SiAmazonaws,
-  SiJenkins,
-  SiNotion,
-  SiVisualstudio,
 } from "react-icons/si";
-import { FaJira, FaDiscord, FaTrello } from "react-icons/fa";
+import { FaJira } from "react-icons/fa";
 import { SiIntercom } from "react-icons/si";
-import { FaEye } from "react-icons/fa";
 
 function Toolstack() {
 const tools = [
