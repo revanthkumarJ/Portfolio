@@ -18,7 +18,6 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Achievements from "./components/Achievements/Achievements";
 import Experience from "./components/Experience/ProffessionalExperience";
-import Certificates from "./components/Certificates/Certficates";
 
 function App() {
   const [load, upadateLoad] = useState(true);

@@ -7,7 +7,6 @@ import Type from "./Type";
 import Experience from "../Experience/ProffessionalExperience";
 import Achievements from "../Achievements/Achievements";
 import ResumeNew from "../Resume/ResumeNew";
-import Github from "../About/Github";
 
 function Home() {
   return (
