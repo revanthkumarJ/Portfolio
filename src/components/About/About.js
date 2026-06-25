@@ -7,6 +7,7 @@ import Aboutcard from "./AboutCard";
 import revanthImg from "../../Assets/revanth.png";
 import Toolstack from "./Toolstack";
 import CodingProfiles from "./CodingProfiles";
+import Highlights from "./Highlights";
 
 function About() {
   return (
@@ -23,7 +24,7 @@ function About() {
             }}
           >
             <h1 style={{ fontSize: "2.1em", paddingBottom: "20px" }}>
-              Know Who <strong className="purple">I'M</strong>
+              Know Who <strong className="purple">I Am</strong>
             </h1>
             <Aboutcard />
           </Col>
@@ -35,8 +36,14 @@ function About() {
             <img src={revanthImg} alt="about" className="img-fluid" />
           </Col>
         </Row>
+
         <h1 className="project-heading">
-          Professional <strong className="purple">Skillset </strong>
+          At a <strong className="purple">Glance</strong>
+        </h1>
+        <Highlights />
+
+        <h1 className="project-heading">
+          Professional <strong className="purple">Skillset</strong>
         </h1>
 
         <Techstack />

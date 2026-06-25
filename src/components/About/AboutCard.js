@@ -8,15 +8,33 @@ function AboutCard() {
       <Card.Body>
         <blockquote className="blockquote mb-0">
           <p style={{ textAlign: "justify" }}>
-            Hi Everyone, I am <span className="purple">Jilakara Revanth Kumar</span>{" "}
-            from <span className="purple">Andhra Pradesh, India.</span>
+            Hi everyone, I'm{" "}
+            <span className="purple">Jilakara Revanth Kumar</span>, a Software
+            Engineer from{" "}
+            <span className="purple">Andhra Pradesh, India</span>, specializing
+            in <span className="purple">Android</span> and{" "}
+            <span className="purple">Kotlin Multiplatform</span> development.
             <br />
-            Currently, I am working as an <span className="purple">SDE 1 - Android Developer at Swipe</span>.
             <br />
-            I have completed my B.Tech in Computer Science and Engineering from RGUKT, RK Valley.
+            Currently, I work as an{" "}
+            <span className="purple">SDE 1 – Android Developer at Swipe (YC S21)</span>
+            , where I was promoted from an Android Developer Intern. I build and
+            modernize production Android experiences using Kotlin, Jetpack
+            Compose, and scalable multi-module MVI architecture, shipping
+            features used by thousands of businesses.
             <br />
-
-            I am passionate about building mobile applications, exploring Kotlin Multiplatform (KMP), working on new projects, and contributing to open source.
+            <br />
+            I'm an active open-source contributor and mentor at the{" "}
+            <span className="purple">Mifos Initiative</span>, with 110+ merged
+            pull requests (98% merge rate) and 230+ contributor PRs reviewed. I
+            was a <span className="purple">Mifos Summer of Code 2025</span> intern
+            and currently mentor contributors for Google Summer of Code (GSoC)
+            and Code4GovTech (C4GT).
+            <br />
+            <br />
+            I hold a B.Tech in Computer Science and Engineering from{" "}
+            <span className="purple">RGUKT, RK Valley</span>, and qualified GATE
+            CS 2025.
             <br />
             <br />
             Apart from coding, here are some things I love doing:
@@ -29,7 +47,7 @@ function AboutCard() {
               <ImPointRight /> Playing Chess
             </li>
             <li className="about-activity">
-              <ImPointRight /> Exploring Tech Tools & Frameworks
+              <ImPointRight /> Exploring new tech tools &amp; frameworks
             </li>
           </ul>
 
