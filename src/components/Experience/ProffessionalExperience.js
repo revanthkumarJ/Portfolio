@@ -1,6 +1,8 @@
-import React from "react";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Particle from "../Particle";
+import { ExperienceDetailModal } from "./dialogPrimitives";
+import dialogRegistry from "./dialogRegistry";
 import mifosLogo from "../../Assets/mifos.jpg"
 import MBSLogo from "../../Assets/MBS.avif"
 import gfg from "../../Assets/GFG.png"
@@ -13,7 +15,7 @@ import devDisplay from "../../Assets/images/dev_display.jpg"
 
 
 // Reusable section component
-function ExperienceSection({ title, experiences }) {
+function ExperienceSection({ title, experiences, onViewMore }) {
     return (
         <div style={{ marginBottom: "40px" }}>
             <h2 className="project-heading" style={{ marginTop: "40px" }}>
@@ -104,6 +106,20 @@ function ExperienceSection({ title, experiences }) {
                                     </div>
                                 )}
 
+                                {/* 7. View more (only when this experience has a detail dialog) */}
+                                {exp.detailKey && (
+                                    <div className="exp-view-more-wrap">
+                                        <Button
+                                            variant="outline-light"
+                                            className="exp-view-more-btn"
+                                            onClick={() => onViewMore(exp.detailKey)}
+                                        >
+                                            View more
+                                            <span className="exp-view-more-arrow">&rarr;</span>
+                                        </Button>
+                                    </div>
+                                )}
+
                             </Card.Body>
                         </Card>
                     </Col>
@@ -115,15 +131,18 @@ function ExperienceSection({ title, experiences }) {
 
 // Main Experience Component
 function Experience() {
+    const [activeDetailKey, setActiveDetailKey] = useState(null);
+
     const technicalExperiences = [
   {
     company: "Swipe (YC S21)",
     logo: swipe,
+    detailKey: "swipe-sde1",
     currentlyWorking: true,
     position: "SDE 1 - Android Developer",
     timeframe: "Jun 2026 – Present",
     roleDescription:
-      "Promoted from Android Developer Intern to SDE 1. Continuing to modernize production Android experiences, scale multi-module architecture, improve application reliability, and deliver high-impact features used by thousands of businesses.",
+      "Promoted from Android Developer Intern to SDE 1. Owning and shipping high-impact production features, scaling the multi-module architecture, and improving app reliability for thousands of businesses.",
     productLinks: [
       {
         text: "Swipe App",
@@ -135,11 +154,12 @@ function Experience() {
   {
     company: "Swipe (YC S21)",
     logo: swipe,
+    detailKey: "swipe-intern",
     currentlyWorking: false,
     position: "Android Developer Intern",
     timeframe: "Dec 2025 – Jun 2026",
     roleDescription:
-      "Modernized 10 production flows comprising 70+ screens by migrating legacy XML-based UI to Jetpack Compose, redesigning user experiences, upgrading backend API integrations, and implementing scalable multi-module MVI architecture. Refactored features into independent modules using Kotlin, Coroutines, Flow, Hilt, Retrofit, Room, and Clean Architecture. Investigated and resolved production crashes, UI defects, and customer-reported issues using Firebase Crashlytics and Intercom.",
+      "Migrated 70+ screens from legacy XML to Jetpack Compose across 10 production flows, improving UX along the way, and restructured a monolithic codebase into multi-module Clean Architecture following MVI.",
     productLinks: [
       {
         text: "Swipe App",
@@ -151,22 +171,24 @@ function Experience() {
   {
     company: "Mifos Initiative",
     logo: mifosLogo,
+    detailKey: "mifos-mentor",
     currentlyWorking: false,
     position: "Mentor",
     timeframe: "Mar 2026 – Present",
     roleDescription:
-      "Mentoring and supporting open-source contributors by reviewing pull requests, conducting standups, and guiding discussions on Kotlin Multiplatform and mobile architecture. Conducting interviews for Google Summer of Code (GSoC) and Code4GovTech (C4GT), helping contributors onboard successfully, and reviewing 230+ pull requests across community projects.",
+      "Mentoring and supporting open-source contributors by reviewing pull requests, running standups, and guiding Kotlin Multiplatform and mobile architecture discussions. Conducting GSoC and C4GT interviews and helping contributors onboard.",
     productLinks: [],
   },
 
   {
     company: "Mifos Initiative",
     logo: mifosLogo,
+    detailKey: "mifos-developer",
     currentlyWorking: false,
     position: "Open Source Mobile Developer",
     timeframe: "Nov 2024 – Present",
     roleDescription:
-      "Contributed to 5 production repositories focused on financial inclusion. Authored 110+ pull requests with a 98% merge rate, migrated 20+ modules from Android-native implementations to Kotlin Multiplatform, and reviewed 230+ contributor pull requests while driving architectural consistency across the organization's mobile ecosystem.",
+      "Contributed to 5 production repositories focused on financial inclusion. Authored 110+ pull requests with a 98% merge rate, migrated 20+ modules to Kotlin Multiplatform, and reviewed 230+ contributor pull requests.",
     mergedPRs: 110,
     productLinks: [
       {
@@ -191,11 +213,12 @@ function Experience() {
   {
     company: "Mifos Initiative",
     logo: mifosLogo,
+    detailKey: "mifos-msoc",
     currentlyWorking: false,
     position: "Mifos Summer of Code 2025 Intern",
     timeframe: "Jun 2025 – Sep 2025",
     roleDescription:
-      "Selected for the competitive Mifos Summer of Code 2025 program with a $2,500 stipend. Led UI modernization across 100+ screens in the Mifos Android Client and Mifos Mobile applications and contributed to the migration from MVVM to MVI architecture, improving scalability, maintainability, and user experience.",
+      "Selected for the competitive Mifos Summer of Code 2025 program with a $2,500 stipend. Led UI modernization across 100+ screens and contributed to the migration from MVVM to MVI architecture.",
     productLinks: [
       {
         text: "MSOC Work",
@@ -376,12 +399,21 @@ function Experience() {
                 <ExperienceSection
                     title="Technical Experience"
                     experiences={technicalExperiences}
+                    onViewMore={setActiveDetailKey}
                 />
                 <ExperienceSection
                     title="Leadership & Volunteer Experience"
                     experiences={leadershipExperiences}
+                    onViewMore={setActiveDetailKey}
                 />
             </Container>
+
+            <ExperienceDetailModal
+                show={!!activeDetailKey}
+                onHide={() => setActiveDetailKey(null)}
+                registry={dialogRegistry}
+                detailKey={activeDetailKey}
+            />
         </Container>
     );
 }
