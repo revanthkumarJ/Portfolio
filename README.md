@@ -74,7 +74,7 @@ Leadership/volunteer: SRC DSA Coordinator & Mentor, Dept. Social Media Manager, 
 1. **💰 ExpenseTrackr** *(flagship)* — privacy-first, offline personal finance tracker. Kotlin Multiplatform + Compose Multiplatform; one codebase → Android, iOS, Desktop. Clean MVI, 16 Gradle modules, 18 screens, 15 ViewModels, **24 languages** with in-app switcher, Room (KMP), Koin, DataStore, custom Gradle convention plugins, R8, PIN (SHA-256) + biometric app-lock, CSV backup/restore, Material 3 dynamic color. Android feature-complete, **Play Store closed testing** (public soon). MIT license.
    - GitHub: <https://github.com/revanthkumarJ/ExpenseTrackr>
    - Play Store: **placeholder — link is commented out in code; uncomment when the app goes public**
-2. **📱 Mifos-Mobile KMP migration** — 39 merged PRs, 7 modules migrated to KMP/CMP (Android, iOS, Web/WASM, Desktop). [GitHub](https://github.com/openMF/mifos-mobile) · [Play Store](https://play.google.com/store/apps/details?id=org.mifos.mobile)
+2. **📱 Mifos-Mobile KMP migration** — 45+ merged PRs, 7 modules migrated to KMP/CMP (Android, iOS, Web/WASM, Desktop). [GitHub](https://github.com/openMF/mifos-mobile) · [Play Store](https://play.google.com/store/apps/details?id=org.mifos.mobile)
 3. **🏦 Android-Client KMP migration** — 52 merged PRs, 5 modules migrated, production banking app. [GitHub](https://github.com/openMF/android-client) · [Play Store](https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid)
 4. **🎪 Abhiyanth Fest website** — frontend team lead; React, Redux, Firebase, Material UI, CashFree payments. [GitHub](https://github.com/revanthkumarJ/abhiyanth-client)
 

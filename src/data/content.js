@@ -120,7 +120,7 @@ export const experience = [
     role: "Android Developer Intern",
     period: "Dec 2025 — Jun 14, 2026",
     summary:
-      "Migrated 70+ screens from legacy XML to Jetpack Compose across 10 production flows — improving UX along the way — and restructured a monolithic codebase into multi-module Clean Architecture with MVI.",
+      "Migrated 70+ screens from legacy XML to Jetpack Compose across 15 production flows — improving UX along the way — and restructured a monolithic codebase into multi-module Clean Architecture with MVI.",
     highlights: [
       "Migrated the onboarding screen — the first thing users see — with a fresh Compose UI.",
       "Migrated document settings, templates, create-expense, and create-product screens.",
@@ -155,7 +155,7 @@ export const experience = [
       "120+ PRs at a 98% merge rate across 5 production fintech repositories. Migrated 20+ modules to Kotlin Multiplatform in apps focused on financial inclusion.",
     highlights: [
       "android-client: 50+ PRs migrating UI to KMP/CMP, Figma redesigns, type-safe navigation.",
-      "mifos-mobile: 39+ PRs — module migrations, QR binding, localization, new screens.",
+      "mifos-mobile: 45+ PRs — module migrations, QR binding, localization, new screens.",
       "mobile-wallet: migrated APIs to the Self API and refreshed the surrounding flows.",
       "Contributed to kmp-project-template and mifos-x-group-banking setup.",
     ],
@@ -299,9 +299,9 @@ export const featuredProjects = [
     title: "Mifos Mobile — KMP Migration",
     tagline: "Production banking app, migrated to every platform",
     description:
-      "Migrated 7 modules of Mifos Mobile — a self-service banking client used worldwide — to Kotlin Multiplatform and Compose Multiplatform, targeting Android, iOS, Web/WASM, and Desktop. 39 merged PRs covering module migrations, new Figma-based screens, QR-code binding, and localization.",
+      "Migrated 7 modules of Mifos Mobile — a self-service banking client used worldwide — to Kotlin Multiplatform and Compose Multiplatform, targeting Android, iOS, Web/WASM, and Desktop. 45+ merged PRs covering module migrations, new Figma-based screens, QR-code binding, and localization.",
     metrics: [
-      { value: "39", label: "PRs merged" },
+      { value: "45+", label: "PRs merged" },
       { value: "7", label: "Modules migrated" },
       { value: "5", label: "Platform targets" },
     ],
