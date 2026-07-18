@@ -39,7 +39,7 @@ export default function Nav() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.7, ease: [0.21, 0.65, 0.32, 0.99], delay: 0.1 }}
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled ? "glass shadow-lg shadow-black/20" : "bg-transparent"
+        scrolled || open ? "glass !bg-ink/85 shadow-lg shadow-black/20" : "bg-transparent"
       }`}
     >
       <nav className="flex h-[72px] w-full items-center justify-between px-5 md:px-10 xl:px-16">
@@ -95,7 +95,7 @@ export default function Nav() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="glass overflow-hidden md:hidden"
+            className="overflow-hidden border-t border-line bg-ink-2/95 backdrop-blur-xl md:hidden"
           >
             {navLinks.map((l) => (
               <li key={l.href}>

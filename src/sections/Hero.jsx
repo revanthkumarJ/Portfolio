@@ -121,7 +121,7 @@ export default function Hero() {
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.6, ease: [0.21, 0.65, 0.32, 0.99] }}
-          className="relative hidden justify-center lg:flex"
+          className="relative flex justify-center pb-4 lg:pb-0"
         >
           {/* glow ring behind the card */}
           <div className="absolute inset-0 -z-10 m-auto h-[70%] w-[70%] rounded-full bg-gradient-to-tr from-violet-600/30 via-fuchsia-600/20 to-cyan-500/20 blur-3xl" />

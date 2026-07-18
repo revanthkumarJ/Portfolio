@@ -21,13 +21,16 @@
 html {
   background: var(--color-ink);
   scrollbar-color: #3d3654 var(--color-ink);
+  /* clip (not hidden): prevents decorative blobs from widening the mobile
+     layout viewport without creating a new scroll container */
+  overflow-x: clip;
 }
 
 body {
   font-family: var(--font-body);
   color: var(--color-body);
   background: var(--color-ink);
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -120,6 +123,15 @@ body {
 }
 .gh-cal .react-activity-calendar__footer {
   width: 100% !important;
+}
+/* On phones, keep natural size and scroll horizontally instead of shrinking */
+@media (max-width: 767px) {
+  .gh-cal .react-activity-calendar__scroll-container {
+    overflow-x: auto;
+  }
+  .gh-cal .react-activity-calendar__calendar {
+    width: auto !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
