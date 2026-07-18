@@ -10,6 +10,7 @@ import Writing from "./sections/Writing.jsx";
 import Testimonial from "./sections/Testimonial.jsx";
 import Contact from "./sections/Contact.jsx";
 import Footer from "./sections/Footer.jsx";
+import { ResumeProvider } from "./ui/resume.jsx";
 
 export default function App() {
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function App() {
   }, []);
 
   return (
+    <ResumeProvider>
     <div className="noise relative min-h-screen bg-ink text-body">
       <Nav />
       <main>
@@ -54,5 +56,6 @@ export default function App() {
       </main>
       <Footer />
     </div>
+    </ResumeProvider>
   );
 }

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Monogram } from "../ui/primitives.jsx";
+import { useResume } from "../ui/resume.jsx";
 import { navLinks, identity } from "../data/content.js";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
+  const openResume = useResume();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -64,14 +66,12 @@ export default function Nav() {
             </li>
           ))}
           <li>
-            <a
-              href={identity.resume}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={openResume}
               className="ml-3 rounded-full border border-violet/50 px-5 py-2 text-sm font-semibold text-bright transition-all hover:border-violet hover:bg-violet/10 hover:shadow-[0_0_24px_-6px_rgba(167,139,250,0.6)]"
             >
               Resume
-            </a>
+            </button>
           </li>
         </ul>
 
@@ -109,14 +109,15 @@ export default function Nav() {
               </li>
             ))}
             <li>
-              <a
-                href={identity.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block px-8 py-4 text-base font-semibold text-violet"
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  openResume();
+                }}
+                className="block w-full px-8 py-4 text-left text-base font-semibold text-violet"
               >
                 Resume ↗
-              </a>
+              </button>
             </li>
           </motion.ul>
         )}

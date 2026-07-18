@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Magnetic, Counter, ImageSlot } from "../ui/primitives.jsx";
+import { useResume } from "../ui/resume.jsx";
 import { identity, heroStats, socials } from "../data/content.js";
 import { FiGithub, FiLinkedin, FiInstagram, FiMail, FiArrowDown } from "react-icons/fi";
 
@@ -16,6 +17,7 @@ const line = {
 };
 
 export default function Hero() {
+  const openResume = useResume();
   return (
     <section id="top" className="relative flex min-h-screen flex-col justify-center overflow-hidden pt-[72px]">
       {/* Ambient gradient blobs */}
@@ -69,14 +71,12 @@ export default function Hero() {
             </a>
           </Magnetic>
           <Magnetic>
-            <a
-              href={identity.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-display inline-block rounded-full border border-line px-8 py-3.5 text-sm font-bold tracking-wide text-bright transition-colors hover:border-violet/60 hover:bg-white/5"
+            <button
+              onClick={openResume}
+              className="font-display inline-block cursor-pointer rounded-full border border-line px-8 py-3.5 text-sm font-bold tracking-wide text-bright transition-colors hover:border-violet/60 hover:bg-white/5"
             >
               Resume
-            </a>
+            </button>
           </Magnetic>
           <div className="ml-1 flex items-center gap-1">
             {socials.map((s) => {
