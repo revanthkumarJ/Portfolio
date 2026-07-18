@@ -318,10 +318,10 @@ export const featuredProjects = [
     title: "Android Client — KMP Migration",
     tagline: "Field-officer banking app for offline-first microfinance",
     description:
-      "52 merged PRs migrating 5 modules of the Mifos Field Officer app to KMP/CMP — refactoring client screens to the latest Figma designs, adding type-safe navigation, fixing production bugs, and building new UI components for an app processing real financial transactions in remote areas.",
+      "52 merged PRs migrating 10 modules of the Mifos Field Officer app to KMP/CMP — refactoring client screens to the latest Figma designs, adding type-safe navigation, fixing production bugs, and building new UI components for an app processing real financial transactions in remote areas.",
     metrics: [
       { value: "52", label: "PRs merged" },
-      { value: "5", label: "Modules migrated" },
+      { value: "10", label: "Modules migrated" },
       { value: "100%", label: "Offline-capable" },
     ],
     tech: ["Kotlin Multiplatform", "Compose Multiplatform", "Room", "MVI"],
@@ -427,7 +427,6 @@ export const achievements = [
   { title: "GFG Institute Rank 1", detail: "1000+ problems — first among all institute peers.", tag: "DSA" },
   { title: "CodeChef 3★", detail: "Consistent contest performance.", tag: "DSA" },
   { title: "HackerRank 5★", detail: "Problem Solving — 500+ challenges.", tag: "DSA" },
-  { title: "GSoC / C4GT Interviewer", detail: "Conducting interviews and onboarding for open-source programs.", tag: "Mentorship" },
   { title: "Qualified NMMS", detail: "National Means-cum-Merit Scholarship at school level.", tag: "Academics" },
 ];
 

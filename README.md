@@ -75,7 +75,7 @@ Leadership/volunteer: SRC DSA Coordinator & Mentor, Dept. Social Media Manager, 
    - GitHub: <https://github.com/revanthkumarJ/ExpenseTrackr>
    - Play Store: **placeholder — link is commented out in code; uncomment when the app goes public**
 2. **📱 Mifos-Mobile KMP migration** — 45+ merged PRs, 7 modules migrated to KMP/CMP (Android, iOS, Web/WASM, Desktop). [GitHub](https://github.com/openMF/mifos-mobile) · [Play Store](https://play.google.com/store/apps/details?id=org.mifos.mobile)
-3. **🏦 Android-Client KMP migration** — 52 merged PRs, 5 modules migrated, production banking app. [GitHub](https://github.com/openMF/android-client) · [Play Store](https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid)
+3. **🏦 Android-Client KMP migration** — 52 merged PRs, 10 modules migrated, production banking app. [GitHub](https://github.com/openMF/android-client) · [Play Store](https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid)
 4. **🎪 Abhiyanth Fest website** — frontend team lead; React, Redux, Firebase, Material UI, CashFree payments. [GitHub](https://github.com/revanthkumarJ/abhiyanth-client)
 
 **Compact grid projects:** Meme Studio (KMP/CMP), Swipe assignment app, KisanConnect (client/API/app), Finance client+API, Sports Auction, Departmental Resource Management app, Instagram UI clone, Netflix UI clone — data lives in the old `src/components/Projects/Projects.js`.
