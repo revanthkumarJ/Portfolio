@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Lenis from "lenis";
+import InterviewHome from "./pages/interview/InterviewHome.jsx";
+import TopicPage from "./pages/interview/TopicPage.jsx";
 import Nav from "./sections/Nav.jsx";
 import Hero from "./sections/Hero.jsx";
 import About from "./sections/About.jsx";
@@ -12,7 +15,7 @@ import Contact from "./sections/Contact.jsx";
 import Footer from "./sections/Footer.jsx";
 import { ResumeProvider } from "./ui/resume.jsx";
 
-export default function App() {
+function Home() {
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.12, smoothWheel: true });
     let raf;
@@ -57,5 +60,18 @@ export default function App() {
       <Footer />
     </div>
     </ResumeProvider>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/interview_preparation" element={<InterviewHome />} />
+        <Route path="/interview_preparation/:categoryId/:topicId" element={<TopicPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
