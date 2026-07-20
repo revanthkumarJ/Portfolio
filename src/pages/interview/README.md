@@ -63,8 +63,11 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Firebase** — expanded (Cloud Messaging/FCM 30, Crashlytics & Analytics 30,
   Remote Config/A-B/App Distribution 30, Auth & Databases 30). Every topic ≥ 30
   questions, teaching-first answers.
-- ⬜ KMP, System Design — pending expansion (many topics already ≥ 30; audit and
-  top up).
+- ✅ **Kotlin Multiplatform** — expanded (KMP Fundamentals 30, iOS Interop 30,
+  Libraries & Compose Multiplatform 30). Every topic ≥ 30 questions, teaching-first
+  answers.
+- ⬜ System Design — pending expansion (many topics already ≥ 30; audit and top
+  up).
 
 **Completed**
 - ✅ **Architecture** — MVC, MVP, MVVM, MVI, Clean Architecture, Modularization

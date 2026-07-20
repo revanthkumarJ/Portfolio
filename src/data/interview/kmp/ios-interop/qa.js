@@ -148,6 +148,581 @@ class ProfileObservable: ObservableObject {
       },
     ],
   },
+  {
+    level: "senior",
+    q: "How does the Kotlin-to-Objective-C bridge work?",
+    a: [
+      {
+        t: "p",
+        text: "Kotlin/Native compiles your shared module into an *Objective-C-compatible framework* — it generates an Obj-C *header* exposing your Kotlin classes/functions as Obj-C interfaces, which Swift consumes via its Obj-C interop. So Swift calls Kotlin *through Obj-C* (not directly). This bridge shapes what's exposed: Kotlin types map to Obj-C/Swift equivalents, but *Obj-C's limitations* (no generics richness, no default args, no sealed exhaustiveness, name mangling) leak into the Swift API — which is exactly what tools like SKIE smooth over.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Kotlin/Native** — outputs an Obj-C-compatible framework.",
+          "**Generates** — an Obj-C header of your Kotlin API.",
+          "**Swift** — calls Kotlin via Obj-C interop.",
+          "**Obj-C limits** — leak into the Swift API (SKIE smooths).",
+        ],
+      },
+      {
+        t: "note",
+        text: "Kotlin/Native outputs an Obj-C-compatible framework — generating an Obj-C header exposing Kotlin classes/functions, which Swift consumes via Obj-C interop (Swift → Obj-C → Kotlin). The bridge shapes the API: Obj-C limitations (weak generics, no default args, no sealed exhaustiveness, mangling) leak into Swift — exactly what SKIE smooths over.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do Kotlin types map to Swift/Objective-C?",
+    a: [
+      {
+        t: "p",
+        text: "Common mappings: Kotlin `String`↔`String`, `Int`/`Long`↔`Int`/`Int64` (boxed as `KotlinInt` in generics), `List`↔`Array`, `Map`↔`Dictionary`, nullable↔optional. But: Kotlin *generics* become loosely-typed (often `Any`/`id`) across the bridge, `sealed class`es lose exhaustiveness (Swift can't `switch` exhaustively), *default parameters* disappear (all args required), `data class` niceties (copy/componentN) aren't exposed, and companion objects/enums map awkwardly. Design shared APIs aware of this — prefer simple, explicit signatures, and use SKIE to restore sealed/Flow ergonomics.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Basics** — String/collections/nullable map cleanly.",
+          "**Generics** — lose type info across the bridge.",
+          "**Sealed classes** — no Swift exhaustiveness.",
+          "**Default args/data-class niceties** — not exposed.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Mappings: String/Int/List/Map/nullable map to Swift equivalents (Int boxed as KotlinInt in generics). But Kotlin generics lose type info, sealed classes lose exhaustiveness, default parameters disappear (all args required), and data-class copy/componentN aren't exposed. Design shared APIs with simple explicit signatures; use SKIE to restore sealed/Flow ergonomics.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you integrate the shared framework into an Xcode project?",
+    a: [
+      {
+        t: "p",
+        text: "Three common ways: *CocoaPods* (the KMP CocoaPods Gradle plugin publishes the shared module as a pod the iOS app depends on — simplest for many teams), *Swift Package Manager* (export the framework as an SPM package/XCFramework), or a *direct framework* (a Gradle task builds the `.framework`/XCFramework, added to Xcode's linked frameworks + a build phase). CocoaPods is popular for tight Gradle integration; XCFramework/SPM is cleaner for distributing a prebuilt binary. In all cases, Swift then `import shared` and calls the Kotlin API.",
+      },
+      {
+        t: "list",
+        items: [
+          "**CocoaPods** — KMP plugin publishes a pod (common).",
+          "**SPM** — export as an XCFramework/package.",
+          "**Direct framework** — Gradle builds `.framework`, link in Xcode.",
+          "**Then** — Swift `import shared` and call Kotlin.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Integrate via CocoaPods (KMP CocoaPods Gradle plugin publishes the shared module as a pod — simplest), Swift Package Manager (export as an XCFramework/package), or a direct framework (Gradle builds .framework/XCFramework, linked in Xcode with a build phase). CocoaPods for tight Gradle integration; XCFramework/SPM for a prebuilt binary. Then Swift import shared and calls Kotlin.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is KMP-NativeCoroutines, and how does it differ from SKIE?",
+    a: [
+      {
+        t: "p",
+        text: "Both solve *consuming Kotlin coroutines/Flows from Swift*. *KMP-NativeCoroutines* is a library where you *annotate* suspend/Flow APIs and it generates Swift-friendly wrappers (async/await, Combine publishers, or an async-sequence), with proper cancellation. *SKIE* is a *compiler plugin* that *transparently* enhances the generated Swift API — Flows become async sequences, suspend functions become Swift `async`, and *sealed classes become exhaustive Swift enums* — with little to no annotation. SKIE is more automatic/broad; NativeCoroutines is explicit/targeted. Both address the coroutine/Flow interop gap.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Both** — Swift-friendly coroutines/Flows.",
+          "**NativeCoroutines** — annotate APIs → generated wrappers.",
+          "**SKIE** — compiler plugin, transparent, + sealed→enum.",
+          "**SKIE** — broader/automatic; NativeCoroutines targeted.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Both make Kotlin coroutines/Flows Swift-friendly. KMP-NativeCoroutines: annotate suspend/Flow APIs → generated async/Combine wrappers with cancellation. SKIE: a compiler plugin that transparently turns Flows into async sequences, suspend into Swift async, and sealed classes into exhaustive Swift enums — minimal annotation. SKIE is broader/automatic; NativeCoroutines explicit/targeted.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle threading when Swift calls shared Kotlin code?",
+    a: [
+      {
+        t: "p",
+        text: "With the *new memory manager*, Kotlin/Native no longer requires freezing, so you can share state and run coroutines across threads much like Android. Still, be deliberate: *suspend functions* called from Swift should complete on a sensible dispatcher, and *UI updates must happen on the main thread* — ensure Flows/results are delivered on Main before Swift updates SwiftUI (tools like SKIE/NativeCoroutines and `MainScope`/`Dispatchers.Main` help). Avoid blocking the main thread with heavy shared work. The mental model is close to Android's main-safety, applied at the Swift boundary.",
+      },
+      {
+        t: "list",
+        items: [
+          "**New memory model** — no freezing; threads like Android.",
+          "**Deliver to Main** — before Swift updates SwiftUI.",
+          "**Tools** — SKIE/NativeCoroutines, Dispatchers.Main.",
+          "**Avoid** — blocking main with heavy shared work.",
+        ],
+      },
+      {
+        t: "note",
+        text: "The new memory manager removes freezing — share state/coroutines across threads like Android. Still, deliver Flow/suspend results on the main thread before Swift updates SwiftUI (SKIE/NativeCoroutines, Dispatchers.Main help), and don't block main with heavy shared work. The model is close to Android main-safety, applied at the Swift boundary.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you share a ViewModel between Android and iOS?",
+    a: [
+      {
+        t: "p",
+        text: "Put a *shared ViewModel/presenter* in `commonMain` exposing state as a `StateFlow` and actions as functions. Android collects the `StateFlow` in Compose normally. iOS consumes it via *SKIE/NativeCoroutines* (as an async sequence/Combine publisher, or an observable wrapper) and drives SwiftUI. Manage the *lifecycle*: the shared VM's `CoroutineScope` must be cancelled when the screen goes away — on iOS you call a `clear()`/`onCleared` from the view's disappear, since there's no Android `ViewModelStore`. Libraries like *Moko-MVVM* or *Decompose* help standardize this cross-platform.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Shared VM** — StateFlow state + action functions in common.",
+          "**Android** — collect StateFlow in Compose.",
+          "**iOS** — SKIE/NativeCoroutines → SwiftUI.",
+          "**Lifecycle** — cancel the scope on iOS disappear (no ViewModelStore).",
+        ],
+      },
+      {
+        t: "note",
+        text: "Share a ViewModel/presenter in commonMain exposing StateFlow state + action functions. Android collects it in Compose; iOS consumes via SKIE/NativeCoroutines into SwiftUI. Manage lifecycle: cancel the VM's CoroutineScope on iOS view-disappear (no Android ViewModelStore). Moko-MVVM/Decompose help standardize this cross-platform.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "Why must UI stay native (SwiftUI) even when logic is shared?",
+    a: [
+      {
+        t: "p",
+        text: "In the *logic-sharing* KMP model, the shared module has *no UI* — each platform builds its own native UI (Compose on Android, SwiftUI on iOS) consuming the shared state/logic. This gives *fully native look, feel, and platform conventions* (navigation, gestures, accessibility) with no rendering compromise, while still guaranteeing consistent behavior via shared logic. (Compose Multiplatform can share UI too, but then iOS renders Compose, not SwiftUI.) So 'shared logic + native UI' deliberately keeps SwiftUI to preserve the best iOS UX.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Shared module** — no UI in the logic-sharing model.",
+          "**Native UI** — Compose + SwiftUI per platform.",
+          "**Benefit** — fully native UX + consistent shared behavior.",
+          "**Alternative** — CMP shares UI (Compose, not SwiftUI).",
+        ],
+      },
+      {
+        t: "note",
+        text: "In the logic-sharing model the shared module has no UI — each platform builds native UI (Compose/SwiftUI) over shared state/logic, giving fully native look/feel/conventions with consistent behavior. (Compose Multiplatform can share UI, but then iOS renders Compose, not SwiftUI.) 'Shared logic + native UI' keeps SwiftUI to preserve the best iOS UX.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you expose sealed classes to Swift usefully?",
+    a: [
+      {
+        t: "p",
+        text: "By default, a Kotlin *sealed class* crosses the bridge as a set of Obj-C classes *without exhaustiveness* — Swift can't `switch` over it with compiler-checked completeness (you'd use `if let ... as?` chains and a fallback). *SKIE* fixes this: it generates an *exhaustive Swift enum* for sealed classes/interfaces, so Swift gets a real `switch` with `case` per subtype and compile-time completeness. Without SKIE, expose a simpler API (e.g. an enum-like discriminator + accessors) to make consumption safe. Sealed-class ergonomics are a top reason teams adopt SKIE.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Default** — sealed loses Swift exhaustiveness (as? chains).",
+          "**SKIE** — generates exhaustive Swift enums with switch.",
+          "**Without SKIE** — expose a discriminator + accessors.",
+          "**Key reason** — teams adopt SKIE for this.",
+        ],
+      },
+      {
+        t: "note",
+        text: "By default a Kotlin sealed class crosses as Obj-C classes without exhaustiveness — Swift uses if-let-as? chains + fallback, no checked switch. SKIE generates an exhaustive Swift enum (real switch, compile-time completeness). Without SKIE, expose a simpler discriminator + accessors. Sealed-class ergonomics are a top reason to adopt SKIE.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle errors/exceptions across the Kotlin-Swift boundary?",
+    a: [
+      {
+        t: "p",
+        text: "Kotlin *unchecked exceptions* don't map to Swift's `throws` automatically — an uncaught Kotlin exception crossing the boundary *crashes* the app. To surface errors to Swift as `throws`, mark functions with *`@Throws`* (Kotlin) so they bridge to Swift error handling for the listed exception types. Better for domain errors: model them *in the return type* (a sealed `Result`/`Either`, or a state with an error field) so Swift handles them as *values*, not exceptions. Reserve `@Throws` for genuinely exceptional cases; prefer typed results across the boundary.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Unchecked exceptions** — crossing → crash.",
+          "**`@Throws`** — bridge listed exceptions to Swift `throws`.",
+          "**Prefer** — model errors as return values (Result/sealed).",
+          "**Reserve** — `@Throws` for truly exceptional cases.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Kotlin unchecked exceptions don't map to Swift throws — an uncaught one crossing the boundary crashes. Mark functions @Throws to bridge listed exceptions to Swift error handling. Better: model domain errors in the return type (sealed Result/Either or an error state) so Swift handles them as values. Reserve @Throws for truly exceptional cases; prefer typed results.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is an XCFramework, and why use it?",
+    a: [
+      {
+        t: "p",
+        text: "An *XCFramework* is Apple's format bundling a framework's binaries for *multiple architectures/platforms* (device arm64, simulator arm64/x64) in one artifact — so a single XCFramework works for both real devices and the simulator. KMP can produce an XCFramework for the shared module, which you distribute (via SPM/CocoaPods or drop-in) to the iOS app. It's the modern way to ship a *prebuilt* shared binary (e.g. so iOS devs don't need the full Kotlin build), versus building the framework from source each time.",
+      },
+      {
+        t: "list",
+        items: [
+          "**XCFramework** — multi-arch/platform framework bundle.",
+          "**One artifact** — device + simulator.",
+          "**KMP** — can produce it for the shared module.",
+          "**Use** — ship a prebuilt binary (SPM/CocoaPods).",
+        ],
+      },
+      {
+        t: "note",
+        text: "An XCFramework bundles a framework's binaries for multiple architectures/platforms (device + simulator) in one artifact. KMP can produce one for the shared module to distribute (SPM/CocoaPods/drop-in) to the iOS app — the modern way to ship a prebuilt shared binary (so iOS devs skip the full Kotlin build) instead of building from source each time.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you consume a Kotlin Flow from SwiftUI?",
+    a: [
+      {
+        t: "p",
+        text: "Raw, a `Flow` is hard to consume in Swift (no native collection of a suspend stream). With *SKIE*, a `Flow` becomes a Swift *async sequence* you can `for await` over (or an observable), and a `StateFlow` maps to something SwiftUI can bind. With *KMP-NativeCoroutines*, you get a Combine `Publisher` or async sequence. You then *collect* it in the SwiftUI view (e.g. in a `.task {}` or via an `@Observable`/`ObservableObject` wrapper) and update `@State`/`@Published` — always on the main thread. Cancel collection when the view disappears.",
+      },
+      {
+        t: "list",
+        items: [
+          "**SKIE** — Flow → Swift async sequence (`for await`).",
+          "**NativeCoroutines** — Flow → Combine Publisher/async.",
+          "**Collect** — in `.task {}` / an observable wrapper.",
+          "**Main thread + cancel** — on view disappear.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Consume a Flow in SwiftUI via SKIE (Flow → Swift async sequence, for await; StateFlow bindable) or KMP-NativeCoroutines (Combine Publisher/async sequence). Collect it in a .task {} or an @Observable/ObservableObject wrapper, updating @State/@Published on the main thread, and cancel collection when the view disappears.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What performance costs exist at the Kotlin-Swift interop boundary?",
+    a: [
+      {
+        t: "p",
+        text: "Crossing the Obj-C bridge isn't free: each *Swift↔Kotlin call* has overhead, and *object conversions* (Kotlin collections ↔ Swift Array/Dictionary, boxing primitives as `KotlinInt`) cost — so *chatty, fine-grained* interop (thousands of tiny calls, or converting huge collections repeatedly) can become a bottleneck. Mitigate with *coarse-grained* APIs (return a whole result object, not many getters), avoid unnecessary conversions, and don't put per-frame/hot-loop calls across the boundary. Execution *within* shared code is native-fast; the *boundary* is where you design carefully.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Per-call overhead** — each Swift↔Kotlin call.",
+          "**Conversions** — collections/primitives cost.",
+          "**Chatty interop** — many tiny calls = bottleneck.",
+          "**Mitigate** — coarse APIs, fewer conversions, no hot-loop crossing.",
+        ],
+      },
+      {
+        t: "note",
+        text: "The Obj-C boundary has costs: per-call overhead and object conversions (collections ↔ Array/Dictionary, boxing as KotlinInt). Chatty fine-grained interop (thousands of tiny calls, repeated huge-collection conversions) can bottleneck. Mitigate with coarse-grained APIs (return whole result objects), fewer conversions, no per-frame/hot-loop crossing. Shared execution is native-fast; design the boundary carefully.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do iOS developers debug shared Kotlin code?",
+    a: [
+      {
+        t: "p",
+        text: "Debugging spans two worlds: iOS devs debug Swift in *Xcode*, and can set breakpoints in the *shared Kotlin* (Kotlin/Native supports LLDB debugging, so you can step into Kotlin from Xcode with the right setup) — though the experience is less seamless than Android's. Kotlin devs debug shared logic in *Android Studio* (and via `commonTest`). Logging that surfaces on both platforms (a multiplatform logger like Napier/Kermit) helps. In practice, cover shared logic with *tests* (debuggable in AS) so you rarely need to step through Kotlin inside Xcode.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Xcode** — debug Swift; can breakpoint shared Kotlin (LLDB).",
+          "**Android Studio** — debug shared logic + `commonTest`.",
+          "**Logging** — multiplatform logger (Kermit/Napier).",
+          "**Best** — cover shared logic with tests to avoid stepping.",
+        ],
+      },
+      {
+        t: "note",
+        text: "iOS devs debug Swift in Xcode and can breakpoint shared Kotlin (Kotlin/Native LLDB support, less seamless than Android). Kotlin devs debug shared logic in Android Studio + commonTest. A multiplatform logger (Kermit/Napier) surfaces logs on both. Best practice: cover shared logic with tests (debuggable in AS) so you rarely step through Kotlin in Xcode.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you expose an enum or sealed hierarchy that Swift can switch on safely?",
+    a: [
+      {
+        t: "p",
+        text: "Kotlin `enum class`es map to Obj-C/Swift enums reasonably (Swift can switch, though not always exhaustively without help). For *sealed* hierarchies, use *SKIE* to get exhaustive Swift enums, or design the API so Swift can branch safely: expose a *discriminator property* (a Kotlin enum tag) plus typed accessors, so Swift switches on the tag. Avoid relying on Swift `as?` downcasts without a fallback (a new Kotlin subtype would silently fall through). The goal: Swift should handle *all* cases with compile-time confidence.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Enums** — map reasonably; Swift can switch.",
+          "**Sealed** — SKIE for exhaustive Swift enums.",
+          "**Or** — discriminator tag + typed accessors.",
+          "**Avoid** — bare `as?` without a fallback.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Kotlin enum classes map to Swift enums (switchable). For sealed hierarchies, use SKIE for exhaustive Swift enums, or expose a discriminator (enum tag) + typed accessors so Swift switches safely. Avoid bare as? downcasts without a fallback (a new subtype silently falls through). Goal: Swift handles all cases with compile-time confidence.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the developer workflow for a KMP team with Android and iOS devs?",
+    a: [
+      {
+        t: "p",
+        text: "Typically: *Kotlin/Android devs* own the shared module (write logic in `commonMain`, test in `commonTest`, work in Android Studio). *iOS devs* consume the shared framework in Xcode and build SwiftUI, occasionally contributing to shared code. The shared module is a *contract* both sides depend on — changes to its API affect both apps, so coordinate (versioning, clear APIs, tests). CI builds the shared module, runs `commonTest`, and produces the iOS framework. Good communication around the shared API surface is key to smooth collaboration.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Kotlin devs** — own shared module (AS, commonTest).",
+          "**iOS devs** — consume the framework, build SwiftUI.",
+          "**Shared module** — a contract both depend on.",
+          "**CI** — builds shared, runs tests, produces the framework.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Workflow: Kotlin/Android devs own the shared module (commonMain logic, commonTest, Android Studio); iOS devs consume the framework in Xcode and build SwiftUI, sometimes contributing to shared code. The shared module is a contract both apps depend on — coordinate API changes (versioning, tests). CI builds shared, runs commonTest, produces the iOS framework. Communication around the API surface is key.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you keep the shared API Swift-friendly by design?",
+    a: [
+      {
+        t: "p",
+        text: "Design the *public* shared API for the Obj-C bridge: prefer *simple, explicit signatures* (avoid heavy generics that lose type info), *don't rely on default arguments* (provide explicit overloads), model errors as *return values*, expose *coarse-grained* functions (fewer boundary calls), keep names clear (Obj-C mangling can produce ugly Swift), and use *SKIE* to restore Flow/sealed/async ergonomics. Treat the shared API like a *published SDK for Swift consumers* — internal Kotlin can be idiomatic, but the exposed surface should be pleasant and safe in Swift.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Simple signatures** — avoid type-losing generics.",
+          "**Explicit overloads** — no reliance on default args.",
+          "**Errors as values; coarse APIs** — fewer boundary calls.",
+          "**SKIE** — restore Flow/sealed/async; treat as an SDK.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Design the public shared API for the Obj-C bridge: simple explicit signatures (avoid type-losing generics), explicit overloads (no default-arg reliance), errors as return values, coarse-grained functions (fewer boundary calls), clear names (avoid ugly mangling), and SKIE for Flow/sealed/async. Treat the exposed surface as a published SDK for Swift — internal Kotlin can be idiomatic, the API should be Swift-pleasant.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you manage dependency injection across the Kotlin-Swift boundary?",
+    a: [
+      {
+        t: "p",
+        text: "Use a *multiplatform DI* (Koin, or manual factory) in `commonMain` to wire shared dependencies. Expose a *single entry point* (e.g. a `KoinComponent`/factory object or a small facade) that iOS calls to obtain shared objects, rather than iOS constructing internal graph pieces. Platform-specific dependencies (an iOS keychain, a URL session) are provided via `expect`/`actual` or injected from the platform side into the shared graph at startup. Keep the graph *initialized once* (call an `initKoin()` from both apps' startup). Swift shouldn't manage Kotlin's internal DI — give it a clean facade.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Multiplatform DI** — Koin/manual in commonMain.",
+          "**Single entry point** — facade for iOS to get shared objects.",
+          "**Platform deps** — via expect/actual or injected at startup.",
+          "**Init once** — `initKoin()` from both apps.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Use multiplatform DI (Koin/manual) in commonMain, exposing a single entry point/facade iOS calls to obtain shared objects (don't have iOS build internal graph pieces). Provide platform deps (keychain, URL session) via expect/actual or inject them into the shared graph at startup. Initialize once (initKoin() from both apps). Give Swift a clean facade, not Kotlin's internal DI.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "Can iOS use Jetpack Compose through KMP?",
+    a: [
+      {
+        t: "p",
+        text: "Yes — via *Compose Multiplatform*, which now supports iOS (stable): you write *shared Compose UI* that renders on iOS (through Skia, in a `UIViewController` you embed in SwiftUI/UIKit). This shares the UI layer, not just logic. But it means iOS shows *Compose-rendered* UI, not native SwiftUI — a trade-off in native feel and access to the latest SwiftUI components. Teams use it when maximal UI sharing outweighs native-UI purity; others keep native SwiftUI and share only logic. So iOS *can* use Compose, but it's an explicit choice.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Compose Multiplatform** — shared Compose UI on iOS (stable).",
+          "**Renders** — via Skia in a UIViewController.",
+          "**Trade-off** — Compose UI, not native SwiftUI.",
+          "**Choice** — max UI sharing vs native purity.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Yes — Compose Multiplatform supports iOS (stable): shared Compose UI renders on iOS via Skia (in a UIViewController embedded in SwiftUI/UIKit), sharing the UI layer. Trade-off: iOS shows Compose-rendered UI, not native SwiftUI (feel/latest-components). Use when maximal UI sharing outweighs native purity; otherwise keep SwiftUI and share only logic. Compose on iOS is an explicit choice.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle iOS-specific platform code within a KMP module?",
+    a: [
+      {
+        t: "p",
+        text: "Put it in `iosMain` (or a shared `appleMain`), where you *can call Apple platform APIs directly* — Kotlin/Native exposes *UIKit/Foundation* etc. via platform bindings (e.g. `platform.Foundation.NSDate`, `platform.UIKit`). Use `expect`/`actual` to give common code an implementation backed by these iOS APIs (e.g. `actual` reading the iOS keychain or `NSUserDefaults`). For C/Obj-C libraries without bindings, use *cinterop*. So iOS platform code lives in the iOS source set, calling Apple APIs, and satisfies `expect` declarations from common.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`iosMain`/`appleMain`** — call Apple APIs directly.",
+          "**Bindings** — `platform.Foundation`/`platform.UIKit`.",
+          "**`actual`** — iOS-backed impls (keychain, NSUserDefaults).",
+          "**cinterop** — for unbound C/Obj-C libraries.",
+        ],
+      },
+      {
+        t: "note",
+        text: "iOS-specific code goes in iosMain/appleMain, calling Apple APIs directly via Kotlin/Native bindings (platform.Foundation.NSDate, platform.UIKit). Use expect/actual so common declares and iosMain implements (keychain, NSUserDefaults). For unbound C/Obj-C libraries, use cinterop. iOS platform code lives in the iOS source set, calls Apple APIs, and satisfies common's expect declarations.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What are the main friction points of KMP iOS interop today?",
+    a: [
+      {
+        t: "p",
+        text: "Key frictions: *coroutines/Flows* aren't natively Swift-consumable (need SKIE/NativeCoroutines); *sealed classes* lose exhaustiveness; *generics* degrade across the bridge; *default arguments* and some Kotlin niceties don't survive; *debugging* shared code in Xcode is less smooth; the *two-IDE* workflow (Android Studio + Xcode); and *build/tooling* setup (framework export, CocoaPods) has a learning curve. Most are *mitigated* (SKIE, better tooling, the new memory model), and the trajectory is steadily improving — but they're the realistic rough edges to plan for.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Coroutines/Flows** — need SKIE/NativeCoroutines.",
+          "**Sealed/generics/default args** — degrade across the bridge.",
+          "**Debugging + two-IDE** — less smooth.",
+          "**Mitigated** — SKIE, tooling, new memory model; improving.",
+        ],
+      },
+      {
+        t: "note",
+        text: "KMP iOS interop frictions: coroutines/Flows not natively Swift-consumable (SKIE/NativeCoroutines), sealed classes lose exhaustiveness, generics degrade, default args/niceties don't survive, Xcode debugging of shared code is rough, the two-IDE workflow, and build/tooling setup. Most are mitigated (SKIE, tooling, new memory model) and steadily improving — realistic rough edges to plan for.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you version and distribute the shared framework to the iOS team?",
+    a: [
+      {
+        t: "p",
+        text: "Two models: *build from source* (the iOS build runs the Gradle framework task each time — always current, but iOS devs need the Kotlin toolchain and pay build time) or *distribute a prebuilt binary* (publish a versioned *XCFramework* via SPM/CocoaPods/a binary repo — iOS devs pull a release, faster, no Kotlin build, but you manage versioning/publishing). Larger teams often prefer prebuilt binaries with *semantic versions* and a *changelog*, treating the shared module like an internal SDK. Match the model to team size and how often the shared API changes.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Build from source** — always current; needs Kotlin toolchain.",
+          "**Prebuilt binary** — versioned XCFramework via SPM/CocoaPods.",
+          "**Prebuilt** — faster, no Kotlin build, manage versioning.",
+          "**Larger teams** — semantic versions + changelog (like an SDK).",
+        ],
+      },
+      {
+        t: "note",
+        text: "Distribute the shared framework by building from source (iOS build runs the Gradle task each time — current, but needs the Kotlin toolchain + build time) or a prebuilt binary (versioned XCFramework via SPM/CocoaPods/binary repo — faster, no Kotlin build, you manage versioning). Larger teams prefer prebuilt with semantic versions + changelog, treating shared as an internal SDK. Match to team size + API churn.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is Skie's effect on the generated Swift API, concretely?",
+    a: [
+      {
+        t: "p",
+        text: "Concretely, SKIE transforms the auto-generated Swift API to feel *idiomatic*: Kotlin `suspend` functions become Swift `async` functions (awaitable, cancellable); `Flow`/`StateFlow` become Swift *async sequences* (and observable-friendly); *sealed classes/interfaces* become *exhaustive Swift enums* (real `switch`); and it improves *default-argument* handling and some type mappings. The net effect: iOS devs consume the shared module almost like a native Swift library, instead of wrestling with raw Obj-C-bridged signatures. It's a compiler plugin, so it works largely transparently.",
+      },
+      {
+        t: "list",
+        items: [
+          "**suspend** → Swift `async` (awaitable, cancellable).",
+          "**Flow** → Swift async sequence.",
+          "**sealed** → exhaustive Swift enum.",
+          "**Net** — consume shared like a native Swift library.",
+        ],
+      },
+      {
+        t: "note",
+        text: "SKIE makes the generated Swift API idiomatic: suspend → Swift async (awaitable/cancellable), Flow/StateFlow → Swift async sequences (observable-friendly), sealed classes → exhaustive Swift enums (real switch), plus better default-arg/type handling. Net: iOS devs consume the shared module almost like a native Swift library, not raw Obj-C-bridged signatures. It's a transparent compiler plugin.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is CocoaPods integration in a KMP project?",
+    a: [
+      {
+        t: "p",
+        text: "The *Kotlin CocoaPods Gradle plugin* lets your shared module be consumed as a *CocoaPod* by the iOS app: you configure the `cocoapods { }` block (name, version, framework name), and Gradle generates a *podspec* so the iOS `Podfile` can depend on `pod 'shared'`. Running `pod install` wires the framework into Xcode, and the plugin rebuilds it as part of the iOS build. It's a popular integration path because it fits existing iOS dependency workflows and keeps the shared framework current. It also lets the shared module *depend on* other pods if needed.",
+      },
+      {
+        t: "list",
+        items: [
+          "**CocoaPods plugin** — shared module as a pod.",
+          "**`cocoapods { }`** — generates a podspec.",
+          "**iOS Podfile** — `pod 'shared'`; `pod install` wires Xcode.",
+          "**Popular** — fits existing iOS dependency workflows.",
+        ],
+      },
+      {
+        t: "note",
+        text: "The Kotlin CocoaPods Gradle plugin makes the shared module a CocoaPod: configure cocoapods { } (name/version/framework), Gradle generates a podspec, the iOS Podfile does pod 'shared', pod install wires Xcode, and the plugin rebuilds the framework in the iOS build. Popular because it fits existing iOS dependency workflows and can let shared depend on other pods.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle cancellation of shared coroutines from Swift?",
+    a: [
+      {
+        t: "p",
+        text: "A Kotlin `suspend`/`Flow` launched for Swift must be *cancellable* so leaving a screen doesn't leak work. *SKIE* maps suspend to Swift `async` and Flow to async sequences that respect *Swift task cancellation* — cancelling the Swift `Task` cancels the underlying Kotlin coroutine. *KMP-NativeCoroutines* returns a cancellable handle/Combine cancellable you dispose. Without these, you'd manually expose a `Job`/`cancel()` for Swift to call on view disappear. The principle: tie the shared coroutine's lifecycle to the *SwiftUI view's lifecycle* (cancel on disappear) to avoid leaks — just like structured concurrency on Android.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Cancellable** — so leaving a screen doesn't leak.",
+          "**SKIE** — Swift Task cancellation → cancels the coroutine.",
+          "**NativeCoroutines** — cancellable handle/Combine cancellable.",
+          "**Tie** — coroutine lifecycle to the SwiftUI view.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Make shared suspend/Flow cancellable so leaving a screen doesn't leak. SKIE ties Swift Task cancellation to the underlying Kotlin coroutine; KMP-NativeCoroutines returns a cancellable handle/Combine cancellable to dispose. Otherwise expose a Job/cancel() for Swift to call on disappear. Tie the coroutine lifecycle to the SwiftUI view's lifecycle — like structured concurrency on Android.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you test the iOS integration of shared code?",
+    a: [
+      {
+        t: "p",
+        text: "Layered: cover shared *logic* with `commonTest` (runs on all targets, including the iOS/Native target — so it validates the code compiles and behaves on Native, not just JVM). Add *iosTest* for iOS-specific `actual`s. Then test the *integration* from the *Swift side* (XCTest calling the shared framework) to verify the *bridged API* works as expected (coroutines/Flows via SKIE, error mapping). Run the Native `commonTest` in CI to catch Native-only issues early (some code compiles on JVM but not Native). This catches interop regressions before iOS devs hit them.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`commonTest` on Native** — validates behavior + Native compilation.",
+          "**`iosTest`** — iOS-specific `actual`s.",
+          "**Swift XCTest** — the bridged API from the iOS side.",
+          "**CI** — run Native tests to catch Native-only issues.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Test iOS integration in layers: commonTest (runs on the Native target too — validates behavior + that code compiles on Native), iosTest for iOS-specific actuals, and Swift XCTest calling the shared framework to verify the bridged API (SKIE Flows, error mapping). Run Native commonTest in CI (some code compiles on JVM but not Native) to catch interop regressions before iOS devs hit them.",
+      },
+    ],
+  },
 ];
 
 export default qa;
