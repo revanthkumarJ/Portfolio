@@ -38,6 +38,8 @@ shippable between categories.
   Hilt (Android DI), Koin/KMP DI & Testing
 - ✅ **Background Work** — WorkManager Fundamentals, WorkManager Advanced,
   AlarmManager & Foreground Services, Doze/Battery & Choosing the Right Tool
+- ✅ **Testing** — Testing Strategy & the Pyramid, Unit Testing (JUnit/Fakes/
+  Mocks), Coroutine & Flow Testing, Android & Compose Testing
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
