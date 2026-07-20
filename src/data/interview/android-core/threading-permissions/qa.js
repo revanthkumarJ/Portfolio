@@ -151,6 +151,634 @@ when {
       },
     ],
   },
+  {
+    level: "junior",
+    q: "What is the main thread, and what runs on it?",
+    a: [
+      {
+        t: "p",
+        text: "The main thread (a.k.a. the UI thread) is where Android runs your app's UI rendering, lifecycle callbacks, input event handling, and the message loop (`Looper`). Because it's single-threaded and drives the UI, any slow work on it freezes the app. All UI updates *must* happen here; all heavy work must happen *off* it.",
+      },
+      {
+        t: "list",
+        items: [
+          "**UI + lifecycle + input** — all run on the main thread.",
+          "**`Looper`/message queue** — the main thread processes messages continuously.",
+          "**Single-threaded** — slow work blocks rendering (jank/ANR).",
+          "**Rule** — UI only on main; heavy work off main (coroutines).",
+        ],
+      },
+      {
+        t: "note",
+        text: "The main (UI) thread runs UI rendering, lifecycle callbacks, input handling, and the Looper message loop. It's single-threaded, so slow work freezes the UI (jank/ANR). All UI updates must happen here; all heavy/blocking work must go off it (coroutines/executors).",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the difference between synchronized, @Volatile, and atomic types?",
+    a: [
+      {
+        t: "p",
+        text: "These solve different aspects of thread safety. `synchronized` provides *mutual exclusion* (a lock) around a block/method so only one thread runs it at a time. `@Volatile` guarantees *visibility* (writes are seen by other threads immediately) but not atomicity. Atomic types (`AtomicInteger`, `AtomicReference`) provide *lock-free atomic operations* (compare-and-set) for single variables.",
+      },
+      {
+        t: "code",
+        title: "Three tools",
+        code: `@Synchronized fun update() { shared++ }         // mutual exclusion (lock)
+@Volatile var running = true                     // visibility only (flag)
+val counter = AtomicInteger(0); counter.incrementAndGet()   // atomic single-var op`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`synchronized`** — mutual exclusion; for compound critical sections.",
+          "**`@Volatile`** — visibility only; for a simple flag (not `count++`).",
+          "**Atomics** — lock-free atomic ops on one variable (counters, CAS).",
+          "**Coroutines** — prefer `Mutex`/immutable state + `StateFlow.update` in coroutine code.",
+        ],
+      },
+      {
+        t: "note",
+        text: "synchronized = mutual exclusion (lock, compound sections); @Volatile = visibility only (a flag — count++ is still a race); atomics (AtomicInteger/Reference) = lock-free atomic ops on one variable (CAS). In coroutine code prefer Mutex or immutable state + StateFlow.update over these Java primitives.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the POST_NOTIFICATIONS runtime permission (API 33+)?",
+    a: [
+      {
+        t: "p",
+        text: "On Android 13 (API 33), posting notifications requires the `POST_NOTIFICATIONS` *runtime* permission — declare it and request it from the user (previously notifications needed no permission). Without it, your notifications are silently *not shown*. Request in context (when the user enables a notifying feature) and handle denial gracefully.",
+      },
+      {
+        t: "code",
+        title: "Notification permission",
+        code: `<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+if (Build.VERSION.SDK_INT >= 33) launcher.launch(Manifest.permission.POST_NOTIFICATIONS)`,
+      },
+      {
+        t: "list",
+        items: [
+          "**API 33+ runtime permission** — notifications now require user grant.",
+          "**Silently dropped** — without it, notifications don't appear.",
+          "**Request in context** — when enabling a notifying feature.",
+          "**Below 33** — implicitly granted (declare it; no prompt).",
+        ],
+      },
+      {
+        t: "note",
+        text: "Android 13 (API 33) made POST_NOTIFICATIONS a runtime permission — declare and request it, or notifications are silently dropped (before 33, none needed). Request in context; handle denial gracefully. On <33 it's implicitly granted.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is permission auto-reset for unused apps?",
+    a: [
+      {
+        t: "p",
+        text: "Android automatically *revokes* runtime permissions from apps the user hasn't opened in a few months (auto-reset, Android 11+, Play-backported). So a permission you were granted may be *gone* when the user returns — always re-check permissions (never cache 'granted' permanently) and re-request if needed.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Auto-reset** — unused apps lose runtime permissions after months.",
+          "**Re-check every time** — don't assume a past grant still holds.",
+          "**Re-request** — as normal if revoked.",
+          "**`isAutoRevokeWhitelisted`** — check/prompt to exempt only if justified.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Android auto-resets (revokes) runtime permissions for apps unused for months (API 11+, Play-backported) — so always re-check permissions each time (never cache 'granted' permanently) and re-request if revoked. Prompt to disable auto-reset only if genuinely justified.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle 'don't ask again' / permanently denied permissions?",
+    a: [
+      {
+        t: "p",
+        text: "When a user denies a permission and checks 'don't ask again' (or denies twice on modern Android), the system won't show the dialog again — `shouldShowRequestPermissionRationale` returns `false` *and* it's not granted. Detect this state and direct the user to *App Settings* (via an intent to `ACTION_APPLICATION_DETAILS_SETTINGS`) to grant it manually, with an explanation of why it's needed.",
+      },
+      {
+        t: "code",
+        title: "Send to settings",
+        code: `if (!granted && !shouldShowRequestPermissionRationale(permission)) {
+    // permanently denied -> guide to settings
+    startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", packageName, null)))
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Permanently denied** — not granted AND `shouldShowRationale` false.",
+          "**Can't re-prompt** — the system won't show the dialog.",
+          "**Guide to settings** — `ACTION_APPLICATION_DETAILS_SETTINGS` with rationale.",
+          "**Degrade gracefully** — offer reduced functionality if they decline.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Permanently denied = not granted AND shouldShowRequestPermissionRationale returns false — the system won't re-prompt. Detect it and send the user to App Settings (ACTION_APPLICATION_DETAILS_SETTINGS) with an explanation. Degrade gracefully if they still decline.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do location permissions work (foreground, background, coarse/fine)?",
+    a: [
+      {
+        t: "p",
+        text: "Location is tiered: `ACCESS_COARSE_LOCATION` (approximate) and `ACCESS_FINE_LOCATION` (precise) are foreground permissions requested together (users can grant only coarse on Android 12+). `ACCESS_BACKGROUND_LOCATION` is a *separate* request that must come *after* foreground is granted, and routes through settings ('Allow all the time'). Request the minimum you need and only when needed.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Coarse vs fine** — approximate vs precise; users may grant only coarse (API 31+).",
+          "**Foreground first** — request coarse/fine together while in use.",
+          "**Background separately** — `ACCESS_BACKGROUND_LOCATION` after foreground, via settings.",
+          "**Minimize** — request the least precision/scope needed, in context.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Location tiers: COARSE (approximate) + FINE (precise) requested together as foreground (users may grant only coarse on API 31+); BACKGROUND_LOCATION is a separate request AFTER foreground, routed through settings ('Allow all the time'). Request the minimum precision/scope, in context, and handle coarse-only grants.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the Choreographer, and how does it relate to jank?",
+    a: [
+      {
+        t: "p",
+        text: "The `Choreographer` coordinates the app's work with the display's *vsync* signal — it schedules input, animation, and draw callbacks to run once per frame (~16.6ms at 60Hz). If your main-thread work for a frame exceeds the budget, the frame is *dropped* (jank). Tools like `FrameMetrics` and the Choreographer's frame callbacks help measure per-frame timing.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Vsync-driven** — schedules per-frame input/animation/draw callbacks.",
+          "**Frame budget** — ~16.6ms (60Hz), ~8.3ms (120Hz); exceed it = dropped frame (jank).",
+          "**Measure** — `FrameMetrics`, JankStats, Perfetto per-frame timing.",
+          "**Cause of jank** — heavy main-thread work stealing the frame budget.",
+        ],
+      },
+      {
+        t: "note",
+        text: "The Choreographer syncs the app's input/animation/draw work to the display's vsync, once per frame (~16.6ms at 60Hz). Main-thread work exceeding the frame budget drops the frame (jank). Measure with FrameMetrics/JankStats/Perfetto. Jank = heavy main-thread work stealing the frame budget.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the difference between blocking and suspending on Android?",
+    a: [
+      {
+        t: "p",
+        text: "A *blocking* call (`Thread.sleep`, synchronous network/disk) *occupies its thread* until it returns — on the main thread that freezes the UI; on a pool thread it ties up a worker. A *suspending* call (`delay`, a suspend network call) *releases the thread* while waiting, so the thread runs other work. Coroutines make waiting non-blocking, which is why they scale and keep the UI responsive.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Blocking** — holds the thread until done (freezes UI on main; ties up a worker).",
+          "**Suspending** — frees the thread while waiting; resumes later.",
+          "**`delay` vs `Thread.sleep`** — suspend vs block; use `delay` in coroutines.",
+          "**Main-safety** — suspend functions offload blocking internally (withContext).",
+        ],
+      },
+      {
+        t: "note",
+        text: "Blocking (Thread.sleep, sync I/O) holds its thread until done (freezes the UI on main, ties up a worker). Suspending (delay, suspend I/O) releases the thread while waiting and resumes later. Use delay over Thread.sleep in coroutines; suspend functions offload blocking work internally (main-safety).",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What thread does UI work happen on, and how do you get back to it?",
+    a: [
+      {
+        t: "p",
+        text: "All UI updates must happen on the main thread — touching a View from a background thread throws `CalledFromWrongThreadException`. To get back to the main thread: with coroutines, `withContext(Dispatchers.Main)` (or just launch on `Dispatchers.Main`); with Views, `runOnUiThread { }`, `view.post { }`, or a main-thread `Handler`. With `StateFlow`/Compose, update state from any thread and let the UI collect on main.",
+      },
+      {
+        t: "list",
+        items: [
+          "**UI on main only** — off-thread View access throws.",
+          "**Coroutines** — `withContext(Dispatchers.Main)` / launch on Main.",
+          "**Views** — `runOnUiThread`, `view.post`, main `Handler`.",
+          "**StateFlow/Compose** — update state anywhere, collect on main.",
+        ],
+      },
+      {
+        t: "note",
+        text: "UI updates must be on the main thread (off-thread View access throws CalledFromWrongThreadException). Get back via coroutines (withContext(Dispatchers.Main)), or Views (runOnUiThread/view.post/main Handler). With StateFlow/Compose, update state from any thread and let the UI collect on main.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the difference between concurrency approaches: Thread, Executor, Coroutines?",
+    a: [
+      {
+        t: "p",
+        text: "Raw `Thread` is low-level (manual creation, no pooling, easy to leak). `ExecutorService`/`ThreadPoolExecutor` pool threads and queue tasks (better resource use, callbacks/Futures). *Coroutines* are the modern default: lightweight (multiplexed on a pool), structured (lifecycle-scoped cancellation), sequential-looking, with easy thread switching. Use coroutines for app code; executors when integrating Java libraries; raw threads almost never.",
+      },
+      {
+        t: "table",
+        headers: ["", "Thread", "Executor", "Coroutines"],
+        rows: [
+          ["Pooling", "no", "yes", "yes (dispatchers)"],
+          ["Cancellation", "manual", "Future.cancel", "structured/automatic"],
+          ["Style", "callbacks", "Futures/callbacks", "sequential"],
+          ["Weight", "heavy", "medium", "light"],
+        ],
+      },
+      {
+        t: "list",
+        items: [
+          "**`Thread`** — low-level, no pooling; avoid directly.",
+          "**`ExecutorService`** — pooled, queued; Java-friendly.",
+          "**Coroutines** — lightweight, structured, sequential; the modern default.",
+          "**Interop** — `Executor.asCoroutineDispatcher()` bridges them.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Thread: low-level, no pooling (avoid). Executor/ThreadPoolExecutor: pooled, queued, Java-friendly (Futures). Coroutines: lightweight (multiplexed), structured (lifecycle cancellation), sequential — the modern default for app code. Use executors for Java-library interop (Executor.asCoroutineDispatcher bridges), raw threads almost never.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you declare and check a permission in the manifest and code?",
+    a: [
+      {
+        t: "p",
+        text: "Declare every permission with `<uses-permission android:name=\"...\"/>` in the manifest (both install-time and runtime). For runtime permissions, also check at runtime with `ContextCompat.checkSelfPermission(context, permission) == PERMISSION_GRANTED` before using the protected API, and request it if not granted.",
+      },
+      {
+        t: "code",
+        title: "Declare + check",
+        code: `<uses-permission android:name="android.permission.CAMERA" />
+// In code:
+if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+    == PackageManager.PERMISSION_GRANTED) { useCamera() }`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Manifest** — `<uses-permission>` for every permission.",
+          "**`checkSelfPermission`** — runtime check before using the API.",
+          "**Request if missing** — via the Activity Result API.",
+          "**Handle revocation** — permissions can be revoked while the app runs.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Declare all permissions with <uses-permission> in the manifest. For runtime permissions, check ContextCompat.checkSelfPermission(...) == PERMISSION_GRANTED before using the protected API, and request via the Activity Result API if missing. Permissions can be revoked at runtime — always check, don't assume.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is scoped storage, and how did it change file access permissions?",
+    a: [
+      {
+        t: "p",
+        text: "Scoped storage (Android 10+) restricts broad file access: apps get their own sandboxed directory (no permission needed) and access to *media* via `MediaStore` (with granular media permissions on API 33+: `READ_MEDIA_IMAGES/VIDEO/AUDIO`), while `READ/WRITE_EXTERNAL_STORAGE` is largely deprecated. For arbitrary files, use the Storage Access Framework (user picks). The broad `MANAGE_EXTERNAL_STORAGE` is heavily restricted on Play.",
+      },
+      {
+        t: "list",
+        items: [
+          "**App-specific storage** — no permission for your own sandboxed dir.",
+          "**Media via `MediaStore`** — granular `READ_MEDIA_*` permissions (API 33+).",
+          "**`READ/WRITE_EXTERNAL_STORAGE` deprecated** — broad access gone.",
+          "**SAF for arbitrary files** — user picks; `MANAGE_EXTERNAL_STORAGE` Play-restricted.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Scoped storage (Android 10+): apps get a permission-free sandboxed dir and media via MediaStore (granular READ_MEDIA_IMAGES/VIDEO/AUDIO on API 33+); READ/WRITE_EXTERNAL_STORAGE is largely deprecated. Use SAF for arbitrary files (user picks). MANAGE_EXTERNAL_STORAGE (all files) is heavily Play-restricted.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What are HandlerThread and the main-thread message barrier?",
+    a: [
+      {
+        t: "p",
+        text: "A `HandlerThread` is a thread with its own `Looper`, so you can post work to it via a `Handler` and it runs serially off the main thread — useful for a dedicated background worker with ordered execution (e.g. sensor/camera callbacks). It's a lower-level tool; coroutines with a single-threaded dispatcher usually replace it in modern code.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`HandlerThread`** — a background thread with a `Looper`; post via a `Handler`.",
+          "**Serial execution** — ordered work off the main thread.",
+          "**Uses** — dedicated worker for camera/sensor callbacks, ordered background tasks.",
+          "**Modern** — a single-threaded coroutine dispatcher usually replaces it.",
+        ],
+      },
+      {
+        t: "note",
+        text: "A HandlerThread is a background thread with its own Looper — post work via a Handler for serial off-main execution (dedicated worker for camera/sensor callbacks, ordered tasks). Lower-level; a single-threaded coroutine dispatcher (limitedParallelism(1)) usually replaces it in modern code.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the difference between a permission group and an individual permission?",
+    a: [
+      {
+        t: "p",
+        text: "Dangerous permissions belong to *groups* (Location, Contacts, Camera, etc.). Historically, granting one permission in a group auto-granted others in it, but modern Android requires requesting each permission and shows per-permission dialogs. You still declare and request individual permissions (e.g. `ACCESS_FINE_LOCATION`), and the group mainly affects how the system presents them.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Permission groups** — Location, Contacts, Camera, Microphone, etc.",
+          "**Request individual permissions** — declare/request each specific one.",
+          "**Per-permission dialogs** — modern Android prompts individually.",
+          "**Group context** — affects settings grouping and presentation.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Dangerous permissions belong to groups (Location/Contacts/Camera…). Modern Android requires requesting each individual permission (e.g. ACCESS_FINE_LOCATION) with per-permission dialogs; the group mainly affects how the system groups/presents them in settings. Don't assume one grant covers a group.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you switch threads with coroutines instead of Handlers?",
+    a: [
+      {
+        t: "p",
+        text: "Instead of posting between threads with `Handler`s, use `withContext(dispatcher)` to move a block of work: `withContext(Dispatchers.IO) { }` for blocking I/O, `Dispatchers.Default` for CPU work, and the coroutine automatically returns to its original (Main) dispatcher after. This replaces the error-prone Handler-posting pattern with clean sequential code.",
+      },
+      {
+        t: "code",
+        title: "withContext replaces Handler posting",
+        code: `viewModelScope.launch {                     // Main
+    val data = withContext(Dispatchers.IO) { loadFromDisk() }   // background
+    render(data)                            // back on Main automatically
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`withContext(IO/Default)`** — move a block to a background dispatcher.",
+          "**Auto-return** — resumes on the original dispatcher (Main) after.",
+          "**No `Handler` juggling** — sequential, readable.",
+          "**Main-safe repos** — push `withContext` into the data layer.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Use withContext(Dispatchers.IO/Default) to move a block off main; the coroutine auto-returns to its original (Main) dispatcher after — replacing Handler.post thread-switching with clean sequential code. Push withContext into main-safe repository functions so the ViewModel stays on Main.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is a race condition, and how do you avoid it on Android?",
+    a: [
+      {
+        t: "p",
+        text: "A race condition happens when two threads access shared mutable state concurrently and the result depends on timing — causing lost updates or corruption (e.g. two threads incrementing a counter). Avoid it by: confining state to one thread (main thread / single dispatcher), using atomics (`AtomicInteger`) or a `Mutex` for critical sections, or — best — using immutable state updated atomically (`StateFlow.update`).",
+      },
+      {
+        t: "list",
+        items: [
+          "**Race** — concurrent access to shared mutable state; timing-dependent bugs.",
+          "**Confinement** — keep state on one thread (main / single dispatcher).",
+          "**Atomics/Mutex** — for shared counters/critical sections.",
+          "**Immutable + atomic update** — `StateFlow.update { it.copy() }` (preferred).",
+        ],
+      },
+      {
+        t: "note",
+        text: "A race condition = concurrent access to shared mutable state with timing-dependent results (lost updates/corruption). Avoid via thread confinement (single thread/dispatcher), atomics (AtomicInteger)/Mutex for critical sections, or best: immutable state updated atomically (StateFlow.update { it.copy() }).",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What special permissions require a settings-screen grant rather than a dialog?",
+    a: [
+      {
+        t: "p",
+        text: "Some high-impact permissions can't be granted via the normal dialog — the user must toggle them in a dedicated Settings screen. Examples: `SYSTEM_ALERT_WINDOW` (draw over other apps), `MANAGE_EXTERNAL_STORAGE` (all files access), `SCHEDULE_EXACT_ALARM` (exact alarms on API 31+), `POST_NOTIFICATIONS` is a normal runtime one but notification-listener access is special, and 'ignore battery optimizations'. You send the user there with a specific settings Intent.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`SYSTEM_ALERT_WINDOW`** — overlay; `ACTION_MANAGE_OVERLAY_PERMISSION`.",
+          "**`MANAGE_EXTERNAL_STORAGE`** — all files; Play-restricted.",
+          "**`SCHEDULE_EXACT_ALARM`** — exact alarms (API 31+).",
+          "**Route via Intent** — a specific settings screen, not a runtime dialog.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Special/high-impact permissions use a Settings-screen toggle, not a dialog: SYSTEM_ALERT_WINDOW (overlay), MANAGE_EXTERNAL_STORAGE (all files, Play-restricted), SCHEDULE_EXACT_ALARM (API 31+), ignore-battery-optimizations. Route the user via a specific settings Intent (e.g. ACTION_MANAGE_OVERLAY_PERMISSION).",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is thread starvation, and how can coroutine dispatchers cause it?",
+    a: [
+      {
+        t: "p",
+        text: "Thread starvation is when work can't proceed because all threads in a pool are occupied (often blocked). It happens if you run *blocking* code on a dispatcher not meant for it — e.g. blocking I/O on `Dispatchers.Default` (few, core-count threads), so a burst of blocking calls exhausts them and other CPU work stalls. Fix by using `Dispatchers.IO` for blocking work (or `limitedParallelism`), and never blocking a scarce pool.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Starvation** — no free thread to run ready work.",
+          "**Cause** — blocking calls on a small pool (`Default`) tie up its threads.",
+          "**Fix** — blocking I/O on `Dispatchers.IO` (large pool); CPU on `Default`.",
+          "**Bound** — `limitedParallelism` to cap concurrency for a resource.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Thread starvation = no free thread to run ready work, often because blocking calls occupy a small pool. Blocking I/O on Dispatchers.Default (core-count threads) can starve CPU work. Fix: run blocking work on Dispatchers.IO (large pool), CPU on Default; use limitedParallelism to bound a resource without starving.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you explain to the user why you need a permission (rationale)?",
+    a: [
+      {
+        t: "p",
+        text: "Show a *rationale* — a brief in-app explanation of *why* the feature needs the permission — *before* (or after a first denial of) the system dialog, gated by `shouldShowRequestPermissionRationale`. Request permissions *in context* (when the user triggers the feature), not upfront at launch, so the reason is obvious and grant rates are higher.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Rationale UI** — explain the benefit before the system prompt.",
+          "**`shouldShowRequestPermissionRationale`** — true after a denial (or to preempt).",
+          "**In-context requests** — ask when the feature is used, not at launch.",
+          "**Graceful denial** — offer reduced functionality if declined.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Show a rationale (why the feature needs the permission) before/after-first-denial, gated by shouldShowRequestPermissionRationale, and request in context (when the user triggers the feature) — not upfront at launch. Contextual requests with clear rationale get higher grant rates; degrade gracefully on denial.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How does structured concurrency prevent the leaks that plagued AsyncTask?",
+    a: [
+      {
+        t: "p",
+        text: "`AsyncTask` leaked because it wasn't tied to a lifecycle — an inner-class task held the Activity and kept running after it was destroyed. Structured concurrency fixes this: coroutines launched in `viewModelScope`/`lifecycleScope` are *owned* by that scope and *cancelled* when it ends, so the work stops and references are released. You can't accidentally leave orphaned work holding a dead screen.",
+      },
+      {
+        t: "list",
+        items: [
+          "**AsyncTask leak** — inner class holding the Activity, no lifecycle cancellation.",
+          "**Scoped coroutines** — owned by `viewModelScope`/`lifecycleScope`.",
+          "**Auto-cancellation** — work stops when the scope ends; references freed.",
+          "**No orphans** — structure prevents work outliving its owner.",
+        ],
+      },
+      {
+        t: "note",
+        text: "AsyncTask leaked because it wasn't lifecycle-tied (inner class holding the Activity, running past destruction). Structured concurrency: coroutines in viewModelScope/lifecycleScope are owned by the scope and cancelled when it ends, so work stops and references are freed — no orphaned work holding a dead screen.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "Which dispatcher should you use for network, database, and image processing?",
+    a: [
+      {
+        t: "p",
+        text: "Match the dispatcher to the workload: `Dispatchers.IO` for *waiting* work (network, disk, database reads) — it has many threads for concurrent blocking calls; `Dispatchers.Default` for *CPU-bound* work (image processing, JSON parsing, sorting) — sized to CPU cores; `Dispatchers.Main` only for UI updates. Room/Retrofit suspend functions are already main-safe, so you don't wrap those.",
+      },
+      {
+        t: "table",
+        headers: ["Work", "Dispatcher"],
+        rows: [
+          ["Network / disk / DB (waiting)", "IO"],
+          ["Image/JSON/CPU computation", "Default"],
+          ["UI updates", "Main"],
+        ],
+      },
+      {
+        t: "list",
+        items: [
+          "**`IO`** — waiting work (network/disk/DB); large pool.",
+          "**`Default`** — CPU work (image/parse/sort); core-count pool.",
+          "**`Main`** — UI only.",
+          "**Don't wrap main-safe libs** — Room/Retrofit suspend functions already switch.",
+        ],
+      },
+      {
+        t: "note",
+        text: "IO for waiting work (network/disk/DB — large pool), Default for CPU-bound work (image/JSON/sort — core-count pool), Main for UI. Room/Retrofit suspend functions are already main-safe (don't wrap them). Wrong dispatcher causes starvation/thrash.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you test permission-gated flows?",
+    a: [
+      {
+        t: "p",
+        text: "Abstract permission checking behind an interface (e.g. `PermissionChecker`) that you can *fake* in tests — so unit/ViewModel tests don't touch the real permission system. For instrumented tests, use `GrantPermissionRule` to grant permissions automatically, or UIAutomator to interact with the system dialog. Testing through an abstraction keeps logic tests fast and deterministic.",
+      },
+      {
+        t: "code",
+        title: "Testable permission checking",
+        code: `interface PermissionChecker { fun has(permission: String): Boolean }
+// Test: FakePermissionChecker(granted = false) -> assert the 'request' path
+
+// Instrumented:
+@get:Rule val grant = GrantPermissionRule.grant(Manifest.permission.CAMERA)`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Abstract behind an interface** — fake it in unit/ViewModel tests.",
+          "**`GrantPermissionRule`** — auto-grant for instrumented tests.",
+          "**UIAutomator** — interact with the real system dialog if needed.",
+          "**Deterministic** — the abstraction avoids depending on device state.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Abstract permission checks behind an interface (PermissionChecker) to fake in unit/ViewModel tests (assert request vs use paths). For instrumented tests, GrantPermissionRule auto-grants, or UIAutomator drives the system dialog. The abstraction keeps logic tests fast and deterministic.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What are the camera and microphone privacy indicators (Android 12+)?",
+    a: [
+      {
+        t: "p",
+        text: "Android 12 added *privacy indicators* — a small dot in the status bar (green) that appears whenever an app is *actively using* the camera or microphone, plus toggles in Quick Settings to disable camera/mic access globally. This means users can see and cut off access in real time, so your app should only access these sensors while genuinely needed and handle the case where access is toggled off.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Indicator dot** — shows active camera/mic use.",
+          "**Quick Settings toggles** — user can disable camera/mic globally.",
+          "**Handle revocation** — access can be cut off mid-use.",
+          "**Use minimally** — access sensors only when needed; release promptly.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Android 12+ privacy indicators show a status-bar dot when an app actively uses the camera/mic, plus Quick Settings toggles to disable them globally. Users see and can cut off access in real time — access these sensors only when needed, release promptly, and handle mid-use revocation gracefully.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle runtime permissions in a Compose screen?",
+    a: [
+      {
+        t: "p",
+        text: "Use `rememberLauncherForActivityResult(RequestPermission())` for the raw API, or Accompanist Permissions' `rememberPermissionState(permission)` / `rememberMultiplePermissionsState(...)` which expose the permission *status* (granted, denied, needs-rationale) as observable state you drive UI from. Request in response to a user action, show rationale, and route to settings if permanently denied.",
+      },
+      {
+        t: "code",
+        title: "Compose permission state",
+        code: `val cameraState = rememberPermissionState(Manifest.permission.CAMERA)
+when {
+    cameraState.status.isGranted -> CameraUi()
+    cameraState.status.shouldShowRationale -> RationaleUi { cameraState.launchPermissionRequest() }
+    else -> Button(onClick = { cameraState.launchPermissionRequest() }) { Text("Enable camera") }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`rememberLauncherForActivityResult`** — the raw Result API in Compose.",
+          "**Accompanist `rememberPermissionState`** — status as observable state.",
+          "**Branch on status** — granted / needs-rationale / denied.",
+          "**Request on action** — plus rationale and settings-redirect for permanent denial.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Compose: rememberLauncherForActivityResult(RequestPermission()) for the raw API, or Accompanist rememberPermissionState/rememberMultiplePermissionsState exposing status (granted/denied/shouldShowRationale) as observable state. Branch UI on status, request on a user action, show rationale, and route to settings on permanent denial.",
+      },
+    ],
+  },
 ];
 
 export default qa;
