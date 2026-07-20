@@ -36,6 +36,8 @@ shippable between categories.
   Serialization, Error Handling & Auth, Ktor & WebSockets
 - ✅ **Dependency Injection** — DI Fundamentals & Concepts, Dagger Fundamentals,
   Hilt (Android DI), Koin/KMP DI & Testing
+- ✅ **Background Work** — WorkManager Fundamentals, WorkManager Advanced,
+  AlarmManager & Foreground Services, Doze/Battery & Choosing the Right Tool
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &

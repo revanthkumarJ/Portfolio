@@ -12,6 +12,7 @@ import androidCore from "./android-core/index.js";
 import dataStorage from "./data-storage/index.js";
 import networking from "./networking/index.js";
 import dependencyInjection from "./dependency-injection/index.js";
+import backgroundWork from "./background-work/index.js";
 
 // Registry for the interview-preparation section. The hub and topic routes
 // render entirely from this — add categories/topics here, never in the JSX.
@@ -32,6 +33,7 @@ export const categories = [
   dataStorage,
   networking,
   dependencyInjection,
+  backgroundWork,
 ];
 
 export function findTopic(categoryId, topicId) {
