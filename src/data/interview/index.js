@@ -5,6 +5,7 @@ import mvi from "./architecture/mvi/index.js";
 import cleanArchitecture from "./architecture/clean-architecture/index.js";
 import modularization from "./architecture/modularization/index.js";
 import compose from "./compose/index.js";
+import coroutines from "./coroutines/index.js";
 import flows from "./flows/index.js";
 
 // Registry for the interview-preparation section. The hub and topic routes
@@ -19,6 +20,7 @@ export const categories = [
     topics: [mvc, mvp, mvvm, mvi, cleanArchitecture, modularization],
   },
   compose,
+  coroutines,
   flows,
 ];
 

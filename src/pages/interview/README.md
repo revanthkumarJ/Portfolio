@@ -21,10 +21,11 @@ shippable between categories.
 - ✅ **Kotlin Flows** — Basics & Cold Flows, Operators, StateFlow & SharedFlow,
   Buffering/Conflation/Backpressure, Context/flowOn/Conversions, Error Handling &
   Testing
+- ✅ **Coroutines** — Basics & Suspend, Builders & Scopes, Structured Concurrency
+  & Jobs, Dispatchers & Context, Cancellation, Exception Handling, Channels &
+  Synchronization
 
 **Pending (planned order — resume here)**
-2. **Coroutines** — suspend internals, builders, structured concurrency,
-   dispatchers, scopes, cancellation, exception handling, channels, select/mutex
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
    lambdas, scope functions, collections/sequences, generics & variance,
    delegates, lateinit/lazy, Java interop
