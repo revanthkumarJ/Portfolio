@@ -44,6 +44,8 @@ shippable between categories.
   Profiling/Startup/Baseline Profiles, App Size & Battery
 - ✅ **Build, Distribution & Play Store** — Gradle & the Build System, Signing/R8/
   Versioning, AAB/APK & Play App Signing, Play Console (tracks/rollouts/updates)
+- ✅ **Firebase** — Cloud Messaging (FCM), Crashlytics & Analytics, Remote Config/
+  A-B Testing/App Distribution, Auth & Databases
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &

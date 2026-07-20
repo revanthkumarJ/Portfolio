@@ -16,6 +16,7 @@ import backgroundWork from "./background-work/index.js";
 import testing from "./testing/index.js";
 import performance from "./performance/index.js";
 import distribution from "./distribution/index.js";
+import firebase from "./firebase/index.js";
 
 // Registry for the interview-preparation section. The hub and topic routes
 // render entirely from this — add categories/topics here, never in the JSX.
@@ -40,6 +41,7 @@ export const categories = [
   testing,
   performance,
   distribution,
+  firebase,
 ];
 
 export function findTopic(categoryId, topicId) {
