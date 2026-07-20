@@ -130,6 +130,581 @@ const qa = [
       },
     ],
   },
+  {
+    level: "senior",
+    q: "What are the layers of a feed's client architecture?",
+    a: [
+      {
+        t: "p",
+        text: "A feed client typically has: a *paginated list UI* (LazyColumn/RecyclerView with efficient item reuse), a *ViewModel* exposing paged UI state, a *Paging library* (Paging 3) coordinating page loads, a *RemoteMediator/repository* that fetches pages from the API and *caches them in a local DB* (Room) as the single source of truth (so the feed shows cached content offline and while refreshing), and the *network layer*. Images load via a *caching image loader* (Coil). This 'network → DB → UI' flow with paging is the canonical feed architecture — describe it clearly.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Paginated list UI** — efficient item reuse.",
+          "**ViewModel** — paged UI state.",
+          "**Paging + RemoteMediator** — pages into a local DB (SSOT).",
+          "**Image loader** — cached (Coil); offline-capable.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Feed client layers: paginated list UI (LazyColumn/RecyclerView, efficient reuse), ViewModel (paged state), Paging library + RemoteMediator/repository fetching pages into a local DB (Room SSOT — shows cached content offline/while refreshing), network layer, and a caching image loader (Coil). The 'network → DB → UI' paged flow is the canonical feed architecture.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you decide between server-side and client-side feed ranking?",
+    a: [
+      {
+        t: "p",
+        text: "*Server-side ranking* (the norm for large feeds) computes the ordered feed on the backend (using signals, ML, freshness) and the client just *displays* it — keeps ranking logic centralized, updatable without an app release, and leverages server data/compute. *Client-side* ranking/re-ordering is limited (the client lacks full signals and compute) but can do *light personalization* (recently viewed, local preferences) or *merge* multiple sources. Generally: *rank on the server, render on the client*. Discuss that the client shouldn't own core ranking, but may apply small local adjustments and handles *presentation* (dedup, seen-state).",
+      },
+      {
+        t: "list",
+        items: [
+          "**Server-side** — centralized ranking, updatable, full signals.",
+          "**Client-side** — light personalization/merging only.",
+          "**Rule** — rank on server, render on client.",
+          "**Client handles** — dedup, seen-state, presentation.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Rank on the server (centralized, ML/signals, updatable without release, full compute); the client displays. Client-side ranking is limited (lacks signals/compute) — only light personalization (recently viewed) or merging sources. Rule: rank on server, render on client. The client handles presentation (dedup, seen-state), not core ranking.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the difference between push and pull (fan-out) models for a feed?",
+    a: [
+      {
+        t: "p",
+        text: "This is a *backend* feed-generation choice: *fan-out on write* (push) — when a user posts, the post is *pushed into all followers' precomputed feeds* (fast reads, expensive writes, bad for celebrities with millions of followers). *Fan-out on read* (pull) — a user's feed is *assembled on request* from the people they follow (cheap writes, expensive reads). Large systems use a *hybrid* (push for most, pull for high-follower accounts). As the *mobile* candidate, you *mention* this to show awareness, but keep focus on the *client* (how it consumes/paginates/caches the feed) unless asked to go backend-deep.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Fan-out on write (push)** — into followers' feeds; fast reads.",
+          "**Fan-out on read (pull)** — assembled per request; cheap writes.",
+          "**Hybrid** — push most, pull celebrities.",
+          "**Mobile focus** — mention it, focus on client consumption.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Backend feed generation: fan-out on write (push) — post pushed into all followers' precomputed feeds (fast reads, costly writes, bad for celebrities); fan-out on read (pull) — feed assembled per request (cheap writes, costly reads); large systems hybrid (push most, pull high-follower). As the mobile candidate, mention it for awareness but focus on client consumption (paginate/cache) unless asked to go backend-deep.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you handle images and media efficiently in a feed?",
+    a: [
+      {
+        t: "p",
+        text: "Use a *caching image loader* (Coil/Glide) that: *downsamples* images to the display size (never decode full-res into a small view), decodes *off the main thread*, caches in *memory + disk*, and *cancels* requests for recycled items (avoiding the 'wrong image' bug). Request *appropriately-sized* images from the server/CDN (thumbnails for the list, full-res on tap) rather than downloading huge originals. *Prefetch* upcoming images during scroll for smoothness. Media (video) should *lazy-load/autoplay only visible* items. Image handling is often the biggest feed performance factor — cover it concretely.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Image loader** — downsample, off-main, memory+disk cache.",
+          "**Cancel** — recycled requests (no wrong-image bug).",
+          "**Server-sized** — thumbnails in list, full-res on tap.",
+          "**Prefetch + lazy video** — smooth scroll, only visible autoplay.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Use a caching image loader (Coil/Glide): downsample to display size, decode off-main, cache memory+disk, cancel recycled requests (no wrong-image bug). Request appropriately-sized images from the CDN (thumbnails in list, full-res on tap), prefetch during scroll, lazy-load/autoplay only visible video. Image handling is often the biggest feed performance factor — cover it concretely.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you keep a feed fresh (pull-to-refresh, new items)?",
+    a: [
+      {
+        t: "p",
+        text: "Support *pull-to-refresh* (fetch the latest page, prepend/replace, update the cache) and optionally a *'new posts' pill* when new content is available (fetched in background via polling/push) that the user taps to jump up — avoiding jarring auto-inserts that disrupt reading position. Use *cursor-based* fetching so refresh gets items *newer than* the top cursor. Preserve *scroll position* and *seen state* across refreshes. Balance freshness with *data/battery* (don't over-poll). For real-time-ish feeds, a lightweight push can signal 'new content' to fetch. Freshness UX matters as much as the mechanism.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Pull-to-refresh** — fetch latest, update cache.",
+          "**'New posts' pill** — non-disruptive; tap to jump.",
+          "**Cursor** — fetch newer-than-top.",
+          "**Preserve** — scroll/seen state; balance freshness vs battery.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Freshness: pull-to-refresh (fetch latest, update cache) + a 'new posts' pill when new content arrives (background poll/push) that the user taps to jump up (avoid jarring auto-inserts). Cursor-fetch newer-than-top; preserve scroll/seen state; don't over-poll (data/battery). A lightweight push can signal new content. Freshness UX matters as much as the mechanism.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you choose a transport for real-time chat, and why?",
+    a: [
+      {
+        t: "p",
+        text: "*WebSockets* are the usual choice for chat — a *persistent, bidirectional* connection giving low-latency send/receive both ways, ideal for instant messaging and typing/presence indicators. Alternatives: *long-polling/SSE* (server→client only, a fallback), *MQTT* (lightweight pub/sub, used by some chat apps for efficiency), and *FCM push* for *delivering messages when the app is backgrounded/killed* (the socket isn't alive then). A robust design uses *WebSocket (or MQTT) while foregrounded* + *push for background delivery*, plus a *fetch-on-open* reconciliation. Justify by latency (bidirectional) and mobile background constraints.",
+      },
+      {
+        t: "list",
+        items: [
+          "**WebSocket** — persistent bidirectional, low-latency (chat).",
+          "**MQTT** — lightweight pub/sub alternative.",
+          "**FCM push** — background/killed delivery (socket not alive).",
+          "**Robust** — socket foreground + push background + reconcile.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Chat transport: WebSocket (persistent bidirectional, low-latency — ideal for messaging + typing/presence), with MQTT as a lightweight alternative, SSE/long-poll as fallback, and FCM push for background/killed delivery (the socket's dead then). Robust design: socket (or MQTT) while foreground + push for background + fetch-on-open reconciliation. Justify by bidirectional latency and mobile background limits.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you guarantee message ordering and no-loss in chat?",
+    a: [
+      {
+        t: "p",
+        text: "Don't rely on network arrival order. Give each message a *server-assigned sequence number/timestamp* (or a logical clock) and *order by it* on the client, not by receipt time. For *no-loss*: the server is the *source of truth*; the client *fetches missed messages on (re)connect* using a *last-seen cursor/sequence* (so a dropped socket message is recovered on sync). Use *acknowledgements* (server acks receipt; client acks delivery/read) and *idempotent message IDs* (client-generated) so retries don't duplicate. Combine live socket delivery with *gap-detection + fetch* to guarantee completeness. Reliability comes from server-as-truth + reconciliation, not the transport alone.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Order by** — server sequence/timestamp, not arrival.",
+          "**No-loss** — server SSOT; fetch missed via last-seen cursor.",
+          "**Acks + idempotent IDs** — no dupes on retry.",
+          "**Gap-detection + fetch** — guarantees completeness.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Order by server-assigned sequence/timestamp (not arrival). No-loss: server is SSOT, client fetches missed messages on reconnect via a last-seen cursor (recovers dropped socket messages); use acks (receipt/delivery/read) and idempotent client-generated message IDs (no dupe on retry); detect sequence gaps and fetch. Reliability = server-as-truth + reconciliation, not transport alone.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you make sending a message feel instant but reliable?",
+    a: [
+      {
+        t: "p",
+        text: "*Optimistic UI*: when the user sends, *immediately* show the message locally in a *'sending'* state (with a client-generated ID) — the UI feels instant. In the background, send it (over socket/API) with *retry*; on *server ack*, mark it *'sent/delivered'* (reconcile the client ID with the server ID); on *failure*, show a *'failed' with retry* affordance. Persist unsent messages locally (an *outbox*) so they survive app restart and send when back online. This decouples *perceived* speed from *actual* delivery — instant feedback, guaranteed eventual delivery. Classic optimistic-write pattern applied to chat.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Optimistic** — show 'sending' immediately (client ID).",
+          "**Background send + retry** — ack → 'sent/delivered'.",
+          "**Failure** — 'failed' with retry.",
+          "**Outbox** — persist unsent; survive restart/offline.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Optimistic UI: on send, immediately show the message locally in 'sending' (client-generated ID) — feels instant. Background send with retry; on server ack mark 'sent/delivered' (reconcile IDs); on failure show 'failed' + retry. Persist unsent in a local outbox (survives restart/offline). Decouples perceived speed from actual delivery — instant feedback, guaranteed eventual delivery.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you handle chat message persistence and history?",
+    a: [
+      {
+        t: "p",
+        text: "Store messages in a *local database* (Room/SQLDelight) keyed by conversation and ordered by sequence/timestamp — the UI reads from the DB (offline-capable, fast). Load history with *pagination* (fetch older messages on scroll-up via a cursor). New messages (socket/push) are *written to the DB*, and the UI observes the DB (single source of truth) so it updates reactively. Sync fills gaps. This 'DB as source of truth, network writes into it' pattern gives offline access, smooth scrolling of history, and reactive updates — the standard chat persistence design.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Local DB** — per conversation, ordered; UI reads it (offline).",
+          "**History** — paginate older via cursor on scroll-up.",
+          "**New messages** — write to DB; UI observes (SSOT).",
+          "**Sync** — fills gaps; reactive updates.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Persist messages in a local DB (Room/SQLDelight) per conversation, ordered by sequence, UI reads it (offline, fast). Paginate history (older messages on scroll-up via cursor). Write new socket/push messages to the DB; the UI observes it (SSOT) for reactive updates. Sync fills gaps. 'DB as source of truth, network writes into it' — the standard chat persistence design.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you implement typing indicators and presence?",
+    a: [
+      {
+        t: "p",
+        text: "These are *ephemeral, high-frequency, best-effort* signals — don't persist them like messages. *Typing*: send a lightweight 'typing' event over the socket, *throttled/debounced* (e.g. every few seconds while typing), with a client-side *timeout* to auto-clear if no update arrives. *Presence* (online/last-seen): the server tracks socket connect/disconnect and heartbeats; clients *subscribe* to presence for visible conversations only (not everyone). Keep these *out of the durable message store*, minimize their frequency (battery/bandwidth), and treat missed ones as harmless. They add liveliness without the reliability guarantees of messages.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Ephemeral/best-effort** — not persisted.",
+          "**Typing** — throttled event + auto-clear timeout.",
+          "**Presence** — server tracks connect/heartbeat; subscribe to visible.",
+          "**Minimize frequency** — battery/bandwidth; missed = harmless.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Typing/presence are ephemeral, high-frequency, best-effort — don't persist them. Typing: throttled/debounced socket event + client timeout to auto-clear. Presence: server tracks socket connect/disconnect/heartbeats; clients subscribe only for visible conversations. Keep out of the message store, minimize frequency (battery/bandwidth), treat misses as harmless. Liveliness without message-level guarantees.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle connection management for a chat socket?",
+    a: [
+      {
+        t: "p",
+        text: "Manage the socket's *lifecycle*: *connect* when the app/chat is foregrounded, *disconnect* when backgrounded (rely on push for background messages, saving battery). *Reconnect* automatically with *exponential backoff + jitter* on drops, *heartbeat/ping* to detect dead connections, and *re-authenticate* on reconnect. On (re)connection, *reconcile* (fetch missed messages via last-seen cursor). Handle *network changes* (WiFi↔cellular) by reconnecting. Tie the socket to a lifecycle-aware scope so it's cleaned up properly. Robust connection management is what makes real-time chat reliable on flaky mobile networks.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Lifecycle** — connect foreground, disconnect background (push covers it).",
+          "**Reconnect** — backoff + jitter; heartbeat detects dead sockets.",
+          "**On reconnect** — re-auth + reconcile missed via cursor.",
+          "**Network changes** — reconnect; lifecycle-scoped cleanup.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Connection management: connect when foreground, disconnect when backgrounded (push covers background — saves battery); reconnect with exponential backoff + jitter, heartbeat/ping to detect dead sockets, re-authenticate on reconnect, and reconcile (fetch missed via last-seen cursor). Handle WiFi↔cellular changes by reconnecting; lifecycle-scope the socket. Robust management makes chat reliable on flaky networks.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you handle read receipts and delivery status?",
+    a: [
+      {
+        t: "p",
+        text: "Model message status as a progression: *sending → sent (server received) → delivered (recipient's device got it) → read (recipient opened it)*. Each transition is driven by an *acknowledgement*: the server acks 'sent', the recipient's client acks 'delivered' on receipt and 'read' when displayed, propagated back to the sender (via socket/push). Store status per message; update the UI (single/double/blue ticks). Batch read receipts to avoid chattiness. Respect *privacy* (some apps let users disable read receipts). It's an ack-driven state machine layered on the messaging pipeline.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Status** — sending → sent → delivered → read.",
+          "**Ack-driven** — server/recipient acks each transition.",
+          "**Propagate back** — to sender; update ticks.",
+          "**Batch + privacy** — avoid chattiness; allow disabling.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Read receipts/delivery status = an ack-driven state machine: sending → sent (server ack) → delivered (recipient device ack) → read (recipient displayed), propagated back to the sender via socket/push. Store status per message, update ticks. Batch receipts to reduce chattiness; respect privacy (allow disabling). Layered on the messaging pipeline as acknowledgements.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How would you support group chat differently from 1:1?",
+    a: [
+      {
+        t: "p",
+        text: "Group chat adds *fan-out* (a message goes to N members — the server delivers to all, and for large groups this is a scaling concern), *membership management* (join/leave, roles/admins), *per-member read state* (who has read — more complex than 1:1's single receipt), and *presence/typing* aggregated across members. Delivery still uses socket + push per member. Consider *large-group* optimizations (don't send full presence for everyone; limit read-receipt granularity). Encryption (if E2EE) is harder (key distribution to all members). Note these deltas from 1:1 — it shows you can extend a design to added complexity.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Fan-out** — to N members; scaling for large groups.",
+          "**Membership + roles** — join/leave, admins.",
+          "**Per-member read state** — more complex than 1:1.",
+          "**Large-group** — limit presence/receipt granularity; E2EE harder.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Group chat vs 1:1 adds: fan-out to N members (scaling for large groups), membership management (join/leave, roles/admins), per-member read state (vs single receipt), and aggregated presence/typing. Delivery still socket+push per member; large groups need optimizations (limit presence/receipt granularity). E2EE is harder (key distribution to all). Note these deltas — shows you extend a design to added complexity.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle media messages (images/video) in chat?",
+    a: [
+      {
+        t: "p",
+        text: "Don't send media inline over the message socket. Instead: *upload the file* to blob storage/CDN (resumable, off the message path), get a *URL/reference*, and send a *message containing that reference + metadata* (thumbnail, size, dimensions). Recipients get the reference and *download/cache* the media via an image/media loader (downsampled, cached). Show a *thumbnail/placeholder* immediately and *progress* for up/download. This keeps the message pipeline lightweight, leverages CDN for delivery, and lets media load lazily. Same 'reference, not payload' principle as elsewhere — media travels out-of-band.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Upload to CDN/blob** — resumable, off the message path.",
+          "**Message** — carries a URL/reference + metadata/thumbnail.",
+          "**Recipient** — downloads/caches lazily via media loader.",
+          "**Show** — thumbnail + progress; media travels out-of-band.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Media in chat: upload the file to blob storage/CDN (resumable, off the message path), send a message with the URL/reference + metadata (thumbnail/size); recipients download/cache lazily via a media loader (downsampled). Show a thumbnail/placeholder + up/download progress. Keeps the message pipeline light, uses CDN for delivery. 'Reference, not payload' — media travels out-of-band.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What are the key performance considerations for a feed?",
+    a: [
+      {
+        t: "p",
+        text: "*Scrolling smoothness* (efficient list recycling, cheap item binding/composition, stable keys, no main-thread work), *image efficiency* (downsampled, cached, cancelled on recycle, prefetched), *pagination* (load incrementally, prefetch before the end), *memory* (bounded caches, don't retain all pages), *network* (compact paginated payloads, cache to avoid refetch, avoid over-fetching), and *perceived performance* (skeletons/placeholders while loading). Also *Baseline Profiles* for the scroll path. A feed is a performance-critical surface — enumerate these concretely and tie them to smooth 60fps scrolling.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Scroll** — recycling, cheap binding, stable keys, off-main.",
+          "**Images** — downsample, cache, cancel, prefetch.",
+          "**Paging + memory** — incremental, bounded caches.",
+          "**Network + perceived** — compact/cached; skeletons; Baseline Profile.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Feed performance: smooth scroll (recycling, cheap binding/composition, stable keys, off-main), image efficiency (downsample, cache, cancel on recycle, prefetch), pagination (incremental + prefetch), bounded memory (don't retain all pages), efficient network (compact/paginated/cached, no over-fetch), perceived performance (skeletons), and a Baseline Profile for the scroll path. Tie to smooth 60fps.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you handle offline support in a feed or chat?",
+    a: [
+      {
+        t: "p",
+        text: "Make the *local DB the source of truth*: the feed/chat UI reads cached content from the DB, so it *works offline* (shows the last-synced feed/messages). *Writes* (post, send message, like) are applied *optimistically* to the local DB and *queued* for sync (retry when back online). New remote data is *written into the DB* and the UI observes it. Show *connectivity/sync state* (offline banner, 'sending' status). On reconnect, sync pushes queued actions and pulls updates. This offline-first pattern applies to both feed and chat — the DB decouples the UI from network availability.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Local DB SSOT** — UI reads cached; works offline.",
+          "**Writes** — optimistic local + queued sync.",
+          "**Remote data** — written to DB; UI observes.",
+          "**Show** — offline/sync state; reconcile on reconnect.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Offline: local DB as SSOT — feed/chat UI reads cached content (works offline, shows last-synced). Writes (post/send/like) applied optimistically to the DB and queued for sync (retry online). Remote data written to the DB, UI observes it. Show connectivity/sync state (offline banner, 'sending'). Reconnect pushes queued + pulls updates. The DB decouples UI from network for both feed and chat.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle the 'jump to unread' / scroll position in chat?",
+    a: [
+      {
+        t: "p",
+        text: "Track the user's *last-read message* (persisted, synced across devices) and, on opening a conversation, *position the list at the first unread* (with a divider), not always the bottom. Handle *scroll anchoring* so loading older history (prepending) doesn't jump the viewport. When new messages arrive while the user is *scrolled up*, don't auto-scroll — show a *'new messages' button*; only auto-scroll if they're already at the bottom. Preserve position across config changes/process death. These UX details (anchoring, unread positioning) are what make a chat feel polished — worth calling out.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Last-read** — persisted/synced; open at first unread.",
+          "**Scroll anchoring** — prepending history doesn't jump.",
+          "**New while scrolled up** — 'new messages' button, no auto-scroll.",
+          "**Preserve position** — across config/process death.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Track last-read (persisted, cross-device synced), open at the first unread (with a divider) not always the bottom. Anchor scroll so prepending older history doesn't jump the viewport. New messages while scrolled up → a 'new messages' button, no auto-scroll (auto only if at bottom). Preserve position across config/process death. These anchoring/unread details make chat feel polished.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you address end-to-end encryption in chat (at a high level)?",
+    a: [
+      {
+        t: "p",
+        text: "With *E2EE*, messages are *encrypted on the sender's device and decrypted only on the recipient's* — the server relays *ciphertext* it can't read. This needs *key management*: each device has a key pair, public keys are exchanged (a key server), and protocols like *Signal's Double Ratchet* provide forward secrecy. Challenges on mobile: *multi-device* (sync keys/messages across a user's devices), *key backup/recovery* (lose the device → lose history unless backed up encrypted), *group E2EE* (distribute keys to all members), and *push* (can't decrypt server-side, so notifications show generic text until the app decrypts). It's a deep topic — show you understand the *model and trade-offs*, not full crypto.",
+      },
+      {
+        t: "list",
+        items: [
+          "**E2EE** — encrypt on sender, decrypt on recipient; server relays ciphertext.",
+          "**Keys** — per-device pairs, key exchange, Double Ratchet.",
+          "**Challenges** — multi-device, backup/recovery, group keys.",
+          "**Push** — generic text (server can't decrypt).",
+        ],
+      },
+      {
+        t: "note",
+        text: "E2EE: encrypt on sender, decrypt only on recipient; server relays unreadable ciphertext. Needs key management (per-device key pairs, public-key exchange, Signal Double Ratchet for forward secrecy). Mobile challenges: multi-device key/message sync, key backup/recovery (lost device = lost history unless encrypted-backed-up), group key distribution, and push (generic text since server can't decrypt). Show the model + trade-offs, not full crypto.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you structure the data model for a chat app?",
+    a: [
+      {
+        t: "p",
+        text: "Core entities: *Conversation* (id, participants, last-message preview, unread count, timestamps), *Message* (id, conversationId, senderId, content/media-ref, sequence/timestamp, status), and *User* (id, name, avatar, presence). Locally (Room/SQLDelight): a `conversations` table and a `messages` table (indexed by conversationId + sequence for ordered pagination), with a *denormalized* last-message on the conversation for the list. The message's *client-generated ID* enables optimistic send + dedup. Design the schema for the *queries* you need (conversation list ordered by recent activity; messages per conversation paginated).",
+      },
+      {
+        t: "list",
+        items: [
+          "**Conversation** — participants, last-message, unread, timestamps.",
+          "**Message** — conversationId, sender, content/ref, sequence, status.",
+          "**Indexed** — messages by conversationId + sequence.",
+          "**Denormalized** — last-message on conversation for the list.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Chat data model: Conversation (id, participants, denormalized last-message preview, unread, timestamps), Message (id, conversationId, senderId, content/media-ref, sequence/timestamp, status), User (id, name, avatar, presence). Locally: conversations + messages tables, messages indexed by conversationId + sequence for ordered pagination; client-generated message ID for optimistic send/dedup. Design the schema for your queries.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle backend push for messages when the app is killed?",
+    a: [
+      {
+        t: "p",
+        text: "When the app is *backgrounded/killed*, the WebSocket is dead, so the server sends a *high-priority FCM message* to wake the app / show a notification. Use a *data message* (or notification + data) so the app can *fetch the actual message(s)* from the server (push as a signal, not the payload — payloads are size-limited and shouldn't carry sensitive/full content). On tap, *deep-link* to the conversation. Handle *reliability* (FCM is best-effort — reconcile on next open via the last-seen cursor) and *ordering* (fetch, don't trust push order). This 'socket foreground, push background, fetch-to-reconcile' combo covers all app states.",
+      },
+      {
+        t: "list",
+        items: [
+          "**App killed** — socket dead → high-priority FCM.",
+          "**Data message** — signal to fetch actual message(s).",
+          "**Tap** — deep-link to conversation.",
+          "**Reliability** — reconcile on open (best-effort push).",
+        ],
+      },
+      {
+        t: "note",
+        text: "App killed → socket dead → server sends high-priority FCM to wake/notify. Use a data (or notification+data) message so the app fetches the actual message(s) — push as a signal, not payload (size-limited, no sensitive content). Deep-link on tap. Handle reliability (FCM best-effort — reconcile on open via last-seen cursor) and ordering (fetch, don't trust push order). 'Socket foreground, push background, fetch-to-reconcile' covers all states.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle feed item interactions (like, comment) reliably?",
+    a: [
+      {
+        t: "p",
+        text: "Apply *optimistic updates*: on like, *immediately* toggle the UI and update the local cache, then send the request in the background; on failure, *revert* and optionally notify. Use *idempotent* operations (a like is idempotent — repeating it is safe) and *dedupe* rapid taps (debounce). Persist the *intent* (queue it) so it survives offline/restart and syncs later. Reconcile with the server's authoritative count on next fetch. For comments (a write with content), the same optimistic + outbox pattern applies with a 'posting' state. Interactions should feel instant while guaranteeing eventual consistency.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Optimistic** — toggle UI + cache instantly, send in background.",
+          "**Idempotent + debounce** — safe repeats, dedupe taps.",
+          "**Queue intent** — survives offline/restart; sync later.",
+          "**Failure** — revert; reconcile with server on fetch.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Feed interactions (like/comment): optimistic — toggle UI + local cache instantly, send in background, revert on failure. Use idempotent ops (like is idempotent) and debounce rapid taps; queue the intent (survives offline/restart, syncs later); reconcile with the server's authoritative count on next fetch. Comments use the same optimistic + outbox pattern with a 'posting' state. Instant feel, eventual consistency.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you handle deep-linking into a feed item or conversation?",
+    a: [
+      {
+        t: "p",
+        text: "Support *deep links* (app links / URIs like `app://post/123` or `https://app.com/chat/abc`) that open the *specific screen* — a feed post or a conversation. On open, *parse the link*, *navigate* to the target (building a sensible back stack so 'back' works), and *load the entity* (fetch if not cached). Handle the *cold-start* case (app not running — initialize, then route) and *not-found/permission* cases gracefully. Deep links power *notifications* (tap → conversation) and *sharing* (share a post link). Use *verified App Links* for `https` to open directly without a chooser.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Deep link** — URI to a specific post/conversation.",
+          "**Parse + navigate** — with a sensible back stack.",
+          "**Load entity** — fetch if uncached; handle not-found.",
+          "**Cold start + verified App Links** — route on launch, no chooser.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Deep-linking: app links/URIs (app://post/123, https://app.com/chat/abc) open the specific screen. Parse the link, navigate (sensible back stack), load the entity (fetch if uncached), handle cold-start (init then route) and not-found/permission cases. Powers notification taps and sharing. Use verified App Links for https (open directly, no chooser).",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you design a feed to minimize data usage?",
+    a: [
+      {
+        t: "p",
+        text: "Data efficiency matters on metered/slow networks: request *compact, screen-shaped payloads* (only fields the feed needs — a BFF/GraphQL helps), *paginate* (don't bulk-download), *cache aggressively* (avoid refetching unchanged content — ETags/conditional requests), request *appropriately-sized images* from the CDN (thumbnails, WebP), *lazy-load* media (only visible/near-visible), and *prefetch conservatively* (respect data-saver/metered-connection settings). Compress responses (gzip). Optionally offer a *data-saver mode* (lower-res images, no autoplay). Data usage affects retention in data-conscious markets — design for it explicitly.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Compact payloads** — screen-shaped (BFF/GraphQL), paginated.",
+          "**Cache + ETags** — avoid refetching unchanged content.",
+          "**Images** — CDN-sized thumbnails/WebP, lazy-load.",
+          "**Prefetch conservatively** — respect data-saver; gzip.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Minimize feed data: compact screen-shaped payloads (BFF/GraphQL), pagination (no bulk download), aggressive caching (ETags/conditional requests avoid refetching), CDN-sized images (thumbnails/WebP), lazy-load media (only visible), conservative prefetch (respect data-saver/metered), gzip. Offer a data-saver mode (lower-res, no autoplay). Data usage affects retention in data-conscious markets.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle message editing and deletion in chat?",
+    a: [
+      {
+        t: "p",
+        text: "Model edits/deletes as *operations on an existing message* referenced by its *stable server ID*: an *edit* sends new content + an edited flag/timestamp; a *delete* marks the message deleted (tombstone) rather than hard-removing (so all clients converge). Apply *optimistically* locally, sync to the server, and propagate to other participants (socket/push) who *update their local copy*. Handle *ordering/consistency* (an edit must apply to the right message even if it arrives before the original on a slow client — reconcile via ID). Show 'edited'/'deleted' states. This is CRUD-on-messages with the same optimistic + sync + reconcile discipline as sends.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Reference by stable ID** — edit = new content+flag, delete = tombstone.",
+          "**Optimistic** — apply locally, sync, propagate to participants.",
+          "**Converge** — tombstones not hard-delete; reconcile by ID.",
+          "**Show** — edited/deleted states.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Edit/delete = operations on an existing message by stable server ID: edit sends new content + edited flag/timestamp; delete marks a tombstone (not hard-remove, so clients converge). Apply optimistically, sync, propagate to participants (socket/push) who update their local copy; reconcile by ID for ordering. Show edited/deleted states. CRUD-on-messages with the same optimistic + sync + reconcile discipline as sends.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What non-functional requirements matter most for feed and chat?",
+    a: [
+      {
+        t: "p",
+        text: "For a *feed*: smooth scrolling performance, offline viewing, image efficiency, freshness, and low data usage. For *chat*: low-latency delivery, message reliability/ordering (no-loss), offline send/receive, real-time presence, and battery-efficient connections. *Both*: work on flaky/slow networks, degrade gracefully, secure data (auth, maybe E2EE for chat), scale to large histories/lists, and observability (delivery metrics, crash-free). Call out that these *non-functional* concerns often *drive the design* more than the features — and prioritize them per the product (a chat lives or dies on reliability; a feed on scroll performance).",
+      },
+      {
+        t: "list",
+        items: [
+          "**Feed** — scroll perf, offline, images, freshness, data use.",
+          "**Chat** — low-latency, reliability/ordering, offline, battery.",
+          "**Both** — flaky networks, security, scale, observability.",
+          "**Drive the design** — prioritize per product.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Feed NFRs: scroll performance, offline viewing, image efficiency, freshness, low data. Chat NFRs: low-latency delivery, reliability/ordering (no-loss), offline send/receive, presence, battery-efficient connections. Both: flaky networks, graceful degradation, security (E2EE for chat), scale to large histories, observability. These non-functional concerns drive the design more than features — prioritize per product (chat=reliability, feed=scroll).",
+      },
+    ],
+  },
 ];
 
 export default qa;

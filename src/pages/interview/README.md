@@ -66,8 +66,12 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Kotlin Multiplatform** — expanded (KMP Fundamentals 30, iOS Interop 30,
   Libraries & Compose Multiplatform 30). Every topic ≥ 30 questions, teaching-first
   answers.
-- ⬜ System Design — pending expansion (many topics already ≥ 30; audit and top
-  up).
+- ✅ **Mobile System Design** — expanded (Approaching Mobile System Design 30,
+  Design an Image-Loading Library 30, Design Offline-First Sync 30, Design a Feed &
+  Chat 30). Every topic ≥ 30 questions, teaching-first answers.
+
+**🎉 Expansion pass complete — all 16 categories are at ≥ 30 questions per topic
+with teaching-first answers.**
 
 **Completed**
 - ✅ **Architecture** — MVC, MVP, MVVM, MVI, Clean Architecture, Modularization
