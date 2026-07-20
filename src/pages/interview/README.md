@@ -40,7 +40,10 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Android Core** — expanded (Activity Lifecycle 30, Context/Process 30,
   Fragments 30, Intents/Tasks/Launch Modes 31, Services/Receivers/Providers 30,
   Threading/Permissions 30). Every topic ≥ 30 questions, teaching-first answers.
-- ⬜ Data & Storage, Networking,
+- ✅ **Data & Storage** — expanded (Room Fundamentals 30, Room Relations &
+  Migrations 30, DataStore & SharedPreferences 30, Caching & Offline-First 30,
+  Paging 3 30). Every topic ≥ 30 questions, teaching-first answers.
+- ⬜ Networking,
   DI, Background Work, Testing, Performance, Distribution, Firebase, KMP, System
   Design — pending expansion (many topics already ≥ 30; audit and top up).
 
