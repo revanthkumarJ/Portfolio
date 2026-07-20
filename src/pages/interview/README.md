@@ -48,7 +48,10 @@ tip via a `note` block). Category-by-category status:
   ≥ 30 questions, teaching-first answers.
 - ✅ **Dependency Injection** — expanded (DI Fundamentals 30, Dagger 30, Hilt 30,
   Koin/KMP/Testing 30). Every topic ≥ 30 questions, teaching-first answers.
-- ⬜ Background Work, Testing, Performance, Distribution, Firebase, KMP, System
+- ✅ **Background Work** — expanded (WorkManager Fundamentals 30, WorkManager
+  Advanced 30, AlarmManager & Foreground Services 30, Doze/Battery & Choosing 30).
+  Every topic ≥ 30 questions, teaching-first answers.
+- ⬜ Testing, Performance, Distribution, Firebase, KMP, System
   Design — pending expansion (many topics already ≥ 30; audit and top up).
 
 **Completed**
