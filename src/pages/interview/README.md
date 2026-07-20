@@ -34,6 +34,8 @@ shippable between categories.
   DataStore & SharedPreferences, Caching & Offline-First, Paging 3
 - ✅ **Networking** — HTTP & REST Fundamentals, Retrofit & OkHttp, JSON
   Serialization, Error Handling & Auth, Ktor & WebSockets
+- ✅ **Dependency Injection** — DI Fundamentals & Concepts, Dagger Fundamentals,
+  Hilt (Android DI), Koin/KMP DI & Testing
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &

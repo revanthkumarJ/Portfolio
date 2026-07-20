@@ -11,6 +11,7 @@ import flows from "./flows/index.js";
 import androidCore from "./android-core/index.js";
 import dataStorage from "./data-storage/index.js";
 import networking from "./networking/index.js";
+import dependencyInjection from "./dependency-injection/index.js";
 
 // Registry for the interview-preparation section. The hub and topic routes
 // render entirely from this — add categories/topics here, never in the JSX.
@@ -30,6 +31,7 @@ export const categories = [
   flows,
   dataStorage,
   networking,
+  dependencyInjection,
 ];
 
 export function findTopic(categoryId, topicId) {
