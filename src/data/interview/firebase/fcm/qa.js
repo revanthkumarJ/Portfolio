@@ -138,6 +138,565 @@ val notification = NotificationCompat.Builder(this, CHANNEL_ID)
       },
     ],
   },
+  {
+    level: "senior",
+    q: "How does FCM deliver a message end-to-end?",
+    a: [
+      {
+        t: "p",
+        text: "Your *app server* sends a message (with a device token or topic) to the *FCM backend* via the HTTP v1 API. FCM authenticates it, queues it, and delivers it to the device over a *persistent connection* maintained by Google Play services. On the device, Play services routes it to your `FirebaseMessagingService`. FCM handles connectivity, retries, and battery-efficient delivery — you never hold your own socket. If the device is offline, FCM stores the message (subject to TTL) and delivers when it reconnects.",
+      },
+      {
+        t: "list",
+        items: [
+          "**App server** — sends via HTTP v1 API (token/topic).",
+          "**FCM backend** — auth, queue, deliver.",
+          "**Persistent connection** — via Play services.",
+          "**Offline** — stored (TTL) and delivered on reconnect.",
+        ],
+      },
+      {
+        t: "note",
+        text: "End-to-end: your app server sends to FCM (HTTP v1, token/topic) → FCM authenticates, queues, and delivers over Play services' persistent connection → the device routes to your FirebaseMessagingService. FCM handles connectivity, retries, and battery-efficient delivery; offline devices get stored messages (subject to TTL) on reconnect.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How is message handling different when the app is in the foreground versus background?",
+    a: [
+      {
+        t: "p",
+        text: "It depends on the *message type*. A *notification message* while the app is *backgrounded* is displayed *automatically* by the system (in the tray) — `onMessageReceived` is NOT called; the data (if any) arrives in the launch intent extras on tap. A *notification message* while *foregrounded* delivers to `onMessageReceived` (you display it). A *data message* *always* delivers to `onMessageReceived` (foreground or background) — you must build the notification yourself. This distinction trips up many developers.",
+      },
+      {
+        t: "table",
+        headers: ["Message type", "Foreground", "Background"],
+        rows: [
+          ["Notification", "onMessageReceived", "Auto-shown in tray (no callback)"],
+          ["Data-only", "onMessageReceived", "onMessageReceived"],
+          ["Notification + data", "onMessageReceived", "Auto-shown; data in tap intent"],
+        ],
+      },
+      {
+        t: "note",
+        text: "Notification message backgrounded → system auto-shows it, onMessageReceived NOT called (data arrives in the tap intent). Notification foregrounded → onMessageReceived (you display). Data-only → always onMessageReceived (you build the notification). This foreground/background × type matrix is a classic FCM gotcha.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is onMessageReceived, and when is it called?",
+    a: [
+      {
+        t: "p",
+        text: "`onMessageReceived(RemoteMessage)` is the callback in your `FirebaseMessagingService` where you *receive and handle* a message. It's called for *data messages always* (foreground and background), and for *notification messages only when the app is in the foreground*. Inside it you read `remoteMessage.data`/`.notification` and typically build a notification with `NotificationCompat` or trigger a sync. It runs on a background thread with ~10–20s to finish — for longer work, enqueue WorkManager.",
+      },
+      {
+        t: "code",
+        title: "onMessageReceived",
+        code: `class MyFirebaseService : FirebaseMessagingService() {\n  override fun onMessageReceived(msg: RemoteMessage) {\n    val title = msg.data["title"] ?: msg.notification?.title\n    showNotification(title, msg.data["body"])   // build with NotificationCompat\n    // for heavy work: WorkManager.getInstance(this).enqueue(...)\n  }\n}`,
+      },
+      {
+        t: "note",
+        text: "onMessageReceived (in FirebaseMessagingService) handles a message — called for data messages always, and notification messages only in the foreground. Read remoteMessage.data/.notification and build a notification or trigger a sync. It has ~10–20s on a background thread; enqueue WorkManager for longer work.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What are notification channels, and why are they required?",
+    a: [
+      {
+        t: "p",
+        text: "Since Android 8 (Oreo), every notification must belong to a *channel* — a user-visible category (e.g. 'Messages', 'Promotions') with its own importance, sound, vibration, and light settings that *the user controls*. You create channels once at startup (`NotificationManager.createNotificationChannel`). If you post a notification without a valid channel on 8+, it won't show. Channels give users fine-grained control (mute promotions, keep messages) instead of all-or-nothing, improving trust and reducing opt-outs.",
+      },
+      {
+        t: "code",
+        title: "Creating a channel",
+        code: `val channel = NotificationChannel("messages", "Messages", NotificationManager.IMPORTANCE_HIGH)\ngetSystemService(NotificationManager::class.java).createNotificationChannel(channel)\n// then post with NotificationCompat.Builder(ctx, "messages")`,
+      },
+      {
+        t: "note",
+        text: "Since Android 8, every notification needs a channel — a user-controlled category (importance, sound, vibration). Create channels at startup (createNotificationChannel); without a valid channel, notifications won't show on 8+. Channels let users mute categories individually (promotions vs messages) instead of all-or-nothing — better trust, fewer opt-outs.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is message priority (high vs normal) in FCM, and how does it affect delivery?",
+    a: [
+      {
+        t: "p",
+        text: "FCM messages have a *priority*: *high* priority wakes the device (even in Doze) to deliver immediately — for time-sensitive content (chat, calls). *Normal* priority may be *delayed/batched* to save battery (delivered in a maintenance window). Notification messages default to high; data messages default to normal (set `\"priority\": \"high\"` explicitly if urgent). Overusing high priority for non-urgent messages wastes battery and, if abused, Google may throttle you. Match priority to genuine urgency.",
+      },
+      {
+        t: "list",
+        items: [
+          "**High** — wakes device (even Doze), immediate; for urgent content.",
+          "**Normal** — may be delayed/batched to save battery.",
+          "**Data messages** — default normal; set high if urgent.",
+          "**Don't abuse high** — battery cost, possible throttling.",
+        ],
+      },
+      {
+        t: "note",
+        text: "FCM priority: high wakes the device (even in Doze) for immediate delivery (chat/calls); normal may be batched/delayed to save battery. Notification messages default high, data messages default normal (set priority:high if urgent). Don't abuse high for non-urgent messages — battery cost and possible throttling. Match priority to real urgency.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is FCM topic messaging?",
+    a: [
+      {
+        t: "p",
+        text: "*Topics* let you send one message to *all devices subscribed to a named topic* (e.g. `news`, `weather_london`) without managing individual tokens. Devices subscribe with `subscribeToTopic(\"news\")`; your server sends to `/topics/news` and FCM fans it out. Great for broadcast content (announcements, categories the user opts into). Subscriptions are managed by FCM (persist across app restarts). Topics aren't for targeting *specific users* (use tokens for that) — they're for *group broadcast*.",
+      },
+      {
+        t: "code",
+        title: "Subscribe to a topic",
+        code: `Firebase.messaging.subscribeToTopic("news")\n  .addOnCompleteListener { /* subscribed */ }\n// server sends to condition/topic \"news\" → all subscribers receive it`,
+      },
+      {
+        t: "note",
+        text: "Topics send one message to all devices subscribed to a named topic (news, weather_london) — no token management. Devices subscribeToTopic; server sends to the topic and FCM fans out. Great for opt-in broadcast content; FCM persists subscriptions. Not for targeting specific users (use tokens) — topics are for group broadcast.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you send to multiple devices (multicast, topics, conditions)?",
+    a: [
+      {
+        t: "p",
+        text: "Options: send to *individual tokens* (loop, or *batch/multicast* up to 500 tokens per request with `sendEachForMulticast`); use *topics* for opt-in broadcast groups; or use *conditions* (boolean topic expressions like `'news' in topics && 'sports' in topics`) to target intersections/unions. For large user bases, topics/conditions scale better than managing millions of tokens. FCM returns per-token results so you can *prune invalid tokens* (unregistered) from your database.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Tokens** — batch/multicast up to 500 per request.",
+          "**Topics** — opt-in broadcast groups.",
+          "**Conditions** — boolean topic expressions (intersections).",
+          "**Prune** — remove invalid/unregistered tokens from per-result.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Send to many via: individual tokens (batch/multicast up to 500 per request), topics (opt-in broadcast), or conditions (boolean topic expressions for intersections/unions). Topics/conditions scale better than millions of tokens. Use FCM's per-token results to prune invalid/unregistered tokens from your DB.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is TTL and collapse key in FCM?",
+    a: [
+      {
+        t: "p",
+        text: "*TTL (time-to-live)* sets how long FCM stores a message for an offline device before dropping it (default ~4 weeks; set to 0 for 'deliver now or discard' — good for real-time-only data). A *collapse key* groups messages so that when the device comes online, *only the latest* message in a group is delivered (older ones collapsed) — useful for 'sync now' or state-update pings where only the newest matters, avoiding a backlog of redundant messages. Both control delivery of stored/queued messages.",
+      },
+      {
+        t: "list",
+        items: [
+          "**TTL** — how long FCM stores for an offline device (0 = now-or-never).",
+          "**Collapse key** — deliver only the latest of a group.",
+          "**Collapse use** — sync pings/state updates (newest matters).",
+          "**Both** — control stored/queued delivery.",
+        ],
+      },
+      {
+        t: "note",
+        text: "TTL: how long FCM stores a message for an offline device before dropping (default ~4 weeks; 0 = deliver-now-or-discard for real-time-only). Collapse key: groups messages so only the latest in a group is delivered on reconnect (older collapsed) — for sync/state pings where only the newest matters. Both govern stored/queued delivery.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you handle the POST_NOTIFICATIONS permission on Android 13+?",
+    a: [
+      {
+        t: "p",
+        text: "Since Android 13 (API 33), posting notifications requires the *runtime permission* `POST_NOTIFICATIONS` — the user must grant it (like other runtime permissions). Declare it in the manifest and *request it at an appropriate moment* (with rationale — after the user sees why notifications help, not on first launch). If denied, notifications silently don't show. On pre-13 devices, notifications are allowed by default (no request). Handle the denied case gracefully and offer a path to settings.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Android 13+** — `POST_NOTIFICATIONS` runtime permission.",
+          "**Declare + request** — at a good moment with rationale.",
+          "**Denied** — notifications silently don't show.",
+          "**Pre-13** — allowed by default.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Android 13+ requires the POST_NOTIFICATIONS runtime permission to show notifications — declare it and request at a good moment (with rationale, not on first launch). Denied → notifications silently don't show; offer a path to settings. Pre-13 devices allow notifications by default. Handle the denied case gracefully.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the difference between the FCM HTTP v1 API and the legacy API?",
+    a: [
+      {
+        t: "p",
+        text: "The *legacy* HTTP/XMPP API used a static *server key* for auth and a flatter JSON. The *HTTP v1 API* (current, required — legacy is deprecated/shut down) uses *OAuth2 access tokens* from a *service account* (more secure, short-lived), a *structured message format* with platform-specific overrides (`android`, `apns`, `webpush`), and better error handling. Migrate to v1: generate tokens from a service account (via the Admin SDK or Google auth libraries) and use the new payload shape. Never embed a server key in the app.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Legacy** — static server key; deprecated/shut down.",
+          "**HTTP v1** — OAuth2 from a service account (secure, short-lived).",
+          "**v1 format** — platform overrides (android/apns/webpush).",
+          "**Migrate** — Admin SDK/auth libs; never embed keys in the app.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Legacy FCM API: static server key auth, flat JSON — deprecated/shut down. HTTP v1 (current): OAuth2 access tokens from a service account (secure, short-lived), structured payload with platform overrides (android/apns/webpush), better errors. Migrate via the Admin SDK/Google auth libs. Never embed a server key in the app.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How does Doze mode affect FCM message delivery?",
+    a: [
+      {
+        t: "p",
+        text: "In *Doze* (device idle), *normal-priority* messages are *deferred* to maintenance windows (may be delayed significantly), while *high-priority* messages can *wake the device* and deliver immediately (with temporary allowances to run briefly). So for time-critical delivery (chat, calls), use high priority; for non-urgent, normal priority respects Doze and saves battery. Don't set everything high — Google can *throttle* apps that abuse high priority. Design your message priorities around actual urgency and Doze behavior.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Normal priority** — deferred to maintenance windows in Doze.",
+          "**High priority** — wakes device, immediate (brief allowance).",
+          "**Urgent** — high; non-urgent — normal (battery-friendly).",
+          "**Abuse** — Google throttles over-use of high.",
+        ],
+      },
+      {
+        t: "note",
+        text: "In Doze, normal-priority messages are deferred to maintenance windows; high-priority can wake the device for immediate delivery (with a brief run allowance). Use high for time-critical (chat/calls), normal for non-urgent (respects Doze, saves battery). Don't set everything high — Google throttles abuse. Design priorities around real urgency.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What are data-only (silent) messages used for?",
+    a: [
+      {
+        t: "p",
+        text: "*Data-only* messages carry a custom key-value payload and *no notification* — they always hit `onMessageReceived`, letting the app *react silently*: trigger a background sync, update cached data, invalidate a token, or decide *whether and how* to show a notification (full client control over presentation/localization). Caveats: they're subject to *background restrictions* (normal priority may be delayed in Doze; the app must not be force-stopped), and heavy work needs WorkManager. Use them when the client should decide the UX, or for pure sync.",
+      },
+      {
+        t: "list",
+        items: [
+          "**No notification** — always `onMessageReceived`.",
+          "**Uses** — silent sync, cache update, client-decided UI.",
+          "**Full control** — presentation/localization on-device.",
+          "**Caveats** — Doze delays (normal priority); WorkManager for heavy work.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Data-only (silent) messages carry key-value data and no notification — always onMessageReceived, so the app reacts silently: background sync, cache update, token invalidation, or client-decided notification (full presentation/localization control). Caveats: subject to Doze delays (normal priority), app must not be force-stopped, WorkManager for heavy work. Use for client-controlled UX or pure sync.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you manage registration tokens on the server?",
+    a: [
+      {
+        t: "p",
+        text: "Store each device's token *associated with the user/account* on your server, update it when `onNewToken` fires (send the new token to your backend), and *remove stale tokens* when FCM reports them *unregistered/invalid* in send responses (app uninstalled, token rotated). Tokens can change (app restore, clear data, reinstall), so treat them as *ephemeral*. Deduplicate per device, and consider token *expiry* (refresh periodically). Clean token management avoids sending to dead endpoints and keeps delivery metrics healthy.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Store** — token ↔ user/account on the server.",
+          "**Update** — on `onNewToken` (push to backend).",
+          "**Remove** — tokens FCM reports unregistered/invalid.",
+          "**Ephemeral** — tokens change; dedupe and refresh.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Store tokens associated with the user on your server, update on onNewToken, and remove stale ones when FCM reports unregistered/invalid (uninstall/rotation). Tokens are ephemeral (change on restore/clear-data/reinstall) — dedupe per device and refresh periodically. Clean management avoids dead endpoints and keeps delivery metrics healthy.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the notification payload size limit in FCM?",
+    a: [
+      {
+        t: "p",
+        text: "FCM message payloads are limited to *4KB* (4096 bytes) for data messages (and topic messages have a smaller ~2KB limit). This means you *can't* send large content in the push — instead send a small payload (an ID or minimal data) and have the app *fetch the full content* from your API when it arrives. This 'notification as a signal, fetch the rest' pattern is standard and also keeps sensitive data out of the push. Keep payloads lean.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Limit** — ~4KB (topics ~2KB).",
+          "**Pattern** — send an ID, fetch full content from your API.",
+          "**Benefit** — no large data in push; keeps secrets out.",
+          "**Keep lean** — minimal payload.",
+        ],
+      },
+      {
+        t: "note",
+        text: "FCM payloads are limited to ~4KB (topics ~2KB). Don't send large content — send a small payload (an ID/minimal data) and have the app fetch the full content from your API on arrival. This 'push as a signal, fetch the rest' pattern is standard and keeps sensitive data out of the push. Keep payloads lean.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is notification trampolining, and why did Android 12 restrict it?",
+    a: [
+      {
+        t: "p",
+        text: "*Notification trampolining* was launching an Activity *indirectly* from a notification tap — the tap started a `BroadcastReceiver`/`Service` that then started the Activity. This *delayed* the app appearing (janky) and let apps do work before the UI. Android 12 *blocks* starting an Activity from a service/receiver launched by a notification tap; you must use a `PendingIntent` that *directly starts the Activity*. Fix by setting the notification's content intent to the Activity's `PendingIntent`, doing any routing inside the Activity.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Trampolining** — tap → service/receiver → Activity (indirect).",
+          "**Problem** — delayed UI, jank.",
+          "**Android 12** — blocks Activity start from that path.",
+          "**Fix** — PendingIntent directly to the Activity; route inside it.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Notification trampolining = launching an Activity indirectly (tap → service/receiver → Activity), which delayed the UI. Android 12 blocks starting an Activity from a service/receiver launched by a notification tap. Fix: set the content intent to a PendingIntent that directly starts the Activity, and do routing inside the Activity.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you display a rich notification with image and actions?",
+    a: [
+      {
+        t: "p",
+        text: "Use `NotificationCompat.Builder` with styles and actions: `BigPictureStyle` for a large image, `BigTextStyle` for expandable text, `addAction()` for buttons (each with its own `PendingIntent`), and set the content intent for the tap. For FCM, send a *data message* so the app builds this rich notification (auto-displayed notification messages are limited to title/body). Load images off the main thread (Coil/Glide) before building. Set the channel, small icon, and priority appropriately.",
+      },
+      {
+        t: "code",
+        title: "Rich notification",
+        code: `val n = NotificationCompat.Builder(ctx, "messages")\n  .setSmallIcon(R.drawable.ic_msg)\n  .setContentTitle(title).setContentText(body)\n  .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))\n  .addAction(R.drawable.ic_reply, "Reply", replyPendingIntent)\n  .setContentIntent(openPendingIntent).build()`,
+      },
+      {
+        t: "note",
+        text: "Build rich notifications with NotificationCompat: BigPictureStyle (image), BigTextStyle (expandable text), addAction (buttons with PendingIntents), content intent for tap. For FCM, use a data message so the app builds it (auto notification messages are title/body only). Load images off-main first; set channel, small icon, priority.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you test FCM messages during development?",
+    a: [
+      {
+        t: "p",
+        text: "Quick options: the *Firebase console* → Cloud Messaging → send a test message to a specific *registration token* (good for notification messages, less so for data). Or `curl` the *HTTP v1 API* with a service-account OAuth token and a JSON payload (tests data messages and platform options). Log the device token (`FirebaseMessaging.getInstance().token`) to target it. Test *all four states*: foreground/background × notification/data, since behavior differs. Also test tap deep-linking and Doze/high-priority delivery.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Firebase console** — send test to a token (notifications).",
+          "**curl HTTP v1** — data messages + platform options.",
+          "**Log the token** — to target the device.",
+          "**Test all states** — fg/bg × notification/data, tap, Doze.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Test FCM via the Firebase console (send to a specific token — good for notifications) or curl the HTTP v1 API with a service-account token (data messages + platform options). Log the device token to target it. Test all four states (foreground/background × notification/data — behavior differs), plus tap deep-linking and high-priority/Doze delivery.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you deep-link from a notification to the right screen?",
+    a: [
+      {
+        t: "p",
+        text: "Put a *destination hint* in the message data (a screen id, entity id, or a deep-link URI), attach it to the notification's *content `PendingIntent`* (extras or an `ACTION_VIEW` deep-link intent), and in the target Activity read the extras/intent to *navigate* to the right screen. Use `TaskStackBuilder` (or a proper back stack) so 'back' returns sensibly. Ensure `PendingIntent` uses `FLAG_IMMUTABLE` and a unique request code. For auto-displayed FCM notifications, the data arrives in the launcher intent on tap.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Destination in data** — screen/entity id or deep-link URI.",
+          "**Attach** — to the content PendingIntent (extras/ACTION_VIEW).",
+          "**Navigate** — read in the Activity; TaskStackBuilder for back stack.",
+          "**PendingIntent** — FLAG_IMMUTABLE + unique request code.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Deep-link by putting a destination hint (screen/entity id or deep-link URI) in message data, attaching it to the content PendingIntent (extras or ACTION_VIEW), and navigating from the target Activity. Use TaskStackBuilder for a sensible back stack; PendingIntent with FLAG_IMMUTABLE + unique request code. Auto-shown FCM notifications deliver data in the tap launcher intent.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "Why should you never embed FCM/server credentials in the app?",
+    a: [
+      {
+        t: "p",
+        text: "The *server key / service-account credentials* let anyone send messages *as your app* — embedding them in the APK means they can be *extracted* (the APK is decompilable) and abused to spam your users or impersonate you. Sending must happen *server-side* (your backend holds the credentials securely). The app only holds the *client* config (`google-services.json`, which is not a secret — it identifies the project) and its own registration token. Keep all send-side secrets on the server.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Server credentials** — can send as your app.",
+          "**In APK** — extractable → spam/impersonation.",
+          "**Send server-side** — backend holds secrets.",
+          "**App holds** — only client config + its token (not secret).",
+        ],
+      },
+      {
+        t: "note",
+        text: "FCM server key/service-account credentials let anyone send as your app — embedded in the APK they're extractable and abusable (spam/impersonation). Sending must be server-side (backend holds credentials). The app only holds client config (google-services.json — not a secret, just project identity) and its token. Keep all send-side secrets server-side.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you ensure notifications aren't shown twice or out of order?",
+    a: [
+      {
+        t: "p",
+        text: "Give each logical notification a *stable id* (e.g. based on the message/conversation id) so re-delivery *updates* rather than duplicates (`notify(sameId, ...)`), and use a *server-side message id* to *dedupe* if the same push could arrive twice. For ordering, don't rely on push arrival order (FCM doesn't guarantee it) — include a *timestamp/sequence* in the payload and let the client render by that. For chat, treat push as a *trigger to fetch ordered data* from your API rather than the source of truth.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Stable notification id** — update, don't duplicate.",
+          "**Server message id** — dedupe re-delivery.",
+          "**Ordering** — timestamp/sequence in payload; don't trust arrival order.",
+          "**Chat** — push triggers an ordered fetch from the API.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Avoid duplicates with a stable notification id (notify(sameId) updates), and dedupe by a server message id if a push can arrive twice. Don't rely on FCM arrival order — include a timestamp/sequence and render by it. For chat, treat push as a trigger to fetch ordered data from your API (source of truth), not the data itself.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is a foreground service notification, and how does it relate to FCM?",
+    a: [
+      {
+        t: "p",
+        text: "A *foreground service* must show an ongoing *notification* (so the user knows it's running) — used for user-visible ongoing tasks (music, navigation, an active call). FCM relates when a *high-priority data message* triggers work that needs to run reliably: on recent Android you may start a foreground service *from* an FCM message only within allowed constraints (there are background-start restrictions). For most push work, prefer *WorkManager* (Doze-aware) over a foreground service unless the task is genuinely ongoing and user-visible (e.g. an incoming call UI).",
+      },
+      {
+        t: "list",
+        items: [
+          "**Foreground service** — ongoing notification; user-visible tasks.",
+          "**FCM trigger** — high-priority message → reliable work.",
+          "**Restrictions** — background foreground-service-start limits.",
+          "**Prefer** — WorkManager unless genuinely ongoing (e.g. calls).",
+        ],
+      },
+      {
+        t: "note",
+        text: "A foreground service shows an ongoing notification (user knows it runs) — for user-visible ongoing tasks (music, calls). FCM can trigger one from a high-priority message within background-start restrictions. For most push-triggered work prefer WorkManager (Doze-aware); use a foreground service only for genuinely ongoing user-visible tasks like an incoming-call UI.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you measure and improve notification delivery and engagement?",
+    a: [
+      {
+        t: "p",
+        text: "Track *delivery* (FCM's delivery data / BigQuery export shows sent vs delivered vs dropped) and *engagement* (opens/taps via Analytics, attributing which notifications drive action). Improve delivery by using correct priority, valid tokens (prune invalid), and respecting Doze; improve engagement with relevant, well-timed, *personalized* content, good channels (so users don't mute you), rich formatting, and A/B testing copy/timing. Watch *opt-out/mute rates* — over-notifying erodes delivery permission. Treat notifications as a measured, respectful channel.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Delivery data** — FCM/BigQuery: sent vs delivered vs dropped.",
+          "**Engagement** — opens/taps via Analytics.",
+          "**Improve** — correct priority, valid tokens, relevance, timing.",
+          "**Watch** — opt-out/mute rates; don't over-notify.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Measure delivery (FCM delivery data/BigQuery export: sent vs delivered vs dropped) and engagement (opens/taps via Analytics). Improve delivery with correct priority, valid tokens (prune), Doze respect; improve engagement with relevant, well-timed, personalized content, good channels, rich formatting, A/B tests. Watch opt-out/mute rates — over-notifying erodes delivery permission.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is google-services.json, and is it a secret?",
+    a: [
+      {
+        t: "p",
+        text: "`google-services.json` is the Firebase *client config* file (project id, app id, API keys for client SDKs, sender id) that the *google-services Gradle plugin* reads at build time to wire up Firebase. It's *not a secret* in the sensitive sense — it identifies your Firebase project and is embedded in the app anyway; security comes from *Security Rules* and *server-side credentials*, not from hiding this file. That said, teams often keep it out of public repos by convention. Losing it isn't a breach; leaking your *service-account key* would be.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Client config** — project/app id, client API keys, sender id.",
+          "**Read by** — the google-services Gradle plugin at build.",
+          "**Not a secret** — embedded in the app; security via Rules/server.",
+          "**Contrast** — service-account key IS sensitive.",
+        ],
+      },
+      {
+        t: "note",
+        text: "google-services.json is Firebase client config (project/app id, client API keys, sender id) read by the google-services Gradle plugin at build. It's not a sensitive secret — it identifies the project and ships in the app; security comes from Security Rules and server credentials. Teams may keep it out of public repos by convention. The service-account key, by contrast, IS sensitive.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How would you architect push for reliability when messages must not be lost?",
+    a: [
+      {
+        t: "p",
+        text: "FCM is *best-effort* — not a guaranteed delivery bus. For must-not-lose messages, treat push as a *wake-up signal* and make the *server the source of truth*: on receipt, the client *fetches* any missed items from an ordered, idempotent API (using a cursor/last-synced marker), so even a dropped push is recovered on the next sync or app open. Persist unread state server-side, use high priority for urgency, dedupe by message id, and periodically *reconcile* (on app foreground). Never rely solely on the push payload for critical data.",
+      },
+      {
+        t: "list",
+        items: [
+          "**FCM best-effort** — not guaranteed delivery.",
+          "**Push = wake-up** — server is source of truth.",
+          "**Fetch missed** — ordered idempotent API + cursor.",
+          "**Reconcile** — on foreground; dedupe by message id.",
+        ],
+      },
+      {
+        t: "note",
+        text: "FCM is best-effort, not guaranteed. For must-not-lose messages, treat push as a wake-up signal with the server as source of truth: on receipt, fetch missed items from an ordered, idempotent API (cursor/last-synced), so a dropped push is recovered on next sync/open. Persist unread server-side, use high priority, dedupe by id, reconcile on foreground. Never rely solely on the payload for critical data.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What happens to a token when the app is uninstalled or data is cleared?",
+    a: [
+      {
+        t: "p",
+        text: "On *uninstall* the token becomes *invalid* — FCM eventually reports it as `NotRegistered`/`UNREGISTERED` in send responses, and you should *delete it* from your server. On *clear data* or some *restores*, the token is *regenerated* and `onNewToken` fires with the new one (update the server). So a token is not permanent: always handle rotation via `onNewToken`, and prune tokens that FCM marks unregistered. Sending to a dead token wastes quota and skews delivery metrics.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Uninstall** — token invalid; FCM reports NotRegistered → delete it.",
+          "**Clear data/restore** — token regenerated; `onNewToken` fires.",
+          "**Not permanent** — handle rotation, prune dead tokens.",
+          "**Dead token** — wastes quota, skews metrics.",
+        ],
+      },
+      {
+        t: "note",
+        text: "On uninstall the token becomes invalid — FCM reports NotRegistered/UNREGISTERED in send responses; delete it server-side. On clear-data/some restores the token regenerates and onNewToken fires (update the server). Tokens aren't permanent — handle rotation and prune dead ones; sending to them wastes quota and skews delivery metrics.",
+      },
+    ],
+  },
 ];
 
 export default qa;

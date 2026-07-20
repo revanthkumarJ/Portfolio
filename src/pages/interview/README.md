@@ -60,8 +60,11 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Build, Distribution & Play Store** — expanded (Gradle & the Build System 30,
   Signing/R8/Versioning 30, AAB/APK & Play App Signing 30, Play Console 30). Every
   topic ≥ 30 questions, teaching-first answers.
-- ⬜ Firebase, KMP, System Design — pending expansion (many topics already ≥ 30;
-  audit and top up).
+- ✅ **Firebase** — expanded (Cloud Messaging/FCM 30, Crashlytics & Analytics 30,
+  Remote Config/A-B/App Distribution 30, Auth & Databases 30). Every topic ≥ 30
+  questions, teaching-first answers.
+- ⬜ KMP, System Design — pending expansion (many topics already ≥ 30; audit and
+  top up).
 
 **Completed**
 - ✅ **Architecture** — MVC, MVP, MVVM, MVI, Clean Architecture, Modularization
