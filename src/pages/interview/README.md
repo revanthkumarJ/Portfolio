@@ -43,8 +43,10 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Data & Storage** — expanded (Room Fundamentals 30, Room Relations &
   Migrations 30, DataStore & SharedPreferences 30, Caching & Offline-First 30,
   Paging 3 30). Every topic ≥ 30 questions, teaching-first answers.
-- ⬜ Networking,
-  DI, Background Work, Testing, Performance, Distribution, Firebase, KMP, System
+- ✅ **Networking** — expanded (HTTP & REST 31, Retrofit & OkHttp 30, JSON
+  Serialization 30, Error Handling & Auth 30, Ktor & WebSockets 30). Every topic
+  ≥ 30 questions, teaching-first answers.
+- ⬜ DI, Background Work, Testing, Performance, Distribution, Firebase, KMP, System
   Design — pending expansion (many topics already ≥ 30; audit and top up).
 
 **Completed**
