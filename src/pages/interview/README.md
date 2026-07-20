@@ -27,6 +27,9 @@ shippable between categories.
 - ✅ **Kotlin Language** — Null Safety & Types, Classes & Objects, Functions/
   Lambdas/Scope Functions, Collections & Sequences, Generics & Variance,
   Delegation & Advanced
+- ✅ **Android Core** — Activity Lifecycle & State, Fragments & Lifecycle,
+  Intents/Tasks/Launch Modes, Services/Receivers/Providers, Context/Processes/
+  App Startup, Threading/Handler-Looper/Permissions
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
