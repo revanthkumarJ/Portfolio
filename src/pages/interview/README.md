@@ -13,6 +13,21 @@ explain the concept plainly → direct answer → code → edge cases (not terse
 interview-speak). Built category by category across sessions; the site is always
 shippable between categories.
 
+## Expansion pass — 30+ questions per topic
+
+A second pass raises every topic to a **minimum of 30 questions** (target 40+),
+spanning basic definitions, "how it works internally", comparisons, practical/
+code, edge cases & gotchas, senior/architecture, and real-world scenarios. Every
+answer follows the teaching-first structure (plain-English concept → direct
+answer → annotated code where applicable → caveats/mistakes → one-line interview
+tip via a `note` block). Category-by-category status:
+
+- ✅ **Architecture** — expanded (MVC 30, MVP 31, MVVM 43, MVI 30, Clean 30,
+  Modularization 31). Every topic ≥ 30 questions, teaching-first answers.
+- ⬜ Compose, Coroutines, Flows, Kotlin, Android Core, Data & Storage, Networking,
+  DI, Background Work, Testing, Performance, Distribution, Firebase, KMP, System
+  Design — pending expansion (many topics already ≥ 30; audit and top up).
+
 **Completed**
 - ✅ **Architecture** — MVC, MVP, MVVM, MVI, Clean Architecture, Modularization
 - ✅ **Jetpack Compose (UI)** — Fundamentals, State & Recomposition, Modifiers &
