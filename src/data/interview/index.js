@@ -14,6 +14,7 @@ import networking from "./networking/index.js";
 import dependencyInjection from "./dependency-injection/index.js";
 import backgroundWork from "./background-work/index.js";
 import testing from "./testing/index.js";
+import performance from "./performance/index.js";
 
 // Registry for the interview-preparation section. The hub and topic routes
 // render entirely from this — add categories/topics here, never in the JSX.
@@ -36,6 +37,7 @@ export const categories = [
   dependencyInjection,
   backgroundWork,
   testing,
+  performance,
 ];
 
 export function findTopic(categoryId, topicId) {

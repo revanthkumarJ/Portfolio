@@ -40,6 +40,8 @@ shippable between categories.
   AlarmManager & Foreground Services, Doze/Battery & Choosing the Right Tool
 - ✅ **Testing** — Testing Strategy & the Pyramid, Unit Testing (JUnit/Fakes/
   Mocks), Coroutine & Flow Testing, Android & Compose Testing
+- ✅ **Performance & Memory** — Memory Leaks & Management, ANRs/Jank/Rendering,
+  Profiling/Startup/Baseline Profiles, App Size & Battery
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
