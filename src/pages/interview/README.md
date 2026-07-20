@@ -46,6 +46,8 @@ shippable between categories.
   Versioning, AAB/APK & Play App Signing, Play Console (tracks/rollouts/updates)
 - ✅ **Firebase** — Cloud Messaging (FCM), Crashlytics & Analytics, Remote Config/
   A-B Testing/App Distribution, Auth & Databases
+- ✅ **Kotlin Multiplatform** — KMP Fundamentals, iOS Interop, Libraries &
+  Compose Multiplatform
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
