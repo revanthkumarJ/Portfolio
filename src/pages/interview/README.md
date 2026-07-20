@@ -28,7 +28,10 @@ tip via a `note` block). Category-by-category status:
   Layout 30, Lazy Lists 31, Side Effects 31, Performance & Stability 31, Theming &
   Animation 31, Navigation/Interop/Testing 31). Every topic ≥ 30 questions,
   teaching-first answers.
-- ⬜ Coroutines, Flows, Kotlin, Android Core, Data & Storage, Networking,
+- ✅ **Coroutines** — expanded (Basics 31, Builders & Scopes 31, Structured
+  Concurrency 31, Dispatchers 32, Cancellation 31, Exception Handling 31, Channels
+  & Synchronization 31). Every topic ≥ 30 questions, teaching-first answers.
+- ⬜ Flows, Kotlin, Android Core, Data & Storage, Networking,
   DI, Background Work, Testing, Performance, Distribution, Firebase, KMP, System
   Design — pending expansion (many topics already ≥ 30; audit and top up).
 
