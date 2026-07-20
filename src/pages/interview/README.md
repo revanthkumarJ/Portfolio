@@ -46,7 +46,9 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Networking** — expanded (HTTP & REST 31, Retrofit & OkHttp 30, JSON
   Serialization 30, Error Handling & Auth 30, Ktor & WebSockets 30). Every topic
   ≥ 30 questions, teaching-first answers.
-- ⬜ DI, Background Work, Testing, Performance, Distribution, Firebase, KMP, System
+- ✅ **Dependency Injection** — expanded (DI Fundamentals 30, Dagger 30, Hilt 30,
+  Koin/KMP/Testing 30). Every topic ≥ 30 questions, teaching-first answers.
+- ⬜ Background Work, Testing, Performance, Distribution, Firebase, KMP, System
   Design — pending expansion (many topics already ≥ 30; audit and top up).
 
 **Completed**

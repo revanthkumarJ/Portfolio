@@ -141,6 +141,671 @@ startKoin { modules(appModule) }`,
       },
     ],
   },
+  {
+    level: "junior",
+    q: "How do you define and start a Koin module?",
+    a: [
+      {
+        t: "p",
+        text: "A Koin `module { }` is a DSL declaring how to create dependencies — `single { }` for singletons, `factory { }` for new instances, `viewModel { }` for ViewModels. You then `startKoin { modules(...) }` (usually in the Application) to build the container. It's runtime DI: definitions are resolved when requested.",
+      },
+      {
+        t: "code",
+        title: "Koin module",
+        code: `val appModule = module {
+    single { Retrofit.Builder()...create(Api::class.java) }
+    single<Repository> { RepositoryImpl(get(), get()) }   // get() resolves deps
+    viewModel { HomeViewModel(get()) }
+}
+// Application: startKoin { androidContext(this@App); modules(appModule) }`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`module { }`** — DSL of definitions.",
+          "**`single`/`factory`/`viewModel`** — instance strategies.",
+          "**`get()`** — resolve a dependency inside a definition.",
+          "**`startKoin { modules(...) }`** — build the container.",
+        ],
+      },
+      {
+        t: "note",
+        text: "A Koin module { } declares definitions: single { } (singleton), factory { } (new each time), viewModel { } (ViewModel); get() resolves dependencies inside a definition. startKoin { androidContext(...); modules(...) } builds the container (in the Application). It's runtime DI — resolved on request.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you inject dependencies with Koin (by inject, get, by viewModel)?",
+    a: [
+      {
+        t: "p",
+        text: "In Android classes, use `by inject<T>()` (lazy) or `get<T>()` (eager) to retrieve dependencies, and `by viewModel<T>()` for ViewModels. Constructor injection works by having definitions call `get()`. Koin resolves the type from its modules at the point of retrieval — no annotations or code generation.",
+      },
+      {
+        t: "code",
+        title: "Retrieving dependencies",
+        code: `class MyActivity : ComponentActivity() {
+    private val repo: Repository by inject()      // lazy
+    private val viewModel: HomeViewModel by viewModel()
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`by inject()`** — lazy dependency retrieval.",
+          "**`get()`** — eager retrieval.",
+          "**`by viewModel()`** — Koin-provided ViewModel.",
+          "**No annotations** — runtime resolution from modules.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Koin retrieval: by inject<T>() (lazy) / get<T>() (eager) for dependencies, by viewModel<T>() for ViewModels; definitions use get() for constructor deps. No annotations or codegen — Koin resolves types from modules at retrieval time (runtime DI).",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you scope dependencies in Koin?",
+    a: [
+      {
+        t: "p",
+        text: "Beyond `single` (app-wide) and `factory` (new each time), Koin has *scopes* — `scope<MyActivity> { scoped { ... } }` creates instances tied to a scope's lifetime (e.g. an Activity), released when the scope closes. Koin also provides lifecycle-aware scopes (`activityScope`, `fragmentScope`). Scoped instances are single within their scope, like Dagger's lifecycle scopes but resolved at runtime.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`single`** — app-wide singleton.",
+          "**`factory`** — new instance each request.",
+          "**`scoped` in a `scope`** — tied to a scope's lifetime.",
+          "**Lifecycle scopes** — `activityScope`/`fragmentScope`.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Koin scoping: single (app-wide), factory (new each time), and scope<T> { scoped { } } for lifetime-tied instances (released when the scope closes), plus lifecycle-aware activityScope/fragmentScope. Scoped instances are single within their scope — like Dagger scopes but resolved at runtime.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What are the trade-offs of Koin versus Hilt?",
+    a: [
+      {
+        t: "p",
+        text: "*Koin* is runtime DI (a Kotlin DSL) — simple setup, no annotation processing/codegen (fast builds), KMP-friendly, easy to learn. But errors surface *at runtime* (missing definition = crash when requested), and there's a small runtime cost. *Hilt* is compile-time — errors caught at build, no reflection (fast runtime), but more build time and ceremony. Choose Koin for simplicity/KMP/fast builds; Hilt for compile-time safety in large Android apps.",
+      },
+      {
+        t: "table",
+        headers: ["", "Koin", "Hilt"],
+        rows: [
+          ["Resolution", "runtime (DSL)", "compile-time (codegen)"],
+          ["Errors", "at runtime", "at build"],
+          ["Build cost", "low", "annotation processing"],
+          ["KMP", "yes", "no"],
+        ],
+      },
+      {
+        t: "list",
+        items: [
+          "**Koin** — runtime DSL, simple, fast builds, KMP; runtime errors.",
+          "**Hilt** — compile-time safe, no reflection; more build cost/ceremony.",
+          "**Koin for** — simplicity, KMP, small/medium apps.",
+          "**Hilt for** — compile-time safety in large Android apps.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Koin: runtime DSL — simple, no codegen (fast builds), KMP-friendly, but errors at runtime (missing definition crashes) + slight runtime cost. Hilt: compile-time — errors caught at build, no reflection, but more build cost/ceremony. Koin for simplicity/KMP; Hilt for compile-time safety in large Android apps.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you expose a shared Koin graph to iOS in a KMP project?",
+    a: [
+      {
+        t: "p",
+        text: "Define the shared Koin modules in `commonMain` and provide a Kotlin *initializer function* (e.g. `initKoin()`) that iOS calls from Swift to start Koin. Since iOS can't use Koin's DSL directly from Swift ergonomically, expose *helper accessor functions* (or a `KoinComponent` facade) in shared code that Swift calls to obtain dependencies. This lets the iOS app bootstrap and use the shared graph.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Shared modules** — in `commonMain`.",
+          "**`initKoin()`** — a Kotlin function iOS calls to start Koin.",
+          "**Accessor facade** — helper functions Swift calls for deps.",
+          "**Bootstrap** — iOS app starts and uses the shared graph.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Expose the shared Koin graph to iOS: define modules in commonMain, provide a Kotlin initializer (initKoin()) iOS calls from Swift, and expose accessor helper functions (or a KoinComponent facade) in shared code that Swift calls to obtain dependencies — since Swift can't ergonomically use Koin's DSL directly.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you swap dependencies for testing in Koin?",
+    a: [
+      {
+        t: "p",
+        text: "Because Koin resolves at runtime, you can override definitions easily: start Koin with a *test module* that provides fakes (or use `koinApplication`/`startKoin` with `modules(testModule)`), or use Koin's test support (`KoinTest`, `declareMock`, `checkModules`). Overriding a definition with the same type replaces the real one — simple to inject fakes without recompiling a component.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Test module** — provide fakes; start Koin with it.",
+          "**Override** — same-type definition replaces the real one.",
+          "**`KoinTest`/`declareMock`** — test support.",
+          "**`checkModules`** — verify the graph resolves.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Koin's runtime resolution makes test-swapping easy: start Koin with a test module providing fakes (or override definitions — same type replaces the real one), using KoinTest/declareMock. checkModules verifies the graph resolves. No component recompile needed to inject fakes.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you handle constructor injection with Koin's DSL?",
+    a: [
+      {
+        t: "p",
+        text: "In a Koin definition, call `get()` for each constructor parameter — Koin resolves them from the graph. So a class uses normal constructor injection (dependencies as parameters), and the module's definition wires them with `get()`. This keeps classes framework-agnostic (they don't know about Koin) while the module does the wiring.",
+      },
+      {
+        t: "code",
+        title: "get() wiring",
+        code: `class UserRepository(private val api: Api, private val dao: UserDao)   // plain constructor
+val module = module {
+    single { UserRepository(get(), get()) }   // Koin resolves api and dao
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`get()` per parameter** — Koin resolves each from the graph.",
+          "**Plain constructors** — classes are framework-agnostic.",
+          "**Module wires** — the definition supplies dependencies.",
+          "**Named/params** — `get(named(\"x\"))` / `get { parametersOf(...) }`.",
+        ],
+      },
+      {
+        t: "note",
+        text: "In a Koin definition, call get() for each constructor parameter — Koin resolves them from the graph. Classes use plain constructor injection (framework-agnostic, don't know Koin); the module does the wiring. Use get(named(\"x\")) for qualified deps and parametersOf for runtime params.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you bind an interface to an implementation in Koin?",
+    a: [
+      {
+        t: "p",
+        text: "Specify the *interface type* on the definition — `single<Repository> { RepositoryImpl(get()) }` binds the `Repository` interface to `RepositoryImpl`, so injecting `Repository` gives you the impl. Without the explicit type, Koin registers it as `RepositoryImpl`. This is how you program to interfaces with Koin (the equivalent of Dagger's `@Binds`).",
+      },
+      {
+        t: "code",
+        title: "Interface binding",
+        code: `single<Repository> { RepositoryImpl(get()) }   // inject Repository -> RepositoryImpl
+// consumer:
+class ViewModel(private val repo: Repository)   // depends on the interface`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`single<Interface> { Impl(...) }`** — bind interface → impl.",
+          "**Without the type** — registered as the concrete class.",
+          "**Program to interfaces** — consumers depend on the abstraction.",
+          "**= Dagger `@Binds`** — the runtime equivalent.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Specify the interface type: single<Repository> { RepositoryImpl(get()) } binds Repository → RepositoryImpl (injecting Repository gives the impl). Without the type it registers as the concrete class. This is programming-to-interfaces in Koin — the runtime equivalent of Dagger's @Binds.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you verify a Koin graph is complete?",
+    a: [
+      {
+        t: "p",
+        text: "Since Koin resolves at runtime, a missing definition only crashes when that dependency is requested — potentially in production. Mitigate with `checkModules()` (a Koin test that attempts to resolve every definition, catching missing dependencies at test time), and `verify()` for module verification. Running these in CI recovers some of the compile-time safety Koin otherwise lacks.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Runtime resolution risk** — missing definition crashes on request.",
+          "**`checkModules()`** — a test resolving all definitions.",
+          "**`verify()`** — module verification.",
+          "**CI** — run these to catch missing deps before production.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Koin resolves at runtime, so a missing definition crashes only when requested. Use checkModules() (a test that resolves every definition, catching missing deps at test time) and verify() in CI — recovering some of the compile-time safety Koin lacks. Run them to catch graph gaps before production.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you inject a ViewModel with Koin?",
+    a: [
+      {
+        t: "p",
+        text: "Declare it in a module with `viewModel { HomeViewModel(get()) }`, then retrieve it with `by viewModel()` (Android) or `koinViewModel()` (Compose). Koin's `koin-androidx-viewmodel` integration handles the `ViewModelProvider.Factory` and scoping. For a runtime parameter, use `viewModel { (id: String) -> DetailViewModel(id, get()) }` and pass it via `parametersOf`.",
+      },
+      {
+        t: "code",
+        title: "Koin ViewModel",
+        code: `val module = module {
+    viewModel { HomeViewModel(get()) }
+    viewModel { (id: String) -> DetailViewModel(id, get()) }
+}
+// Compose: val vm = koinViewModel<HomeViewModel>()
+// with param: koinViewModel { parametersOf(id) }`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`viewModel { }`** — declare the ViewModel definition.",
+          "**`by viewModel()`/`koinViewModel()`** — retrieve (Views/Compose).",
+          "**Parameters** — `viewModel { (arg) -> }` + `parametersOf`.",
+          "**Integration** — koin-androidx-viewmodel handles the factory.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Koin ViewModel: declare viewModel { HomeViewModel(get()) }, retrieve with by viewModel() (Views) or koinViewModel() (Compose); koin-androidx-viewmodel handles the factory/scoping. For runtime params: viewModel { (id) -> DetailViewModel(id, get()) } passed via parametersOf(id).",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you pass runtime parameters to a Koin definition?",
+    a: [
+      {
+        t: "p",
+        text: "Koin supports *parameter injection*: a definition can take runtime parameters via a lambda `{ (param) -> ... }`, and you pass them at retrieval with `parametersOf(value)`. This handles the same case as Dagger's assisted injection (mixing injected deps with a runtime id) but at runtime, without a generated factory.",
+      },
+      {
+        t: "code",
+        title: "Parameters",
+        code: `single { (userId: String) -> UserSession(userId, get()) }
+val session: UserSession = get { parametersOf(currentUserId) }`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`{ (param) -> }`** — definition takes runtime params.",
+          "**`parametersOf(value)`** — pass at retrieval.",
+          "**Runtime + injected** — like assisted injection.",
+          "**No generated factory** — resolved at runtime.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Koin parameter injection: a definition takes runtime params via { (param) -> ... } and you pass them with parametersOf(value) at retrieval — handling the assisted-injection case (injected deps + a runtime id) at runtime, without a generated factory.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What DI options exist for Kotlin Multiplatform, and how do they compare?",
+    a: [
+      {
+        t: "p",
+        text: "The main KMP DI options are *Koin* (runtime DSL, most popular, simple, multiplatform) and *Kodein-DI* (another runtime multiplatform container). *Hilt/Dagger are Android-only* (JVM annotation processing) so they can't be used in shared KMP code. Some teams use *manual DI* in `commonMain` (a shared container class) to avoid a framework entirely. Koin is the common choice.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Koin** — runtime DSL, popular, simple, multiplatform.",
+          "**Kodein-DI** — another multiplatform container.",
+          "**Manual DI** — a shared container in `commonMain`.",
+          "**Not Hilt/Dagger** — Android-only.",
+        ],
+      },
+      {
+        t: "note",
+        text: "KMP DI options: Koin (runtime DSL, popular, simple, multiplatform), Kodein-DI (another multiplatform container), or manual DI (a shared container in commonMain). Hilt/Dagger are Android-only (JVM annotation processing) — unusable in shared code. Koin is the common choice.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you handle Android context and platform dependencies in Koin?",
+    a: [
+      {
+        t: "p",
+        text: "Pass the Android `Context` into Koin at startup with `androidContext(this)` in `startKoin { }`, then retrieve it in definitions with `androidContext()` (or `get()`). For platform-specific dependencies in KMP, use `expect`/`actual` factory functions or separate platform Koin modules — the Android module provides Android impls, the iOS module provides iOS impls.",
+      },
+      {
+        t: "code",
+        title: "androidContext",
+        code: `startKoin { androidContext(this@App); modules(appModule) }
+val module = module {
+    single { AppDatabase.build(androidContext()) }   // Context available
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`androidContext(this)`** — provide the Context at startup.",
+          "**`androidContext()`** — retrieve it in definitions.",
+          "**Platform deps** — `expect`/`actual` or platform modules.",
+          "**KMP** — per-platform module provides platform impls.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Provide the Android Context with androidContext(this) in startKoin, retrieve with androidContext() in definitions. For KMP platform-specific dependencies, use expect/actual factories or separate platform Koin modules (Android module = Android impls, iOS module = iOS impls).",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is a fake versus a mock, and which should you inject in tests?",
+    a: [
+      {
+        t: "p",
+        text: "A *fake* is a working lightweight implementation (an in-memory repository) you write; a *mock* is a generated object whose behavior you stub and whose calls you verify (Mockito/MockK). *Prefer fakes* for most tests — they're more realistic, less brittle, and reusable; use mocks for verifying interactions (was `analytics.log()` called?) or when a fake is impractical. Both are enabled by DI.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Fake** — a real lightweight implementation (in-memory).",
+          "**Mock** — stubbed behavior + verifiable calls (MockK/Mockito).",
+          "**Prefer fakes** — realistic, less brittle, reusable.",
+          "**Mocks for** — interaction verification / impractical fakes.",
+        ],
+      },
+      {
+        t: "note",
+        text: "A fake is a working lightweight implementation you write (in-memory repo); a mock is a generated stub with verifiable calls (MockK/Mockito). Prefer fakes (realistic, less brittle, reusable); use mocks to verify interactions (was log() called?) or when a fake is impractical. DI enables injecting either.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you organize DI modules in a large app?",
+    a: [
+      {
+        t: "p",
+        text: "Split modules by *concern* or *feature*: a network module, database module, and per-feature modules — rather than one giant module. In multi-module apps, each Gradle module owns its DI module(s). This keeps DI maintainable, makes dependencies discoverable, allows feature modules to declare their own bindings, and supports testing modules in isolation. Aggregate them at the app level.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Split by concern/feature** — network, DB, per-feature modules.",
+          "**Per Gradle module** — each owns its DI module(s).",
+          "**Discoverable + maintainable** — not one giant module.",
+          "**Aggregate at app** — combine into the graph.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Organize DI modules by concern/feature (network, DB, per-feature) rather than one giant module; in multi-module apps each Gradle module owns its DI module(s), aggregated at the app level. Keeps DI maintainable/discoverable, lets features declare their own bindings, and supports isolated testing.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What Koin extensions exist for Android and Compose?",
+    a: [
+      {
+        t: "p",
+        text: "Koin has Android-specific artifacts: `koin-android` (for `androidContext`, `by inject`, scopes), `koin-androidx-viewmodel` (`by viewModel`), `koin-androidx-workmanager` (worker injection), and `koin-androidx-compose` (`koinViewModel()`, `koinInject()` in composables). These integrate Koin with Android/Compose lifecycles and components idiomatically.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`koin-android`** — `androidContext`, `by inject`, scopes.",
+          "**`koin-androidx-viewmodel`** — `by viewModel`.",
+          "**`koin-androidx-compose`** — `koinViewModel()`/`koinInject()`.",
+          "**`koin-androidx-workmanager`** — Worker injection.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Koin Android/Compose extensions: koin-android (androidContext, by inject, scopes), koin-androidx-viewmodel (by viewModel), koin-androidx-compose (koinViewModel()/koinInject()), koin-androidx-workmanager (worker injection) — integrating Koin with Android/Compose lifecycles idiomatically.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle DI for feature modules that can be dynamically loaded?",
+    a: [
+      {
+        t: "p",
+        text: "Dynamic feature modules complicate DI because they load at runtime. In *Koin*, load the feature's module when the feature starts (`loadKoinModules(featureModule)`) and unload it when done. In *Hilt*, dynamic feature modules can't add to the app component directly — you use `@EntryPoint`/a separate component or expose dependencies from the base module. Koin's runtime nature makes dynamic loading simpler.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Koin** — `loadKoinModules`/`unloadKoinModules` at feature load/unload.",
+          "**Hilt** — dynamic features can't extend the app component; use `@EntryPoint`.",
+          "**Base exposes deps** — features consume from the base module.",
+          "**Koin simpler** — runtime loading fits dynamic features.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Dynamic feature modules load at runtime. Koin: loadKoinModules(featureModule) on load, unloadKoinModules on unload. Hilt: dynamic features can't extend the app component — use @EntryPoint or expose deps from the base module. Koin's runtime nature makes dynamic-feature DI simpler than Hilt.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you test a repository with an injected fake data source?",
+    a: [
+      {
+        t: "p",
+        text: "Construct the repository with a *fake* API/DAO (an in-memory or scripted implementation of the interface) and test its logic — caching, mapping, error handling — without real network/DB. Since the repository takes its data sources via constructor, you just pass fakes. Assert the repository returns the expected domain data and handles errors correctly.",
+      },
+      {
+        t: "code",
+        title: "Repository test",
+        code: `val repo = UserRepository(FakeApi(cannedUsers), FakeDao())
+val result = repo.getUsers()
+assertEquals(expectedUsers, result)`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Fake data sources** — in-memory/scripted API/DAO.",
+          "**Constructor injection** — pass fakes directly.",
+          "**Test logic** — caching, mapping, errors.",
+          "**No real I/O** — fast, deterministic.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Construct the repository with fake data sources (in-memory/scripted API/DAO implementing the interfaces) and test its logic — caching, mapping, error handling — without real network/DB. Constructor injection lets you pass fakes directly; assert the repo returns expected domain data and handles errors.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "When would you choose manual DI over Koin or Hilt?",
+    a: [
+      {
+        t: "p",
+        text: "Manual DI (a hand-written container) suits *small apps*, *simple graphs*, *learning*, or *KMP without a framework* — it's explicit, has no dependencies/build cost, and no learning curve. Choose a framework (Hilt/Koin) when the graph grows complex (scopes, lifecycles, many dependencies, ViewModel injection) where manual wiring becomes tedious and error-prone. The threshold is roughly when scope management and boilerplate outweigh the framework's cost.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Manual DI** — small apps, simple graphs, learning, framework-free KMP.",
+          "**Explicit, no cost** — no build/learning overhead.",
+          "**Framework** — complex graphs, scopes, lifecycles, ViewModels.",
+          "**Threshold** — when boilerplate/scoping outweighs framework cost.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Manual DI suits small apps, simple graphs, learning, or framework-free KMP — explicit, no build/learning cost. Choose Hilt/Koin when the graph grows complex (scopes, lifecycles, many deps, ViewModel injection) where manual wiring gets tedious/error-prone. The threshold: when boilerplate/scope management outweighs the framework's cost.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you inject platform-specific implementations in KMP?",
+    a: [
+      {
+        t: "p",
+        text: "Use `expect`/`actual` for the *declaration* (define an `expect` function/class in `commonMain`, `actual` implementations per platform) or provide platform-specific *Koin modules* that bind platform impls. For example, a `DatabaseDriverFactory` is `expect` in common, `actual` on Android (Room/SQLDelight Android driver) and iOS (native driver), and the shared code depends on the common interface.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`expect`/`actual`** — common declaration, per-platform implementation.",
+          "**Platform Koin modules** — bind platform impls.",
+          "**Shared code depends on the common interface** — impls injected per platform.",
+          "**Example** — DatabaseDriverFactory, platform APIs.",
+        ],
+      },
+      {
+        t: "note",
+        text: "KMP platform impls: use expect/actual (common declaration, per-platform actual) or platform-specific Koin modules binding platform impls. Shared code depends on the common interface; each platform provides its implementation (e.g. DatabaseDriverFactory: Room/SQLDelight driver on Android, native on iOS).",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the role of the Application class in DI setup?",
+    a: [
+      {
+        t: "p",
+        text: "The `Application` is the process-lifetime root, so it's where you *initialize* the DI container: `@HiltAndroidApp` for Hilt (generates the root component), or `startKoin { }` for Koin. It hosts the app-scoped graph and provides the application `Context`. Every DI framework bootstraps from the `Application`.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Process-lifetime root** — hosts the app-scoped graph.",
+          "**Hilt** — `@HiltAndroidApp` generates the root component.",
+          "**Koin** — `startKoin { modules(...) }`.",
+          "**Provides app Context** — for the container.",
+        ],
+      },
+      {
+        t: "note",
+        text: "The Application (process-lifetime root) initializes the DI container: @HiltAndroidApp (Hilt — generates the root component) or startKoin { modules(...) } (Koin). It hosts the app-scoped graph and provides the application Context. Every DI framework bootstraps from the Application.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you avoid the service-locator anti-pattern while using Koin?",
+    a: [
+      {
+        t: "p",
+        text: "Koin *can* be used like a service locator (calling `get()`/`inject()` everywhere), which reintroduces hidden dependencies. Avoid it by using *constructor injection* — have definitions call `get()` to build objects, but make classes themselves receive dependencies via their *constructors* (not by calling Koin inside). Reserve `by inject()`/`get()` for the entry points (Activities/Fragments) where constructor injection isn't possible.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Constructor injection** — classes receive deps via constructors.",
+          "**`get()` in definitions** — to build, not inside class logic.",
+          "**Entry-point retrieval only** — `by inject()` in Activities/Fragments.",
+          "**Avoid** — calling Koin throughout class code (hidden deps).",
+        ],
+      },
+      {
+        t: "note",
+        text: "Koin can degrade into a service locator if you call get()/inject() everywhere (hidden deps). Avoid it: use constructor injection (definitions call get() to build, but classes receive deps via constructors), reserving by inject()/get() for entry points (Activities/Fragments) where constructor injection isn't possible.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you use named qualifiers in Koin?",
+    a: [
+      {
+        t: "p",
+        text: "To register multiple definitions of the same type, give them *names* (qualifiers): `single(named(\"auth\")) { ... }` and `single(named(\"public\")) { ... }`, then retrieve with `get(named(\"auth\"))` or `by inject(named(\"auth\"))`. This is Koin's equivalent of Dagger qualifiers for disambiguating same-typed bindings.",
+      },
+      {
+        t: "code",
+        title: "Named definitions",
+        code: `single(named("auth")) { authClient() }
+single(named("public")) { publicClient() }
+val client: OkHttpClient = get(named("auth"))`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`named(\"x\")`** — qualify a definition.",
+          "**Retrieve** — `get(named(\"x\"))`/`by inject(named(\"x\"))`.",
+          "**Disambiguate** — multiple same-typed definitions.",
+          "**= Dagger qualifiers** — the runtime equivalent.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Koin named qualifiers disambiguate same-typed definitions: single(named(\"auth\")) { } / single(named(\"public\")) { }, retrieve with get(named(\"auth\")). The runtime equivalent of Dagger's @Qualifier/@Named for two OkHttpClients, multiple config strings, etc.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you test a ViewModel with a fake in a DI-agnostic way?",
+    a: [
+      {
+        t: "p",
+        text: "The cleanest ViewModel tests bypass DI entirely: construct the ViewModel directly with fakes (`HomeViewModel(FakeRepo())`) — no Hilt/Koin needed. Because the ViewModel takes dependencies via its constructor, tests provide test doubles and assert its state/behavior with `runTest` + a test dispatcher. Reserve DI-framework test setup (Hilt test rules, Koin test modules) for integration tests.",
+      },
+      {
+        t: "code",
+        title: "DI-agnostic VM test",
+        code: `@Test fun loads() = runTest {
+    val vm = HomeViewModel(FakeRepo(cannedData))   // no DI framework
+    vm.load(); advanceUntilIdle()
+    assertEquals(UiState.Content(cannedData), vm.state.value)
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Construct directly** — pass fakes, no DI framework.",
+          "**Constructor injection** — makes this possible.",
+          "**`runTest` + test dispatcher** — deterministic.",
+          "**DI test setup** — reserve for integration tests.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Test ViewModels DI-agnostically: construct directly with fakes (HomeViewModel(FakeRepo())) — no Hilt/Koin needed, since constructor injection lets you pass test doubles. Use runTest + a test dispatcher for determinism. Reserve DI-framework test setup (Hilt rules, Koin test modules) for integration tests.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What are the pros and cons of runtime DI for a large team?",
+    a: [
+      {
+        t: "p",
+        text: "Runtime DI (Koin) *pros*: fast builds (no annotation processing), easy onboarding (simple DSL), KMP support, flexible dynamic loading. *Cons* for large teams/codebases: missing bindings crash *at runtime* (not caught in CI unless you run `checkModules`), the service-locator temptation, and less tooling for large graphs. Large Android teams often prefer *compile-time* DI (Hilt) for the safety net; smaller teams/KMP favor Koin's simplicity.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Pros** — fast builds, easy onboarding, KMP, flexible.",
+          "**Cons** — runtime errors (mitigate with checkModules in CI), service-locator risk.",
+          "**Large Android teams** — often prefer Hilt's compile-time safety.",
+          "**Small teams/KMP** — favor Koin's simplicity.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Runtime DI (Koin) pros: fast builds, easy onboarding, KMP, flexible dynamic loading. Cons for large teams: runtime errors on missing bindings (mitigate with checkModules in CI), service-locator temptation, less large-graph tooling. Large Android teams often prefer Hilt's compile-time safety; small teams/KMP favor Koin.",
+      },
+    ],
+  },
 ];
 
 export default qa;
