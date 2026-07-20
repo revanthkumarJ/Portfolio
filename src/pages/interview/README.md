@@ -18,11 +18,11 @@ shippable between categories.
 - ✅ **Jetpack Compose (UI)** — Fundamentals, State & Recomposition, Modifiers &
   Layout, Lazy Lists, Side Effects, Performance & Stability, Theming & Animation,
   Navigation/Interop/Testing
+- ✅ **Kotlin Flows** — Basics & Cold Flows, Operators, StateFlow & SharedFlow,
+  Buffering/Conflation/Backpressure, Context/flowOn/Conversions, Error Handling &
+  Testing
 
 **Pending (planned order — resume here)**
-1. **Flows** — cold vs hot, operators, StateFlow vs SharedFlow, buffering/
-   conflation/backpressure, flowOn, stateIn/shareIn, callbackFlow, error handling,
-   testing (Turbine)
 2. **Coroutines** — suspend internals, builders, structured concurrency,
    dispatchers, scopes, cancellation, exception handling, channels, select/mutex
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
