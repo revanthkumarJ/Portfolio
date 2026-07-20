@@ -42,6 +42,8 @@ shippable between categories.
   Mocks), Coroutine & Flow Testing, Android & Compose Testing
 - ✅ **Performance & Memory** — Memory Leaks & Management, ANRs/Jank/Rendering,
   Profiling/Startup/Baseline Profiles, App Size & Battery
+- ✅ **Build, Distribution & Play Store** — Gradle & the Build System, Signing/R8/
+  Versioning, AAB/APK & Play App Signing, Play Console (tracks/rollouts/updates)
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
