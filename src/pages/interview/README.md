@@ -51,7 +51,10 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Background Work** — expanded (WorkManager Fundamentals 30, WorkManager
   Advanced 30, AlarmManager & Foreground Services 30, Doze/Battery & Choosing 30).
   Every topic ≥ 30 questions, teaching-first answers.
-- ⬜ Testing, Performance, Distribution, Firebase, KMP, System
+- ✅ **Testing** — expanded (Strategy & Pyramid 30, Unit Testing 30, Coroutine &
+  Flow Testing 30, Android & Compose Testing 30). Every topic ≥ 30 questions,
+  teaching-first answers.
+- ⬜ Performance, Distribution, Firebase, KMP, System
   Design — pending expansion (many topics already ≥ 30; audit and top up).
 
 **Completed**

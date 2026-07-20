@@ -191,6 +191,685 @@ const qa = [
       },
     ],
   },
+  {
+    level: "junior",
+    q: "What is the difference between local (unit) and instrumented tests?",
+    a: [
+      {
+        t: "p",
+        text: "*Local* (unit) tests live in `src/test/`, run on the *JVM* (your machine), are *fast*, and can't use the Android framework (unless with Robolectric). *Instrumented* tests live in `src/androidTest/`, run on a *real device/emulator*, are *slower*, and *can* use the framework (real Room, Espresso, Compose UI tests). Put logic tests (ViewModels, use cases) in local; UI/DB/integration tests in instrumented.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Local (`src/test/`)** — JVM, fast, no framework (or Robolectric).",
+          "**Instrumented (`src/androidTest/`)** — device/emulator, slower, full framework.",
+          "**Local** — ViewModels, use cases, logic.",
+          "**Instrumented** — UI, Room, Espresso, integration.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Local (unit) tests: src/test/, run on the JVM, fast, no Android framework (or Robolectric). Instrumented tests: src/androidTest/, run on a device/emulator, slower, full framework (Room/Espresso/Compose UI). Put logic (ViewModels/use cases) in local; UI/DB/integration in instrumented.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you find and interact with composables in a Compose UI test?",
+    a: [
+      {
+        t: "p",
+        text: "Compose tests work on the *semantics tree*: *find* nodes with `onNodeWithText`/`onNodeWithContentDescription`/`onNodeWithTag`, *assert* with `assertIsDisplayed`/`assertTextEquals`/`assertIsEnabled`, and *act* with `performClick`/`performTextInput`/`performScrollTo`. `testTag` (via `Modifier.testTag`) gives a stable handle independent of visible text. Tests auto-synchronize (wait for idle) before each action.",
+      },
+      {
+        t: "code",
+        title: "Find/act/assert",
+        code: `composeTestRule.onNodeWithTag("email").performTextInput("a@b.com")
+composeTestRule.onNodeWithText("Submit").performClick()
+composeTestRule.onNodeWithText("Welcome").assertIsDisplayed()`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Finders** — `onNodeWithText`/`ContentDescription`/`Tag`.",
+          "**Assertions** — `assertIsDisplayed`/`assertTextEquals`.",
+          "**Actions** — `performClick`/`performTextInput`/`performScrollTo`.",
+          "**`testTag`** — stable handle; auto-sync before actions.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Compose tests operate on the semantics tree: find (onNodeWithText/ContentDescription/Tag), assert (assertIsDisplayed/assertTextEquals/assertIsEnabled), act (performClick/performTextInput/performScrollTo). Modifier.testTag gives a stable handle independent of visible text. Tests auto-wait for idle before actions.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is createComposeRule vs createAndroidComposeRule?",
+    a: [
+      {
+        t: "p",
+        text: "`createComposeRule()` hosts composables in a test *without* a specific Activity — lighter/faster, for self-contained composable tests. `createAndroidComposeRule<MyActivity>()` launches a real *Activity* — needed when the composable depends on the Activity (Hilt injection, `LocalContext` specifics, or the Activity already sets the content). Call `setContent { }` to render the composable under test.",
+      },
+      {
+        t: "code",
+        title: "Compose rules",
+        code: `@get:Rule val rule = createComposeRule()
+@Test fun greets() {
+    rule.setContent { AppTheme { Greeting("Sam") } }
+    rule.onNodeWithText("Hello Sam").assertIsDisplayed()
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`createComposeRule()`** — no Activity; light, self-contained.",
+          "**`createAndroidComposeRule<A>()`** — launches Activity A.",
+          "**`setContent { }`** — render the composable.",
+          "**Android variant** — for Hilt/Context/Activity-set content.",
+        ],
+      },
+      {
+        t: "note",
+        text: "createComposeRule() hosts composables without an Activity (light, self-contained tests); createAndroidComposeRule<A>() launches a real Activity (for Hilt/Context-dependent UI or Activity-set content). Call rule.setContent { AppTheme { … } } to render — wrap in the theme, pass fakes.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How does test synchronization work in Compose tests?",
+    a: [
+      {
+        t: "p",
+        text: "Compose tests *auto-synchronize* — each assertion/action first waits for the app to be *idle* (no pending recomposition or animation). For async data, use `waitUntil { condition }` (poll with a timeout, no `Thread.sleep`). For animations, control the clock: `mainClock.autoAdvance = false` + `advanceTimeBy` to assert mid-animation. Infinite animations keep the tree never-idle, so you must control the clock or the test hangs.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Auto-sync** — waits for idle before each action.",
+          "**`waitUntil { }`** — poll for async conditions.",
+          "**`mainClock`** — control animation timing.",
+          "**Infinite animations** — never idle; must control the clock.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Compose tests auto-synchronize (wait for idle — no pending recomposition/animation — before each action). For async: waitUntil { condition } (poll, no Thread.sleep). For animations: mainClock.autoAdvance = false + advanceTimeBy. Infinite animations never idle — control the clock or the test hangs.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you test a Compose screen that uses a ViewModel?",
+    a: [
+      {
+        t: "p",
+        text: "Inject a *fake ViewModel* (or a real one with fakes) exposing a controllable `StateFlow`, set it as the screen's content, and drive the UI by emitting states — asserting the UI reflects each. Push Loading → Content → Error and assert the rendered UI per state. Verify the ViewModel's functions are called on interactions (via a spy/fake). Keep it a UI test of the screen; unit-test the ViewModel separately.",
+      },
+      {
+        t: "code",
+        title: "Screen + fake VM",
+        code: `val state = MutableStateFlow<UiState>(UiState.Loading)
+rule.setContent { ProductScreen(viewModel = FakeVm(state)) }
+rule.onNodeWithTag("spinner").assertIsDisplayed()
+state.value = UiState.Content(product)
+rule.onNodeWithText(product.name).assertIsDisplayed()`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Fake VM** — controllable `StateFlow`.",
+          "**Emit states** — Loading → Content → Error; assert UI.",
+          "**Verify interactions** — VM functions called on clicks.",
+          "**Separate** — unit-test the VM logic elsewhere.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Test a Compose screen with a fake ViewModel exposing a controllable StateFlow: set it as content, emit states (Loading → Content → Error), assert the UI per state, verify VM functions are called on interactions. Keep it a UI test of the screen; unit-test the ViewModel logic separately.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle semantics merging in Compose tests?",
+    a: [
+      {
+        t: "p",
+        text: "Compose *merges* a composable's semantics with its descendants when a parent sets `mergeDescendants` (buttons, list items do this) — so a button reads as one node to tests and TalkBack. This means a child's text/testTag can be hidden inside the merged node. Tests use the *merged* tree by default; to assert on a specific child, request the *unmerged* tree with `useUnmergedTree = true`.",
+      },
+      {
+        t: "code",
+        title: "Unmerged tree",
+        code: `rule.onNode(hasTestTag("badge"), useUnmergedTree = true).assertIsDisplayed()`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Merging** — parent combines descendant semantics (Button/ListItem).",
+          "**Hidden children** — child text/tag subsumed in the merged node.",
+          "**`useUnmergedTree = true`** — reach specific children.",
+          "**a11y parallel** — merging aids TalkBack too.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Compose merges a composable's semantics with descendants when a parent sets mergeDescendants (Button/ListItem) — one node for tests/TalkBack, hiding child text/tags. Tests use the merged tree by default; use useUnmergedTree = true to assert on specific children. Semantics that aid testing also aid accessibility.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you test navigation in a Compose app?",
+    a: [
+      {
+        t: "p",
+        text: "Set up a `TestNavHostController`, render your `NavHost` with it, perform the UI action, and assert `navController.currentBackStackEntry?.destination?.route` matches the expected destination (and arguments). Alternatively, assert the destination screen's content is displayed (more behavioral). This verifies the click→navigation wiring; test screen content separately.",
+      },
+      {
+        t: "code",
+        title: "Navigation test",
+        code: `lateinit var navController: TestNavHostController
+rule.setContent {
+    navController = TestNavHostController(LocalContext.current).apply {
+        navigatorProvider.addNavigator(ComposeNavigator()) }
+    AppNavHost(navController)
+}
+rule.onNodeWithText("Open").performClick()
+assertThat(navController.currentBackStackEntry?.destination?.route).isEqualTo("detail/{id}")`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`TestNavHostController`** — controllable nav controller.",
+          "**Perform action** — then assert the route.",
+          "**Or assert content** — destination screen displayed.",
+          "**Wiring** — click→navigation; content tested separately.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Test navigation with a TestNavHostController (add ComposeNavigator): render the NavHost with it, perform the click, assert currentBackStackEntry?.destination?.route (and args) — or assert the destination content is displayed. Verifies click→navigation wiring; test screen content separately.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you provide custom semantics for testing a custom composable?",
+    a: [
+      {
+        t: "p",
+        text: "Custom-drawn or gesture-based composables (raw `Canvas`/`pointerInput`) have *no built-in semantics*, so tests (and TalkBack) can't find them. Add `Modifier.semantics { }` with `contentDescription`, `role`, `stateDescription`, `testTag`, or custom actions — making the composable both *testable* and *accessible*. Well-designed semantics serve both purposes.",
+      },
+      {
+        t: "code",
+        title: "Custom semantics",
+        code: `Box(Modifier.pointerInput(Unit) { detectTapGestures { toggle() } }
+    .semantics { role = Role.Switch; stateDescription = if (on) "On" else "Off"; testTag = "wifiToggle" })`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Custom composables** — no built-in semantics.",
+          "**`Modifier.semantics { }`** — contentDescription/role/state/testTag.",
+          "**Testable + accessible** — same metadata serves both.",
+          "**`clearAndSetSemantics`** — present a subtree as one node.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Custom-drawn/gesture composables (Canvas/pointerInput) lack built-in semantics, so add Modifier.semantics { } (contentDescription/role/stateDescription/testTag/custom actions) — making them testable AND accessible. clearAndSetSemantics presents a subtree as one node. Good semantics serve both tests and TalkBack.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you test a Compose list (LazyColumn)?",
+    a: [
+      {
+        t: "p",
+        text: "Because a `LazyColumn` only composes *visible* items, tests must *scroll* to off-screen items before asserting them: `onNodeWithText(...).performScrollTo()` or `onNode(...).performScrollToIndex(n)` on the list. Assert visible items directly. Give items stable `testTag`s or use their text. This handles the lazy nature — you can't assert an item that isn't composed yet.",
+      },
+      {
+        t: "code",
+        title: "Scrolling to an item",
+        code: `rule.onNodeWithTag("list").performScrollToIndex(20)
+rule.onNodeWithText("Item 20").assertIsDisplayed()`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Lazy = only visible composed** — scroll to off-screen items.",
+          "**`performScrollTo`/`performScrollToIndex`** — bring into view.",
+          "**Assert visible items** — directly.",
+          "**Stable tags/text** — to find items.",
+        ],
+      },
+      {
+        t: "note",
+        text: "A LazyColumn only composes visible items, so scroll to off-screen ones before asserting: onNodeWithText(...).performScrollTo() or performScrollToIndex(n) on the list. Assert visible items directly. Use stable testTags/text. You can't assert an item that isn't composed yet.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you use @Preview to create screenshot tests?",
+    a: [
+      {
+        t: "p",
+        text: "Compose Preview Screenshot Testing turns your existing `@Preview` composables into screenshot tests — you add the plugin, mark previews for testing, and Gradle tasks *generate* golden images (`updateDebugScreenshotTest`) and *verify* against them (`validateDebugScreenshotTest`). This reuses the previews you already write for design, giving low-effort visual regression coverage across states (light/dark, different data).",
+      },
+      {
+        t: "code",
+        title: "Preview screenshot test",
+        code: `@Preview(showBackground = true)
+@Composable fun ProfileCardPreview() { AppTheme { ProfileCard(sampleUser) } }
+// ./gradlew updateDebugScreenshotTest  (record)
+// ./gradlew validateDebugScreenshotTest (verify)`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Reuse `@Preview`s** — as screenshot tests.",
+          "**Record** — `updateScreenshotTest` generates goldens.",
+          "**Verify** — `validateScreenshotTest` diffs.",
+          "**Low effort** — cover states you already preview.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Compose Preview Screenshot Testing turns @Preview composables into screenshot tests — add the plugin, record goldens (updateScreenshotTest) and verify (validateScreenshotTest) via Gradle. Reuses previews you write for design → low-effort visual regression coverage across states (light/dark, different data).",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you test animations in Compose?",
+    a: [
+      {
+        t: "p",
+        text: "Compose tests use a *controllable animation clock*. By default it auto-advances and `waitForIdle` waits for animations to finish (assert the end state). To assert *mid-animation*, set `mainClock.autoAdvance = false` and step with `mainClock.advanceTimeBy(ms)` to specific points. Infinite animations never let the tree idle, so you *must* control the clock manually or the test hangs.",
+      },
+      {
+        t: "code",
+        title: "Animation clock",
+        code: `rule.mainClock.autoAdvance = false
+rule.onNodeWithText("Expand").performClick()
+rule.mainClock.advanceTimeBy(150)   // mid-animation
+// assert intermediate state
+rule.mainClock.advanceTimeBy(1000)  // finish`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Controllable clock** — auto-advance or manual.",
+          "**End state** — auto-advance + waitForIdle.",
+          "**Mid-animation** — `autoAdvance = false` + `advanceTimeBy`.",
+          "**Infinite animations** — must control the clock or hang.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Compose tests use a controllable animation clock: default auto-advances (waitForIdle waits for animations — assert end state); mainClock.autoAdvance = false + advanceTimeBy asserts mid-animation. Infinite animations never idle — you MUST control the clock or the test hangs.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you write Espresso tests for View-based UI?",
+    a: [
+      {
+        t: "p",
+        text: "Espresso tests View-based UI: `onView(withId(R.id.button))` finds a view, `.perform(click())` acts, `.check(matches(isDisplayed()))` asserts. It auto-synchronizes with the UI thread (waits for idle). Use `IdlingResource` for async work Espresso can't see. For interacting with the system UI (dialogs, other apps, notifications), use `UIAutomator`. Espresso is for in-app View testing; Compose has its own test API.",
+      },
+      {
+        t: "code",
+        title: "Espresso",
+        code: `onView(withId(R.id.email)).perform(typeText("a@b.com"))
+onView(withText("Submit")).perform(click())
+onView(withText("Welcome")).check(matches(isDisplayed()))`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`onView(matcher)`** — find a view.",
+          "**`.perform(action)`** — click/type/scroll.",
+          "**`.check(matches(...))`** — assert.",
+          "**`IdlingResource`/UIAutomator** — async / system UI.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Espresso tests Views: onView(matcher).perform(action).check(matches(...)) — auto-syncs with the UI thread; IdlingResource for invisible async work. UIAutomator for system UI (dialogs, other apps, notifications). Espresso for in-app Views; Compose has its own test API (both can coexist).",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you test a Room database with migrations?",
+    a: [
+      {
+        t: "p",
+        text: "For DAO logic, use an *in-memory* database (`Room.inMemoryDatabaseBuilder`) in instrumented tests — insert data, run queries, assert. For *migrations*, use `MigrationTestHelper` (with exported schemas): create the DB at the old version, insert data, run `runMigrationsAndValidate`, and assert the schema and data survived. Both need instrumented tests (or Robolectric) since Room needs the SQLite runtime.",
+      },
+      {
+        t: "list",
+        items: [
+          "**In-memory DB** — fast DAO tests (insert/query/assert).",
+          "**`MigrationTestHelper`** — test migrations against exported schemas.",
+          "**Create old → migrate → validate** — assert data/schema.",
+          "**Instrumented/Robolectric** — Room needs SQLite runtime.",
+        ],
+      },
+      {
+        t: "note",
+        text: "DAO tests: Room.inMemoryDatabaseBuilder (fast, insert/query/assert). Migration tests: MigrationTestHelper (exported schemas) — create at old version, insert data, runMigrationsAndValidate, assert schema+data survived. Both need instrumented tests (or Robolectric) — Room needs the SQLite runtime.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you use Hilt in instrumented tests?",
+    a: [
+      {
+        t: "p",
+        text: "Annotate the test `@HiltAndroidTest`, use a `HiltAndroidRule` (to inject), a custom test runner (`HiltTestRunner` extending `AndroidJUnitRunner` with `HiltTestApplication`), and swap dependencies with `@BindValue` (bind a fake) or `@UninstallModules` (remove a production module, provide a test one). This lets instrumented tests run against the real DI graph with test doubles substituted.",
+      },
+      {
+        t: "code",
+        title: "Hilt test",
+        code: `@HiltAndroidTest
+class ScreenTest {
+    @get:Rule(order = 0) val hiltRule = HiltAndroidRule(this)
+    @get:Rule(order = 1) val composeRule = createAndroidComposeRule<MainActivity>()
+    @BindValue val repo: Repository = FakeRepository()
+    @Before fun setup() { hiltRule.inject() }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`@HiltAndroidTest` + `HiltAndroidRule`** — test graph + inject.",
+          "**Custom runner** — `HiltTestApplication`.",
+          "**`@BindValue`/`@UninstallModules`** — swap dependencies.",
+          "**Rule order** — Hilt rule before the Compose/Activity rule.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Hilt instrumented tests: @HiltAndroidTest, HiltAndroidRule (inject), a custom runner with HiltTestApplication, and @BindValue (bind a fake) / @UninstallModules (replace a production module). Order the Hilt rule before the Compose/Activity rule. Runs against the real DI graph with test doubles.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you run instrumented tests efficiently (Firebase Test Lab, Gradle Managed Devices)?",
+    a: [
+      {
+        t: "p",
+        text: "Instrumented tests are slow and need devices — run them efficiently with *Firebase Test Lab* (run on a *matrix* of real/virtual devices in the cloud, catching device-specific issues) or *Gradle Managed Devices* (define emulators in Gradle; the build spins them up, runs tests, tears down — reproducible in CI). Both let you test across API levels/devices without maintaining physical hardware, integrated into CI.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Firebase Test Lab** — cloud device matrix; real device coverage.",
+          "**Gradle Managed Devices** — emulators defined in Gradle; reproducible.",
+          "**Across API levels/devices** — without physical hardware.",
+          "**CI integration** — automated instrumented runs.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Run instrumented tests efficiently with Firebase Test Lab (cloud device matrix — real device coverage across API levels) or Gradle Managed Devices (emulators defined in Gradle, auto spun-up/torn-down — reproducible CI). Both test across devices without maintaining physical hardware, integrated into CI.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you test text input and form validation in Compose?",
+    a: [
+      {
+        t: "p",
+        text: "Use `performTextInput(\"...\")` on the `TextField` node, then assert the resulting state — an error message appears (`onNodeWithText(\"invalid email\").assertIsDisplayed()`), the submit button enables/disables (`assertIsEnabled`/`assertIsNotEnabled`), or the value updates. Test both valid and invalid inputs and the boundary between them. Use `testTag`s on fields for reliable selection.",
+      },
+      {
+        t: "code",
+        title: "Form test",
+        code: `rule.onNodeWithTag("email").performTextInput("invalid")
+rule.onNodeWithText("Enter a valid email").assertIsDisplayed()
+rule.onNodeWithText("Submit").assertIsNotEnabled()`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`performTextInput`** — type into a field.",
+          "**Assert validation** — error messages, enabled state.",
+          "**Valid + invalid** — and the boundary.",
+          "**`testTag`s** — reliable field selection.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Test forms with performTextInput on the TextField node, then assert the resulting state: error messages (onNodeWithText.assertIsDisplayed), submit enabled/disabled (assertIsEnabled/assertIsNotEnabled), value updates. Test valid + invalid inputs and the boundary. Use testTags for reliable field selection.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the difference between testing recomposition and testing behavior?",
+    a: [
+      {
+        t: "p",
+        text: "*Behavior* testing (the norm) verifies *what the user sees/can do* — the UI shows the right content, responds to clicks — via the semantics tree, robust to implementation. *Recomposition* testing (rare, performance-focused) checks *how often* composables recompose — done via the Layout Inspector's recomposition counts or Compose benchmark tests, not the standard test API. UI tests assert behavior; performance tools measure recomposition.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Behavior** — what the user sees/does (semantics; robust).",
+          "**Recomposition** — how often composables recompose (performance).",
+          "**UI tests** — assert behavior.",
+          "**Perf tools** — Layout Inspector/benchmarks for recomposition.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Behavior testing (the norm) verifies what the user sees/does via the semantics tree (robust). Recomposition testing (rare, performance) checks how often composables recompose — via Layout Inspector counts or Compose benchmarks, not the standard test API. UI tests assert behavior; perf tools measure recomposition.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you test a feature end-to-end within the app?",
+    a: [
+      {
+        t: "p",
+        text: "Write an integration/UI test that exercises the *feature's full slice* — launch the screen (with a fake backend via MockWebServer or fake repositories, not the real network), perform the user flow (type, click, navigate), and assert the outcomes at each step. Use Hilt to swap in fakes, Compose/Espresso to drive the UI, and assert both UI state and side effects. This catches wiring bugs unit tests miss, without full E2E fragility.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Feature slice** — full flow with fakes (MockWebServer/fake repos).",
+          "**Drive the UI** — Compose/Espresso through the flow.",
+          "**Assert at each step** — UI state + side effects.",
+          "**Hilt swaps fakes** — catches wiring bugs, less fragile than E2E.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Test a feature end-to-end (within the app) with an integration/UI test: launch the screen with fakes (MockWebServer/fake repos, not real network), perform the user flow (type/click/navigate), assert outcomes at each step. Hilt swaps in fakes; Compose/Espresso drives the UI. Catches wiring bugs without full E2E fragility.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you assert a composable does NOT exist or is hidden?",
+    a: [
+      {
+        t: "p",
+        text: "Use `assertDoesNotExist()` (the node isn't in the tree at all) or `assertIsNotDisplayed()` (present but not visible). For example, after dismissing a dialog, assert it `assertDoesNotExist()`; a scrolled-off item might exist but `assertIsNotDisplayed()`. Testing *absence* verifies conditional UI (an error message *shouldn't* show when input is valid).",
+      },
+      {
+        t: "code",
+        title: "Asserting absence",
+        code: `rule.onNodeWithText("Error").assertDoesNotExist()      // not in the tree
+rule.onNodeWithTag("offscreen").assertIsNotDisplayed()  // present but hidden`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`assertDoesNotExist()`** — not in the tree.",
+          "**`assertIsNotDisplayed()`** — present but not visible.",
+          "**Conditional UI** — error shouldn't show when valid.",
+          "**Test absence** — not just presence.",
+        ],
+      },
+      {
+        t: "note",
+        text: "assertDoesNotExist() (node not in the tree — e.g. dismissed dialog) vs assertIsNotDisplayed() (present but not visible — e.g. scrolled off). Testing absence verifies conditional UI (an error message shouldn't show when input is valid). Test absence, not just presence.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you test a dialog or bottom sheet in Compose?",
+    a: [
+      {
+        t: "p",
+        text: "Trigger the dialog/sheet (perform the action that shows it), then assert its content is displayed (`onNodeWithText(...).assertIsDisplayed()`), interact (click a button), and assert it dismisses (`assertDoesNotExist()`). Note dialogs render in a *separate window/layer*, but the Compose test API sees them through the semantics tree. For custom dismiss behavior (back press, outside tap), test those paths too.",
+      },
+      {
+        t: "code",
+        title: "Dialog test",
+        code: `rule.onNodeWithText("Delete").performClick()          // shows dialog
+rule.onNodeWithText("Are you sure?").assertIsDisplayed()
+rule.onNodeWithText("Confirm").performClick()
+rule.onNodeWithText("Are you sure?").assertDoesNotExist()  // dismissed`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Trigger** — the action that shows it.",
+          "**Assert displayed** — content visible.",
+          "**Interact + dismiss** — click, then `assertDoesNotExist`.",
+          "**Separate window** — still visible via semantics.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Test dialogs/sheets: trigger the show action, assert content displayed (onNodeWithText.assertIsDisplayed), interact (click), assert dismissed (assertDoesNotExist). Dialogs render in a separate window/layer but the Compose test API sees them via the semantics tree. Test dismiss paths (back press, outside tap) too.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is an IdlingResource, and when do you need one?",
+    a: [
+      {
+        t: "p",
+        text: "Espresso auto-synchronizes with the *UI thread* but can't see *background* async work (a network call, a custom thread pool) — so a test might assert before the async work finishes. An `IdlingResource` tells Espresso 'I'm busy' until the async work completes, so Espresso waits. Modern coroutine-based apps often don't need it (Compose tests handle idle, and test dispatchers control timing), but it's essential for legacy async.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Espresso sees the UI thread** — not background async.",
+          "**`IdlingResource`** — signals busy until async completes.",
+          "**Espresso waits** — for registered resources.",
+          "**Modern** — often unneeded (Compose idle, test dispatchers).",
+        ],
+      },
+      {
+        t: "note",
+        text: "Espresso auto-syncs with the UI thread but not background async work — an IdlingResource signals 'busy' until that async completes, so Espresso waits (avoiding asserting too early). Modern coroutine apps often don't need it (Compose handles idle, test dispatchers control timing); essential for legacy async.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you test that clicking a button triggers the right action?",
+    a: [
+      {
+        t: "p",
+        text: "Set the composable's content with a *callback you can observe* (a lambda that records it was called, or a fake ViewModel), perform the click (`onNodeWithText(\"Submit\").performClick()`), and assert the callback fired / the ViewModel function was called / the state changed. This verifies the click wiring — the UI invokes the correct action.",
+      },
+      {
+        t: "code",
+        title: "Click test",
+        code: `var clicked = false
+rule.setContent { MyButton(onClick = { clicked = true }) }
+rule.onNodeWithText("Submit").performClick()
+assertThat(clicked).isTrue()`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Observable callback** — record the invocation.",
+          "**`performClick()`** — trigger the button.",
+          "**Assert** — callback fired / state changed.",
+          "**Wiring** — UI invokes the correct action.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Set content with an observable callback (a lambda recording it fired, or a fake ViewModel), performClick() the button, and assert the callback/ViewModel function was invoked (or state changed). Verifies the click wiring — the UI invokes the correct action.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you test different UI states (loading, error, empty, content)?",
+    a: [
+      {
+        t: "p",
+        text: "For each state, render the screen with a `UiState` (via a controllable `StateFlow` or by passing the state directly to a stateless composable) and assert the correct UI: Loading → spinner shown; Error → error message + retry; Empty → empty view; Content → the data. Stateless composables (state hoisted) make this trivial — just pass the state and assert. Cover all states, not just the happy path.",
+      },
+      {
+        t: "code",
+        title: "State tests",
+        code: `@Test fun showsError() {
+    rule.setContent { ProductScreen(uiState = UiState.Error("Failed")) }
+    rule.onNodeWithText("Failed").assertIsDisplayed()
+    rule.onNodeWithText("Retry").assertIsDisplayed()
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Render per state** — pass each `UiState`.",
+          "**Assert the right UI** — spinner/error/empty/content.",
+          "**Stateless composables** — make this trivial.",
+          "**Cover all states** — not just happy path.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Test each UI state by rendering the screen with that UiState (controllable StateFlow or passing state to a stateless composable) and asserting the correct UI (Loading→spinner, Error→message+retry, Empty→empty view, Content→data). Stateless composables make this trivial. Cover all states, not just the happy path.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you test accessibility (semantics) in Compose?",
+    a: [
+      {
+        t: "p",
+        text: "Assert the *semantics* your UI exposes for accessibility: content descriptions (`onNodeWithContentDescription(...)`), roles (`assert(hasRole(Role.Button))`), state descriptions, and that interactive elements have labels. The `printToLog()` helper dumps the semantics tree to inspect what a screen reader would see. Because Compose tests *are* semantics-based, testing findability by content description also verifies TalkBack accessibility.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Content descriptions** — `onNodeWithContentDescription`.",
+          "**Roles/state** — `hasRole`, state descriptions.",
+          "**`printToLog()`** — dump the semantics tree.",
+          "**Tests = semantics** — findability verifies TalkBack too.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Test accessibility by asserting semantics: content descriptions (onNodeWithContentDescription), roles (hasRole(Role.Button)), state descriptions, and that interactive elements have labels. printToLog() dumps the semantics tree (what a screen reader sees). Since Compose tests are semantics-based, testing findability by content description also verifies TalkBack accessibility.",
+      },
+    ],
+  },
 ];
 
 export default qa;
