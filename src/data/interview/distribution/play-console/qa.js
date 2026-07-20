@@ -152,6 +152,559 @@ const qa = [
       },
     ],
   },
+  {
+    level: "junior",
+    q: "What is the difference between internal, closed, and open testing tracks?",
+    a: [
+      {
+        t: "p",
+        text: "Play's testing tracks escalate audience/visibility: *internal* — up to ~100 named testers, near-instant availability (no review delay), for quick QA; *closed* — a larger controlled group (email lists or Google Groups), still invite-only, for beta with a broader set; *open* — anyone with the link can join (public beta), largest reach. You *promote* the same build up the ladder (internal → closed → open → production) as confidence grows. Choose the track by how wide and controlled you want testers.",
+      },
+      {
+        t: "table",
+        headers: ["Track", "Audience", "Use"],
+        rows: [
+          ["Internal", "~100 named testers, instant", "Quick QA"],
+          ["Closed", "Controlled group (lists/groups)", "Broader beta"],
+          ["Open", "Anyone with the link", "Public beta"],
+          ["Production", "All users", "Live release"],
+        ],
+      },
+      {
+        t: "note",
+        text: "Testing tracks escalate: internal (~100 named testers, instant, quick QA), closed (controlled invite-only group — email lists/Google Groups, broader beta), open (anyone with the link, public beta), production (all users). Promote the same build up the ladder as confidence grows. Choose by how wide/controlled you want testers.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is a staged (percentage) rollout, and why use one?",
+    a: [
+      {
+        t: "p",
+        text: "A *staged rollout* releases a new version to a *percentage* of production users (e.g. 1% → 5% → 20% → 50% → 100%) instead of everyone at once. This limits *blast radius*: if the release has a crash/regression, only a small fraction is affected, and you can *halt or roll back* before it spreads. You watch vitals (crashes, ANRs) at each stage and increase the percentage as it proves stable. Standard practice for any app with meaningful user numbers.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Percentage release** — 1% → … → 100% of production.",
+          "**Limits blast radius** — few users hit a bad build.",
+          "**Halt/rollback** — before a problem spreads.",
+          "**Watch vitals** — increase % as stability proves out.",
+        ],
+      },
+      {
+        t: "note",
+        text: "A staged rollout releases to a percentage of production users (1% → 5% → 20% → … → 100%) instead of all at once — limiting blast radius so a crash/regression hits few users and you can halt/roll back before it spreads. Watch vitals at each stage and increase % as it proves stable. Standard for apps with meaningful scale.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What can and can't you do when halting or rolling back a staged rollout?",
+    a: [
+      {
+        t: "p",
+        text: "You *can* **halt** a staged rollout (stop increasing %, freezing exposure) at any point, and *resume* later. You *cannot truly 'un-install'* a bad version from users who already got it — 'rollback' means *halting the bad rollout and releasing a new higher-versionCode build* (a fix, or a re-release of the previous code with a new code) to supersede it. Since `versionCode` can't go backward, the fix always ships as a *new, higher* version. So plan releases so you can quickly build/ship a forward fix.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Halt** — freeze the rollout %; resume later.",
+          "**Can't un-install** — from users who already updated.",
+          "**Rollback** — halt + ship a new higher-versionCode fix.",
+          "**No going backward** — versionCode only increases.",
+        ],
+      },
+      {
+        t: "note",
+        text: "You can halt a staged rollout (freeze %) and resume later, but you can't un-install a bad version from users who got it. 'Rollback' = halt the bad rollout + release a new higher-versionCode build (a fix or re-released prior code with a new code). versionCode only increases, so the fix always ships as a new version — plan for a fast forward fix.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What are release notes, and how are they localized?",
+    a: [
+      {
+        t: "p",
+        text: "*Release notes* ('What's new') describe changes in a version, shown to users on the store and in the update prompt. You provide them per *locale* (localized strings), and they're attached to a *release* (versionCode range). Keep them concise and user-facing (what improved), not internal changelog. Play requires them for each release; you can reuse/copy across releases. Good release notes can nudge users to update and communicate value.",
+      },
+      {
+        t: "list",
+        items: [
+          "**'What's new'** — per-version change description.",
+          "**Localized** — provided per locale.",
+          "**User-facing** — value/changes, not internal changelog.",
+          "**Per release** — attached to a versionCode.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Release notes ('What's new') describe a version's changes, shown on the store and update prompt, provided per locale (localized). Keep them concise and user-facing (what improved), not an internal changelog. Play requires them per release; they can nudge users to update and communicate value.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How does update priority work with in-app updates?",
+    a: [
+      {
+        t: "p",
+        text: "When you roll out a release you can set an *update priority* (0–5) via the Play Developer API. Your app reads it from `AppUpdateInfo.updatePriority()` and *decides the flow*: high priority → trigger the *immediate* (blocking) update; medium → *flexible*; low → maybe just a subtle prompt or ignore for now. Priority lets you *classify releases* (critical vs routine) and drive the in-app update UX accordingly, without hardcoding per-version logic. Combine with `clientVersionStalenessDays` to escalate over time.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Priority 0–5** — set per release via the Developer API.",
+          "**App reads** — `updatePriority()` to choose the flow.",
+          "**High → immediate** — low → flexible/subtle.",
+          "**+ staleness** — escalate as the update ages.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Update priority (0–5, set per release via the Play Developer API) is read by the app from AppUpdateInfo.updatePriority() to choose the in-app update flow: high → immediate (blocking), medium → flexible, low → subtle/ignore. It classifies releases (critical vs routine) driving UX without per-version hardcoding. Combine with clientVersionStalenessDays to escalate over time.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What are Android vitals, and which metrics matter most?",
+    a: [
+      {
+        t: "p",
+        text: "*Android vitals* is the Play Console's production quality dashboard, aggregating real-device metrics: *crash rate* and *ANR rate* (the core stability metrics — Google sets *bad-behavior thresholds* that can hurt discoverability if exceeded), plus *excessive wakeups*, *stuck partial wakelocks*, *slow/frozen frames*, and startup times. Watch crash-free and ANR-free rates closely during rollouts. Vitals is your *production* signal — it catches issues real users hit across devices you can't test locally.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Core** — crash rate + ANR rate (thresholds affect discoverability).",
+          "**Also** — wakeups, wakelocks, slow/frozen frames, startup.",
+          "**Watch** — during rollouts.",
+          "**Production signal** — real-user issues across devices.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Android vitals is Play's production quality dashboard of real-device metrics: crash rate and ANR rate (core — Google's bad-behavior thresholds can hurt discoverability), plus excessive wakeups/wakelocks, slow/frozen frames, startup times. Watch crash-free/ANR-free rates during rollouts. It catches issues real users hit on devices you can't test.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the app review process, and how long does it take?",
+    a: [
+      {
+        t: "p",
+        text: "Play *reviews* new apps and updates for *policy compliance* (content, permissions, data safety, restricted features) before they go live. Review times vary — often hours to a few days (new apps and sensitive permissions take longer; updates are usually faster). A release stays 'In review'/'Pending publication' until approved. Plan releases with buffer, don't schedule a hard launch for the instant you upload, and avoid last-minute policy-sensitive changes that trigger longer review.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Reviews** — policy compliance (content, permissions, data safety).",
+          "**Time** — hours to days; new/sensitive apps longer.",
+          "**Status** — 'In review' until approved.",
+          "**Plan** — buffer; avoid launch-instant-on-upload assumptions.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Play reviews new apps and updates for policy compliance (content, permissions, data safety, restricted features) before going live — often hours to a few days (new/sensitive apps longer, updates faster). Releases stay 'In review' until approved. Plan with buffer; don't assume instant publish, and avoid last-minute policy-sensitive changes that lengthen review.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the Data Safety section, and why does it matter?",
+    a: [
+      {
+        t: "p",
+        text: "The *Data Safety* form (in the Play Console) is a mandatory declaration of *what data your app collects/shares*, why, whether it's encrypted in transit, and whether users can request deletion — shown to users on your store listing. It must *accurately match your app's actual behavior* (including third-party SDKs' data practices). Inaccurate declarations are a *policy violation* that can get the app removed. Audit your SDKs' data collection to fill it correctly; update it when data practices change.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Declares** — data collected/shared, purpose, encryption, deletion.",
+          "**Shown to users** — on the store listing.",
+          "**Must match** — actual behavior incl. third-party SDKs.",
+          "**Inaccurate** — policy violation → possible removal.",
+        ],
+      },
+      {
+        t: "note",
+        text: "The Data Safety form declares what data your app collects/shares, why, encryption-in-transit, and deletion options — shown on your store listing. It must accurately match actual behavior including third-party SDKs. Inaccurate declarations are a policy violation risking removal. Audit SDK data collection to fill it correctly and update on changes.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you design a safe release process for an app with millions of users?",
+    a: [
+      {
+        t: "p",
+        text: "Ladder builds through *internal → closed → open* testing, review the *pre-launch report*, then a *staged production rollout* (1% → grow) while monitoring *vitals* (crash/ANR-free) and *Crashlytics* at each stage. Gate features behind *Remote Config/feature flags* so you can disable a bad feature *without a new release*. Keep releases *small and frequent* (easier to diagnose), always retain *mapping.txt*, and have a *forward-fix* plan (since you can't roll back). Automate with CI + the Play Developer API.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Ladder** — internal → closed → open → staged production.",
+          "**Monitor** — vitals + Crashlytics at each stage.",
+          "**Feature flags** — disable bad features without a release.",
+          "**Forward-fix ready** — small frequent releases, keep mapping.txt.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Safe release at scale: ladder internal→closed→open, review the pre-launch report, staged production rollout (1%→) monitoring vitals + Crashlytics at each stage; gate features behind Remote Config/flags (disable without a release); keep releases small/frequent, retain mapping.txt, and plan forward-fixes (no rollback). Automate via CI + Play Developer API.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle a critical crash discovered at 100% rollout?",
+    a: [
+      {
+        t: "p",
+        text: "You can't recall the version, so: (1) if the bad feature is *flag-gated*, disable it via *Remote Config* immediately (fastest, no release); (2) *halt* any ongoing rollout; (3) build and ship a *forward-fix* as a *new higher-versionCode* release, expedited (consider a staged rollout that ramps quickly while watching vitals); (4) for the most severe cases, ship a *fix release* and monitor Crashlytics for the crash-free rate recovering. Post-incident: add a test/guard and a kill-switch to prevent recurrence.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Flag-gated?** — disable via Remote Config instantly.",
+          "**Halt** — any ongoing rollout.",
+          "**Forward-fix** — new higher-versionCode release, expedited.",
+          "**Monitor + prevent** — Crashlytics recovery; add kill-switch/test.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Critical crash at 100%: you can't recall it — if flag-gated, disable via Remote Config instantly (no release); halt ongoing rollouts; ship a forward-fix as a new higher-versionCode release (expedited, watch vitals); monitor Crashlytics for recovery. Post-incident: add a kill-switch and a test/guard to prevent recurrence.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the difference between managed publishing and timed publishing?",
+    a: [
+      {
+        t: "p",
+        text: "By default an approved release *publishes automatically*. *Managed publishing* lets you *hold* approved changes and release them *when you choose* (click 'Publish'), so you can align a store update with a marketing moment or coordinate multiple changes. It separates *review approval* from *going live*. Use it when timing matters (a coordinated launch) or to batch approved changes and publish together. Turn it on in the Console's Publishing overview.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Default** — approved releases publish automatically.",
+          "**Managed publishing** — hold approved changes, publish on click.",
+          "**Separates** — approval from going live.",
+          "**Use** — coordinated launches, batching changes.",
+        ],
+      },
+      {
+        t: "note",
+        text: "By default approved releases publish automatically. Managed publishing lets you hold approved changes and publish them when you choose (separating review approval from going live) — for coordinated launches or batching multiple approved changes to publish together. Enable it in the Console's Publishing overview.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the Play Developer API, and how do you automate releases?",
+    a: [
+      {
+        t: "p",
+        text: "The *Play Developer (Publishing) API* lets you automate release tasks programmatically — upload an AAB, assign it to a track, set rollout percentage, update listing/metadata, and manage testers — using a *service account* with granted permissions. Tools like *fastlane (supply)* and the *Gradle Play Publisher* plugin wrap it. This enables CI/CD: a merge triggers a build that uploads to internal testing (or a staged production rollout) with no manual Console steps — faster, repeatable, less error-prone releases.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Automates** — upload AAB, set track/rollout, metadata, testers.",
+          "**Auth** — a service account with permissions.",
+          "**Tools** — fastlane supply, Gradle Play Publisher.",
+          "**Enables** — CI/CD releases without manual Console steps.",
+        ],
+      },
+      {
+        t: "note",
+        text: "The Play Developer (Publishing) API automates release tasks — upload an AAB, assign a track, set rollout %, update metadata/testers — via a service account. Tools like fastlane (supply) and Gradle Play Publisher wrap it. Enables CI/CD: a merge builds and uploads to a track (or staged rollout) with no manual Console steps — faster, repeatable, less error-prone.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is a store listing, and what affects install conversion?",
+    a: [
+      {
+        t: "p",
+        text: "The *store listing* is your app's Play page: title, short/full description, icon, screenshots, feature graphic, and (optionally) a promo video. These drive *install conversion* (visitors → installers): a clear icon, compelling screenshots showing real value, a concise benefit-led description, and good ratings. Play lets you run *store listing experiments (A/B tests)* on these assets to measure conversion. Also, *download size* and *ratings/reviews* strongly affect conversion. Treat the listing as an optimizable funnel.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Listing** — title, description, icon, screenshots, graphic, video.",
+          "**Conversion** — icon/screenshots/description/ratings drive it.",
+          "**A/B test** — store listing experiments on assets.",
+          "**Also** — download size and reviews affect conversion.",
+        ],
+      },
+      {
+        t: "note",
+        text: "The store listing (title, descriptions, icon, screenshots, feature graphic, video) drives install conversion (visitors → installers) — clear icon, value-showing screenshots, benefit-led description, good ratings. Play offers store listing experiments (A/B tests) to measure asset changes. Download size and reviews also affect conversion. Treat the listing as an optimizable funnel.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What are store listing experiments (A/B testing on the Play page)?",
+    a: [
+      {
+        t: "p",
+        text: "*Store listing experiments* let you A/B test listing assets (icon, screenshots, description, feature graphic) on *real Play traffic* — Play shows variants to different user segments and measures which yields higher *install conversion* (with statistical significance), then you apply the winner. It's the data-driven way to optimize the top of your acquisition funnel, separate from optimizing the app itself. Run one variable at a time for clear signal, and let it run long enough for significance.",
+      },
+      {
+        t: "list",
+        items: [
+          "**A/B test** — icon/screenshots/description on real traffic.",
+          "**Measures** — install conversion with significance.",
+          "**Apply the winner** — data-driven listing optimization.",
+          "**Best practice** — one variable at a time, sufficient duration.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Store listing experiments A/B test listing assets (icon, screenshots, description, feature graphic) on real Play traffic — Play serves variants to segments, measures install conversion with significance, and you apply the winner. The data-driven way to optimize the acquisition funnel. Test one variable at a time, run long enough for significance.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle a policy violation or app suspension?",
+    a: [
+      {
+        t: "p",
+        text: "Read the *violation notice* carefully to understand the exact policy and offending element (permission misuse, deceptive behavior, data-safety mismatch, restricted content). *Fix the issue* (remove the offending code/permission, correct the declaration), then *appeal* via the Console with a clear explanation of the remediation. To *avoid* violations: review policies before using sensitive permissions/features, keep Data Safety accurate, and test against Play's requirements. Repeated violations risk account termination, so treat notices seriously and promptly.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Understand** — the exact policy and offending element.",
+          "**Fix** — remove/correct the violating behavior.",
+          "**Appeal** — via the Console explaining remediation.",
+          "**Prevent** — review policies, accurate Data Safety, test.",
+        ],
+      },
+      {
+        t: "note",
+        text: "On a policy violation/suspension: read the notice to pinpoint the exact policy and offending element (permission misuse, deception, data-safety mismatch), fix it (remove/correct), then appeal via the Console explaining the remediation. Prevent by reviewing policies before sensitive features, keeping Data Safety accurate, and testing. Repeated violations risk account termination — act promptly.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the difference between a production release and a testing release?",
+    a: [
+      {
+        t: "p",
+        text: "A *testing release* (internal/closed/open track) goes only to *testers* and doesn't affect your public rating or general users — safe to iterate. A *production release* goes to *all users* on the Play Store, counts toward your public rating and vitals, and is what most people install. You *promote* a validated build from testing to production (often via a staged rollout). Never push straight to production without testing-track validation and a pre-launch report.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Testing release** — testers only; safe to iterate.",
+          "**Production release** — all users; public rating + vitals.",
+          "**Promote** — validated build testing → production.",
+          "**Never** — skip testing-track validation.",
+        ],
+      },
+      {
+        t: "note",
+        text: "A testing release (internal/closed/open) goes only to testers — no public-rating impact, safe to iterate. A production release goes to all users (counts toward rating/vitals). Promote a validated build from testing to production (often via staged rollout). Never push straight to production without testing-track validation and a pre-launch report.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you use Remote Config / feature flags with releases?",
+    a: [
+      {
+        t: "p",
+        text: "Ship features *disabled behind a flag* (Firebase Remote Config or your own), then *enable them remotely* — decoupling *code deployment* from *feature launch*. Benefits: turn a feature on gradually (or for a segment), *kill-switch* a broken feature *without a new release* (critical since you can't roll back an app version), run staged feature exposure independent of app rollout, and A/B test behaviors. Best practice for any risky feature: dark-launch it behind a flag so you retain control post-release.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Decouples** — code deployment from feature launch.",
+          "**Kill-switch** — disable a broken feature without a release.",
+          "**Gradual/segmented** — enable per rollout or audience.",
+          "**Dark-launch** — risky features behind a flag.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Ship features disabled behind a flag (Remote Config/own) and enable remotely — decoupling code deployment from feature launch. You can kill-switch a broken feature without a new release (vital since apps can't roll back), enable gradually/per-segment, and A/B test. Dark-launch any risky feature behind a flag to keep post-release control.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What are ratings and reviews' impact, and how do you request reviews well?",
+    a: [
+      {
+        t: "p",
+        text: "Ratings/reviews affect *store ranking* and *install conversion* (users trust higher-rated apps). To gather them well, use the *In-App Review API* — it shows a *native review card in-context* (no leaving the app) and Play controls frequency to avoid spamming. Trigger it at a *positive moment* (after a success/completion), *never* gate features on leaving a review or nag repeatedly (a policy violation). Respond to reviews to improve sentiment. Good in-app moments raise both volume and average rating.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Impact** — ranking + install conversion.",
+          "**In-App Review API** — native in-context card, frequency-capped.",
+          "**Trigger** — at a positive moment; never nag or gate.",
+          "**Respond** — to reviews to improve sentiment.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Ratings/reviews affect ranking and install conversion. Use the In-App Review API (native in-context card, Play-frequency-capped) triggered at a positive moment (after success) — never gate features on reviewing or nag repeatedly (policy violation). Respond to reviews to improve sentiment. Good in-app timing raises both volume and average rating.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you manage multiple app versions across tracks simultaneously?",
+    a: [
+      {
+        t: "p",
+        text: "Play lets each track hold its own active release, so you might have (say) v10 at 20% in production, v11 in open testing, and v12 in internal — progressing independently. Manage this by keeping *versionCodes strictly increasing across all tracks* (a testing build must out-number production), *promoting* builds up the ladder rather than rebuilding, and being careful that a *higher-versionCode testing build isn't accidentally offered to production users* (Play handles track eligibility, but coordinate codes). Use the Console's release dashboard to see all tracks at a glance.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Per-track releases** — different versions progress independently.",
+          "**Increasing versionCodes** — across all tracks.",
+          "**Promote** — up the ladder, don't rebuild.",
+          "**Dashboard** — view all tracks; coordinate codes.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Each track holds its own release (e.g. v10 at 20% production, v11 open, v12 internal) progressing independently. Keep versionCodes strictly increasing across all tracks (testing out-numbers production), promote builds up the ladder rather than rebuild, and coordinate codes so track eligibility stays correct. Use the Console release dashboard to view all tracks.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the difference between an update and a fresh install for users?",
+    a: [
+      {
+        t: "p",
+        text: "An *update* replaces the installed app *in place* — user data, preferences, and databases persist (same signing key required), and it can happen automatically (auto-update) or via the In-App Updates API. A *fresh install* is a new user getting the app for the first time (no prior data), or a user who *uninstalled and reinstalled* (data gone unless backed up). Updates must preserve data (test migrations!); fresh installs go through onboarding. Play distinguishes these in acquisition metrics.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Update** — in-place; data persists; same signing key.",
+          "**Fresh install** — first-time or reinstall; no prior data.",
+          "**Updates** — must preserve data (test migrations).",
+          "**Fresh** — onboarding path.",
+        ],
+      },
+      {
+        t: "note",
+        text: "An update replaces the app in place — data/preferences/databases persist (same signing key), auto or via In-App Updates. A fresh install is a first-time user (or reinstall, data gone unless backed up). Updates must preserve data (test Room migrations!); fresh installs hit onboarding. Play separates these in acquisition metrics.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you monitor a release's health in the first hours?",
+    a: [
+      {
+        t: "p",
+        text: "Immediately after (and during) a rollout, watch *Crashlytics* for new/spiking crashes on the new versionCode (velocity alerts), *Android vitals* for crash/ANR-free rates dipping, and *reviews* for sudden negative feedback. Compare the new version's metrics against the prior version at the *same rollout stage*. Keep the rollout *small initially* so problems surface at 1% not 100%. If metrics degrade, *halt* and *forward-fix* (or flag-disable). Have alerting so you're notified rather than polling.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Crashlytics** — new/spiking crashes on the new versionCode.",
+          "**Vitals** — crash/ANR-free rate dips.",
+          "**Compare** — vs prior version at the same stage.",
+          "**Degrade → halt + forward-fix**; alerting, not polling.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Post-release, watch Crashlytics for new/spiking crashes on the new versionCode (velocity alerts), Android vitals for crash/ANR-free dips, and reviews for sudden negatives — comparing against the prior version at the same rollout stage. Keep the initial % small so issues surface early. Degrade → halt + forward-fix/flag-disable. Set alerts, don't poll.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the difference between forced updates and recommended updates?",
+    a: [
+      {
+        t: "p",
+        text: "A *recommended* (flexible) update *suggests* the user update but lets them continue on the old version — good for routine improvements. A *forced* (immediate) update *blocks* app use until updated — reserve it for genuinely necessary cases: a critical security/data bug, a broken API contract, or a legal requirement, since forcing interrupts users. Implement forcing via the *In-App Updates immediate flow* (using update *priority*/staleness) or a *server-driven minimum version* check that gates the app. Overusing forced updates frustrates users.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Recommended** — suggest; user can keep using old version.",
+          "**Forced** — block until updated; for critical cases only.",
+          "**Implement** — immediate In-App Update / min-version gate.",
+          "**Overuse** — frustrates users; reserve for necessity.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Recommended (flexible) updates suggest updating but let users continue; forced (immediate) updates block use until updated — reserve for critical security/data bugs, broken API contracts, or legal needs. Implement via the immediate In-App Update flow (priority/staleness) or a server-driven minimum-version gate. Overusing forced updates frustrates users.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you handle target API level requirement deadlines from Play?",
+    a: [
+      {
+        t: "p",
+        text: "Play *raises the required `targetSdkVersion`* each year — after the deadline, you *can't submit updates* (and eventually new installs may be restricted on newer devices) unless you target a recent API level. Plan ahead: bump `targetSdk` well before the deadline, *handle that level's behavior changes* (permissions, background limits, scoped storage, etc.), and test thoroughly (behavior changes can break things silently). Existing apps get an extension window but shouldn't rely on it. Treat the annual target bump as scheduled maintenance.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Annual bump** — Play raises required targetSdk yearly.",
+          "**After deadline** — can't submit updates without it.",
+          "**Handle** — that level's behavior changes; test thoroughly.",
+          "**Plan ahead** — treat as scheduled maintenance.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Play raises the required targetSdkVersion yearly — after the deadline you can't submit updates (and new installs may be restricted on newer devices) without targeting a recent level. Bump targetSdk ahead of the deadline, handle that level's behavior changes (permissions, background limits, scoped storage), and test thoroughly. Treat the annual bump as scheduled maintenance.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is Play Console's release dashboard and 'release with confidence' flow?",
+    a: [
+      {
+        t: "p",
+        text: "The Console guides a structured release: create a release on a track, upload the AAB, add *release notes*, review the *pre-launch report* and any *errors/warnings* Play flags (missing mapping file, oversized, policy issues), set the *rollout percentage*, and confirm. It surfaces *pre-release checks* (deobfuscation file, target API level, permissions) before you publish. Following this flow (not skipping the warnings) prevents common release mistakes. The dashboard shows each track's current release and rollout state.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Guided flow** — track → AAB → notes → checks → rollout %.",
+          "**Pre-release checks** — mapping file, target API, permissions.",
+          "**Heed warnings** — don't skip flagged errors.",
+          "**Dashboard** — per-track release + rollout state.",
+        ],
+      },
+      {
+        t: "note",
+        text: "The Console guides releases: create a release on a track, upload the AAB, add release notes, review the pre-launch report and Play's warnings (missing mapping file, oversized, target API, permissions), set rollout %, confirm. Heeding these pre-release checks prevents common mistakes. The dashboard shows each track's current release and rollout state.",
+      },
+    ],
+  },
 ];
 
 export default qa;

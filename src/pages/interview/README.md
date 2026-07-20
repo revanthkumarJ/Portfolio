@@ -57,8 +57,11 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Performance & Memory** — expanded (ANRs/Jank/Rendering 30, Memory Leaks &
   Management 30, Profiling/Startup/Baseline Profiles 30, App Size & Battery 30).
   Every topic ≥ 30 questions, teaching-first answers.
-- ⬜ Distribution, Firebase, KMP, System Design — pending expansion (many topics
-  already ≥ 30; audit and top up).
+- ✅ **Build, Distribution & Play Store** — expanded (Gradle & the Build System 30,
+  Signing/R8/Versioning 30, AAB/APK & Play App Signing 30, Play Console 30). Every
+  topic ≥ 30 questions, teaching-first answers.
+- ⬜ Firebase, KMP, System Design — pending expansion (many topics already ≥ 30;
+  audit and top up).
 
 **Completed**
 - ✅ **Architecture** — MVC, MVP, MVVM, MVI, Clean Architecture, Modularization
