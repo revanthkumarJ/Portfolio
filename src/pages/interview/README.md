@@ -54,8 +54,11 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Testing** — expanded (Strategy & Pyramid 30, Unit Testing 30, Coroutine &
   Flow Testing 30, Android & Compose Testing 30). Every topic ≥ 30 questions,
   teaching-first answers.
-- ⬜ Performance, Distribution, Firebase, KMP, System
-  Design — pending expansion (many topics already ≥ 30; audit and top up).
+- ✅ **Performance & Memory** — expanded (ANRs/Jank/Rendering 30, Memory Leaks &
+  Management 30, Profiling/Startup/Baseline Profiles 30, App Size & Battery 30).
+  Every topic ≥ 30 questions, teaching-first answers.
+- ⬜ Distribution, Firebase, KMP, System Design — pending expansion (many topics
+  already ≥ 30; audit and top up).
 
 **Completed**
 - ✅ **Architecture** — MVC, MVP, MVVM, MVI, Clean Architecture, Modularization

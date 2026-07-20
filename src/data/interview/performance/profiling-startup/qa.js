@@ -147,6 +147,551 @@ const qa = [
       },
     ],
   },
+  {
+    level: "senior",
+    q: "What is a Baseline Profile and how does it work?",
+    a: [
+      {
+        t: "p",
+        text: "A *Baseline Profile* is a list of hot code paths (classes/methods) shipped with your app that tells ART to *ahead-of-time compile* them at install time, instead of interpreting/JIT-ing on first run. This speeds up *startup* and *jank-prone paths* (like first scroll) by 20–30%+. You generate it with the Macrobenchmark library by exercising critical journeys, and it ships in the app bundle; Play delivers it so the code is precompiled before the user runs it.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Hot code list** — classes/methods AOT-compiled at install.",
+          "**Speeds** — startup and jank-prone paths (~20–30%+).",
+          "**Generate** — Macrobenchmark exercising critical journeys.",
+          "**Delivered** — via the app bundle / Play.",
+        ],
+      },
+      {
+        t: "note",
+        text: "A Baseline Profile lists hot code paths shipped with the app so ART AOT-compiles them at install (instead of interpret/JIT on first run) — speeding startup and jank-prone paths (first scroll) ~20–30%+. Generate with Macrobenchmark exercising critical journeys; it ships in the bundle and Play delivers it precompiled.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the Macrobenchmark library and what does it measure?",
+    a: [
+      {
+        t: "p",
+        text: "*Macrobenchmark* measures *whole-app, user-visible* performance on a real device/build — startup time (`StartupTimingMetric`) and rendering/jank (`FrameTimingMetric`) — by launching your app (in a release-like build) and running an interaction, repeatedly, for stable numbers. It's the tool for measuring startup and scroll performance, and for *generating Baseline Profiles*. Contrast with *Microbenchmark* (measures a small code snippet in isolation). Run it on a physical device, on a release/non-debuggable build.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Whole-app metrics** — `StartupTimingMetric`, `FrameTimingMetric`.",
+          "**Release-like build** — launches + interacts repeatedly.",
+          "**Generates** — Baseline Profiles.",
+          "**vs Microbenchmark** — small isolated code snippets.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Macrobenchmark measures whole-app user-visible performance (StartupTimingMetric, FrameTimingMetric) by launching a release-like build and running interactions repeatedly for stable numbers — the tool for startup/scroll perf and generating Baseline Profiles. Microbenchmark measures isolated snippets. Run on a physical, non-debuggable build.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the difference between Microbenchmark and Macrobenchmark?",
+    a: [
+      {
+        t: "p",
+        text: "*Microbenchmark* measures the speed of a *small piece of code* (a function, an algorithm) in isolation, in a tight loop, warming up the JIT and reporting nanosecond-level timing. *Macrobenchmark* measures *user-visible, whole-app* behavior (startup, scrolling) by driving the real app. Use Micro to compare two implementations of a hot function; use Macro to measure/regression-test startup and jank. Both run on a device, but at very different scopes.",
+      },
+      {
+        t: "table",
+        headers: ["", "Microbenchmark", "Macrobenchmark"],
+        rows: [
+          ["Scope", "One function/algorithm", "Whole app / journey"],
+          ["Measures", "ns-level code speed", "Startup, jank"],
+          ["Use", "Compare implementations", "Startup/scroll regression"],
+          ["Also", "—", "Generates Baseline Profiles"],
+        ],
+      },
+      {
+        t: "note",
+        text: "Microbenchmark: speed of a small code piece in isolation (tight loop, ns timing) — compare two implementations of a hot function. Macrobenchmark: user-visible whole-app behavior (startup, scroll) by driving the real app — regression-test startup/jank and generate Baseline Profiles. Same device, very different scopes.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the difference between cold, warm, and hot startup?",
+    a: [
+      {
+        t: "p",
+        text: "*Cold start*: the process doesn't exist — the system creates it, runs `Application.onCreate`, then the first Activity (slowest; the one to optimize). *Warm start*: the process exists but the Activity must be recreated (some work reused). *Hot start*: the Activity is already in memory, just brought to the foreground (fastest). Optimize *cold* start because it's the worst case and users' first impression; measure it with `StartupTimingMetric`/`reportFullyDrawn`.",
+      },
+      {
+        t: "table",
+        headers: ["Type", "State", "Cost"],
+        rows: [
+          ["Cold", "Process created from scratch", "Slowest (optimize this)"],
+          ["Warm", "Process alive, Activity recreated", "Medium"],
+          ["Hot", "Activity in memory, foregrounded", "Fastest"],
+        ],
+      },
+      {
+        t: "note",
+        text: "Cold: process created from scratch (Application.onCreate + first Activity) — slowest, optimize this. Warm: process alive but Activity recreated — medium. Hot: Activity in memory, just foregrounded — fastest. Optimize cold start (worst case + first impression); measure with StartupTimingMetric/reportFullyDrawn.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is Time To Initial Display (TTID) vs Time To Full Display (TTFD)?",
+    a: [
+      {
+        t: "p",
+        text: "*TTID* is the time until the *first frame* is drawn (the UI appears, possibly with placeholders). *TTFD* is the time until the app is *fully usable* with real content loaded — you signal it by calling `reportFullyDrawn()` once the meaningful content is ready. TTID measures perceived launch speed; TTFD measures when the user can actually use the screen. Optimizing both matters: show something fast (TTID) and load real data promptly (TTFD).",
+      },
+      {
+        t: "list",
+        items: [
+          "**TTID** — first frame drawn (UI appears).",
+          "**TTFD** — app fully usable; signal via `reportFullyDrawn()`.",
+          "**TTID** — perceived launch speed.",
+          "**TTFD** — when the user can truly use the screen.",
+        ],
+      },
+      {
+        t: "note",
+        text: "TTID = time to the first frame drawn (UI appears, maybe placeholders). TTFD = time until fully usable with real content — you signal it with reportFullyDrawn(). TTID = perceived speed; TTFD = actual usability. Optimize both: show something fast, load real data promptly.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How does the App Startup library help, and what problem does it solve?",
+    a: [
+      {
+        t: "p",
+        text: "Many libraries auto-initialize using a *ContentProvider* at startup (each provider adds overhead, and they run *before* your `Application.onCreate` in an uncontrolled order). The Jetpack *App Startup* library consolidates these into a *single* ContentProvider and lets you define `Initializer`s with explicit *dependencies* and *lazy* initialization — reducing startup cost and giving you control over ordering. It's a common cold-start optimization: fewer providers, deferred non-critical init.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Problem** — many library ContentProviders each add startup cost.",
+          "**App Startup** — one provider + `Initializer`s with dependencies.",
+          "**Lazy init** — defer non-critical initialization.",
+          "**Benefit** — less cold-start overhead, controlled ordering.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Libraries auto-initializing via separate ContentProviders each add startup cost and run before Application.onCreate in uncontrolled order. Jetpack App Startup consolidates them into one provider with Initializers (explicit dependencies, lazy init) — a common cold-start win: fewer providers, deferred non-critical init.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What work commonly bloats Application.onCreate, and how do you fix it?",
+    a: [
+      {
+        t: "p",
+        text: "`Application.onCreate` runs on the main thread *before the first frame* — heavy work here directly delays startup. Common culprits: eagerly initializing analytics/crash/DI/image libraries, reading disk/preferences, network calls. Fix: *defer* non-critical init (lazy, App Startup, or after first frame), move I/O off the main thread, and initialize only what the first screen needs. Measure with a trace to see what's spending time in `onCreate`.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Runs before first frame** — on main; delays startup.",
+          "**Culprits** — eager analytics/DI/image init, disk/network.",
+          "**Fix** — defer non-critical (lazy/App Startup/post-frame).",
+          "**Only** — init what the first screen needs.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Application.onCreate runs on main before the first frame — heavy work delays startup. Culprits: eager analytics/crash/DI/image init, disk reads, network. Fix: defer non-critical init (lazy, App Startup, or post-first-frame), move I/O off main, init only what the first screen needs. Trace onCreate to find the cost.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is a splash screen's role in perceived startup, and how do you do it right?",
+    a: [
+      {
+        t: "p",
+        text: "A splash screen fills the *unavoidable* cold-start gap (process/UI init) with branding so the app doesn't look frozen — it improves *perceived* speed but doesn't make startup faster. Use the official *SplashScreen API* (androidx.core.splashscreen) rather than a fake splash Activity (which *adds* an Activity transition and slows startup). You can keep the splash visible while critical data loads (`setKeepOnScreenCondition`), but keep that brief.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Fills the cold-start gap** — perceived, not actual, speed.",
+          "**Official SplashScreen API** — not a fake splash Activity.",
+          "**Fake splash Activity** — adds a transition, slows startup.",
+          "**`setKeepOnScreenCondition`** — keep briefly while critical data loads.",
+        ],
+      },
+      {
+        t: "note",
+        text: "A splash screen fills the unavoidable cold-start gap with branding (perceived, not actual, speed). Use the official SplashScreen API (androidx.core.splashscreen), not a fake splash Activity (which adds a transition and slows startup). Keep it on briefly for critical data via setKeepOnScreenCondition.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you measure startup time reliably?",
+    a: [
+      {
+        t: "p",
+        text: "Use `Macrobenchmark`'s `StartupTimingMetric` on a *physical device* with a *release/non-debuggable* build, running many iterations for a stable median (debug builds and emulators mislead). For quick local checks, `adb shell am start -W` reports `TotalTime`. In production, Play Console's Android vitals reports startup times across real devices. Always distinguish cold/warm/hot and report `reportFullyDrawn` (TTFD), not just the first frame.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Macrobenchmark `StartupTimingMetric`** — physical, release build, many iterations.",
+          "**`am start -W`** — quick `TotalTime` locally.",
+          "**Play vitals** — production startup across devices.",
+          "**Distinguish** — cold/warm/hot; report TTFD.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Measure startup with Macrobenchmark's StartupTimingMetric on a physical, non-debuggable release build over many iterations (debug/emulator mislead). Quick local check: adb shell am start -W (TotalTime). Production: Play vitals. Distinguish cold/warm/hot and report reportFullyDrawn (TTFD), not just first frame.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the difference between the CPU Profiler and a system trace (Perfetto)?",
+    a: [
+      {
+        t: "p",
+        text: "The *CPU Profiler* (method tracing / sampling) shows *your app's* method call stacks and timing — great for finding a slow function inside your code. A *system trace (Perfetto)* shows the *whole system*: all threads, the RenderThread, scheduling, binder calls, frame timeline, and how your app interacts with the OS — great for jank, startup, and cross-thread/system-level issues. Use CPU Profiler for 'which of my methods is slow', Perfetto for 'why is this frame/startup slow overall'.",
+      },
+      {
+        t: "table",
+        headers: ["", "CPU Profiler", "System trace (Perfetto)"],
+        rows: [
+          ["Scope", "Your app's methods", "Whole system, all threads"],
+          ["Best for", "Slow function in your code", "Jank, startup, scheduling"],
+          ["Shows", "Call stacks + timing", "Frame timeline, binder, RenderThread"],
+        ],
+      },
+      {
+        t: "note",
+        text: "CPU Profiler (method trace/sampling): your app's call stacks + timing — find a slow function in your code. System trace (Perfetto): whole system — all threads, RenderThread, scheduling, binder, frame timeline — for jank/startup/cross-thread issues. 'Which of my methods is slow' → CPU Profiler; 'why is this frame/startup slow' → Perfetto.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is the difference between sampled and instrumented (traced) profiling?",
+    a: [
+      {
+        t: "p",
+        text: "*Sampled* profiling periodically captures the call stack (low overhead, may miss very short methods) — good for finding where time is generally spent without distorting timings. *Instrumented/traced* profiling records *every* method entry/exit (exact call counts and timing, but high overhead that can distort the very timings you measure). Start with sampling for realistic hotspots; use instrumentation when you need precise call counts for a narrow section.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Sampled** — periodic stacks; low overhead; may miss short methods.",
+          "**Instrumented** — every entry/exit; exact; high overhead (distorts).",
+          "**Sampling** — realistic hotspots first.",
+          "**Instrumentation** — precise call counts for a narrow section.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Sampled profiling: periodically captures stacks — low overhead, realistic hotspots, may miss short methods. Instrumented/traced: records every method entry/exit — exact counts/timing but high overhead that distorts timings. Start with sampling; use instrumentation for precise call counts on a narrow section.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do custom trace markers (Trace.beginSection) help profiling?",
+    a: [
+      {
+        t: "p",
+        text: "`Trace.beginSection(\"name\")`/`endSection()` (or `androidx.tracing`'s `trace(\"name\") { }`) add *named markers* to a system trace, so your own operations (e.g. 'loadUser', 'decodeImage') appear as labeled spans in Perfetto — making it far easier to see *your* code's timing amid system activity. Add them around suspected-slow sections. They're cheap and can stay in release (system tracing must be actively capturing to record them).",
+      },
+      {
+        t: "code",
+        title: "Custom trace section",
+        code: `androidx.tracing.trace("loadUserProfile") {\n    val user = repository.loadUser(id)   // shows as a labeled span in Perfetto\n    render(user)\n}`,
+      },
+      {
+        t: "note",
+        text: "Trace.beginSection/endSection (or androidx.tracing trace(\"name\"){}) add named markers to a system trace, so your operations appear as labeled spans in Perfetto — far easier to spot your code's timing amid system activity. Add around suspected-slow sections; cheap enough to leave in (only recorded while tracing is active).",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How does R8/dex optimization relate to startup performance?",
+    a: [
+      {
+        t: "p",
+        text: "R8 shrinks and optimizes code (removing unused classes/methods, inlining) — a smaller, simpler dex means *less code to load and verify* at startup and fewer methods, which can improve cold start and reduce app size. It also enables more effective *class verification* and works with Baseline Profiles. Ensure R8 is on for release; overly broad `keep` rules bloat the dex and can hurt startup. Optimization + Baseline Profiles together give the best startup.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Smaller/simpler dex** — less to load and verify at startup.",
+          "**Fewer methods** — can improve cold start + size.",
+          "**Works with** — Baseline Profiles.",
+          "**Watch** — broad keep rules bloat dex, hurt startup.",
+        ],
+      },
+      {
+        t: "note",
+        text: "R8 shrinks/optimizes code (removes unused, inlines) — a smaller/simpler dex means less to load and verify at startup, improving cold start and size. Works with Baseline Profiles. Keep R8 on for release; avoid overly broad keep rules (they bloat dex and hurt startup). R8 + Baseline Profiles = best startup.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "Why should you profile on a release build and a real device?",
+    a: [
+      {
+        t: "p",
+        text: "*Debug* builds are unoptimized (no R8, debuggable, extra checks) and run code differently (more interpretation), so their timings don't reflect what users experience — they can be several times slower and mislead you. *Emulators* have different CPU/GPU/memory characteristics than real phones (especially low-end). Always measure performance on a *release/non-debuggable* build on a *representative physical device* (ideally a low-end one) for numbers that match production.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Debug builds** — unoptimized, debuggable; misleadingly slow/different.",
+          "**Emulators** — different CPU/GPU/memory than real phones.",
+          "**Measure** — release/non-debuggable build.",
+          "**Device** — representative physical (ideally low-end).",
+        ],
+      },
+      {
+        t: "note",
+        text: "Debug builds are unoptimized (no R8, debuggable, extra checks, more interpretation) — timings don't reflect users (can be several× slower). Emulators differ from real phones. Always measure on a release/non-debuggable build on a representative physical device (ideally low-end) for production-matching numbers.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is lazy initialization and how does it help startup?",
+    a: [
+      {
+        t: "p",
+        text: "Lazy initialization defers creating an object until it's *first used* (`by lazy { }`, or lazy DI providers) rather than at startup. Since startup work directly delays the first frame, deferring anything not needed for the first screen (analytics that can init after launch, heavy singletons, secondary feature managers) speeds cold start. Balance: don't lazily init something on a hot path where the deferred cost causes jank later — defer what's genuinely not needed *early*.",
+      },
+      {
+        t: "code",
+        title: "Deferring non-critical work",
+        code: `// heavy manager not needed for the first screen — created on first use, not at startup\nval analytics by lazy { AnalyticsManager(appContext) }\n// or initialize after the first frame:\nwindow.decorView.post { initNonCriticalLibraries() }`,
+      },
+      {
+        t: "note",
+        text: "Lazy init defers creating an object until first use (by lazy, lazy DI) instead of at startup — deferring anything not needed for the first screen (post-launch analytics, heavy singletons) speeds cold start. Balance: don't defer hot-path work where the later cost causes jank. Defer what's genuinely not needed early.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you profile and optimize a slow list scroll?",
+    a: [
+      {
+        t: "p",
+        text: "Capture a *system trace* while scrolling, find janky frames, and expand them to see the expensive main-thread work (binding/composition, image decode, layout, allocations). Then fix the specific cause: cheaper item layouts, right-sized images off the main thread, stable keys/DiffUtil, precomputed data, fewer allocations, and a Baseline Profile. Verify with Macrobenchmark's `FrameTimingMetric` on a release build. Iterate: measure → fix the top cost → re-measure.",
+      },
+      {
+        t: "list",
+        items: [
+          "**System trace** — find janky frames, expand to see the cost.",
+          "**Fix causes** — cheap items, right-sized images, stable keys.",
+          "**Baseline Profile** — for the scroll path.",
+          "**Verify** — Macrobenchmark `FrameTimingMetric` (release).",
+        ],
+      },
+      {
+        t: "note",
+        text: "Profile a slow scroll: system trace while scrolling → find janky frames → expand to see expensive main-thread work (binding/composition, image decode, layout, allocations). Fix the specific cause (cheap items, right-sized off-main images, stable keys, precompute, fewer allocations, Baseline Profile). Verify with Macrobenchmark FrameTimingMetric on release.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the flame chart / call chart in the profiler, and how do you read it?",
+    a: [
+      {
+        t: "p",
+        text: "A *call chart* (flame chart) visualizes call stacks over time: the x-axis is time, and each bar is a method call with its callees stacked *below* it — a *wide* bar means that method (or its children) took a long time. Read it top-down to find *wide* bars (time sinks). The related *flame graph* aggregates by total time per method (ignoring order) to show cumulative hotspots. Use these to spot which function dominates.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Call chart** — time on x-axis, callees stacked below.",
+          "**Wide bar** — that method/subtree took long.",
+          "**Flame graph** — aggregates cumulative time per method.",
+          "**Read** — find the widest bars (time sinks).",
+        ],
+      },
+      {
+        t: "note",
+        text: "A call/flame chart plots call stacks over time (x=time, callees stacked below) — a wide bar means that method/subtree took long; read top-down for the widest bars. A flame graph aggregates cumulative time per method (order-independent) for hotspots. Both find which function dominates.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you regression-test performance in CI?",
+    a: [
+      {
+        t: "p",
+        text: "Add *Macrobenchmark* tests (startup, key scrolls) that run on a *physical device* (a Firebase Test Lab device or a self-hosted device farm) and record metrics. Track the numbers over time and *fail/alert on regressions* beyond a threshold. Pair with Baseline Profile generation. Because device numbers are noisy, run multiple iterations and compare medians, and use consistent device models. This catches performance regressions before they ship, like tests catch functional ones.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Macrobenchmark in CI** — startup + key scrolls.",
+          "**Physical device** — Firebase Test Lab / device farm.",
+          "**Alert on regression** — beyond a threshold; track over time.",
+          "**Noise** — multiple iterations, medians, consistent devices.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Regression-test perf with Macrobenchmark tests (startup, key scrolls) on physical devices (Firebase Test Lab/device farm), tracking metrics and alerting on regressions beyond a threshold. Handle device noise with multiple iterations/medians and consistent models. Catches perf regressions pre-ship like tests catch functional ones.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is the difference between latency and throughput in performance?",
+    a: [
+      {
+        t: "p",
+        text: "*Latency* is how long *one* operation takes (a single request's response time, one frame's render time) — it drives perceived responsiveness. *Throughput* is how *many* operations complete per unit time (frames per second, requests per second) — it drives capacity. They can trade off: batching improves throughput but may raise per-item latency. On mobile UI, low per-frame *latency* (staying under the frame budget) is usually the priority for smoothness.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Latency** — time for one operation (responsiveness).",
+          "**Throughput** — operations per unit time (capacity).",
+          "**Trade-off** — batching boosts throughput, may raise latency.",
+          "**Mobile UI** — low per-frame latency for smoothness.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Latency = time for one operation (drives perceived responsiveness); throughput = operations per unit time (drives capacity). They trade off (batching boosts throughput but raises per-item latency). On mobile UI, low per-frame latency (under the frame budget) is usually the smoothness priority.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you decide what to optimize (where to focus)?",
+    a: [
+      {
+        t: "p",
+        text: "Optimize by *impact* × *frequency*, guided by data: measure first to find the *actual* bottleneck (Amdahl's law — speeding up something that's 5% of the time barely helps), prioritize what users hit most (startup, main scroll, key journeys), and confirm with production telemetry (Play vitals, custom traces) which screens are slow *in the field*. Avoid micro-optimizing cold paths. Set a target (e.g. 'cold start under X ms on low-end'), measure against it, and stop when you meet it.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Impact × frequency** — measure the actual bottleneck first.",
+          "**Amdahl's law** — optimizing a small fraction barely helps.",
+          "**Prioritize** — startup, main scroll, hot journeys.",
+          "**Target-driven** — set a goal, measure, stop when met.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Optimize by impact × frequency, data-driven: measure to find the real bottleneck (Amdahl — speeding up 5% of time barely helps), prioritize what users hit most (startup, main scroll), confirm with production telemetry (Play vitals) which screens are slow in the field. Set a target, measure against it, stop when met.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is dex verification / class loading and how does it affect startup?",
+    a: [
+      {
+        t: "p",
+        text: "At runtime ART must *load* and *verify* classes before use — on first run (or without AOT compilation) this happens lazily and costs time during startup and first interactions. A *Baseline Profile* pre-compiles the hot classes/methods so this work is done at install; *R8* reduces the number of classes/methods to verify. Excessive classes, reflection, and huge dependency graphs increase this cost. This is a key reason Baseline Profiles help startup so much.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Load + verify** — ART processes classes before use.",
+          "**First run** — happens lazily; costs startup time.",
+          "**Baseline Profile** — pre-compiles hot classes at install.",
+          "**R8** — fewer classes/methods to verify.",
+        ],
+      },
+      {
+        t: "note",
+        text: "ART loads and verifies classes before use — on first run (no AOT) this is lazy and costs startup/first-interaction time. Baseline Profiles pre-compile hot classes at install; R8 reduces the count to verify. Excessive classes/reflection/huge graphs increase the cost — a key reason Baseline Profiles help startup.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you profile power/CPU usage over time?",
+    a: [
+      {
+        t: "p",
+        text: "Use *Perfetto/systrace* to see CPU scheduling and wakeups over time, `Battery Historian` (from a bug report) to analyze wakelocks, jobs, and battery drain, and the *Energy Profiler* (Android Studio, on supported devices) for a rough power view. Look for *background CPU activity* (busy loops, frequent wakeups, chatty network), and correlate CPU spikes with your operations via trace markers. Excessive CPU when idle is the main power/perf red flag.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Perfetto** — CPU scheduling, wakeups over time.",
+          "**Battery Historian** — wakelocks, jobs, drain (from bug report).",
+          "**Energy Profiler** — rough power view.",
+          "**Red flag** — background CPU/wakeups when idle.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Profile power/CPU with Perfetto/systrace (CPU scheduling, wakeups over time), Battery Historian (wakelocks/jobs/drain from a bug report), Energy Profiler (rough power). Look for background CPU (busy loops, frequent wakeups, chatty network); correlate spikes with your ops via trace markers. Idle CPU is the main red flag.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you profile Compose recomposition and performance?",
+    a: [
+      {
+        t: "p",
+        text: "Use the *Layout Inspector*'s recomposition counts to see which composables recompose (and how often) — high or unexpected counts point to instability or bad state reads. The *Compose compiler metrics/reports* tell you which composables are *skippable/restartable* and which parameters are *unstable* (why skipping fails). For frame-level timing, use a *system trace* (composition/layout/draw phases are traced). Combine: reports to find instability, Layout Inspector to see counts, trace to measure the cost.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Layout Inspector** — recomposition counts per composable.",
+          "**Compiler metrics/reports** — skippable/restartable, unstable params.",
+          "**System trace** — composition/layout/draw phase timing.",
+          "**Combine** — reports (why) + counts (where) + trace (cost).",
+        ],
+      },
+      {
+        t: "note",
+        text: "Profile Compose with Layout Inspector recomposition counts (which composables recompose, how often), the compiler metrics/reports (skippable/restartable + unstable params explaining failed skipping), and a system trace for phase timing. Combine: reports (why unstable) + Inspector (where) + trace (cost).",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What does 'measure before optimizing' mean in practice?",
+    a: [
+      {
+        t: "p",
+        text: "It means never guess where the slowness is — *profile first* to find the real bottleneck, because intuition is often wrong (the slow part is rarely where you'd expect). Get a baseline number, make one change, and *re-measure* to confirm it actually helped (and didn't regress elsewhere). Premature optimization wastes effort on non-bottlenecks and adds complexity. The loop is: measure → identify the top cost → fix it → measure again.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Profile first** — find the real bottleneck (intuition misleads).",
+          "**Baseline** — measure before changing.",
+          "**Re-measure** — confirm the change helped, no regression.",
+          "**Avoid** — premature optimization of non-bottlenecks.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Measure before optimizing = profile first to find the real bottleneck (intuition is usually wrong), get a baseline, make one change, re-measure to confirm it helped without regressing. Premature optimization wastes effort and adds complexity. Loop: measure → top cost → fix → measure again.",
+      },
+    ],
+  },
 ];
 
 export default qa;
