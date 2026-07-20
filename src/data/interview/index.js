@@ -10,6 +10,7 @@ import coroutines from "./coroutines/index.js";
 import flows from "./flows/index.js";
 import androidCore from "./android-core/index.js";
 import dataStorage from "./data-storage/index.js";
+import networking from "./networking/index.js";
 
 // Registry for the interview-preparation section. The hub and topic routes
 // render entirely from this — add categories/topics here, never in the JSX.
@@ -28,6 +29,7 @@ export const categories = [
   coroutines,
   flows,
   dataStorage,
+  networking,
 ];
 
 export function findTopic(categoryId, topicId) {

@@ -32,6 +32,8 @@ shippable between categories.
   App Startup, Threading/Handler-Looper/Permissions
 - ✅ **Data & Storage** — Room & SQLite Fundamentals, Room Relations & Migrations,
   DataStore & SharedPreferences, Caching & Offline-First, Paging 3
+- ✅ **Networking** — HTTP & REST Fundamentals, Retrofit & OkHttp, JSON
+  Serialization, Error Handling & Auth, Ktor & WebSockets
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
