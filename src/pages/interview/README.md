@@ -30,6 +30,8 @@ shippable between categories.
 - ✅ **Android Core** — Activity Lifecycle & State, Fragments & Lifecycle,
   Intents/Tasks/Launch Modes, Services/Receivers/Providers, Context/Processes/
   App Startup, Threading/Handler-Looper/Permissions
+- ✅ **Data & Storage** — Room & SQLite Fundamentals, Room Relations & Migrations,
+  DataStore & SharedPreferences, Caching & Offline-First, Paging 3
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
