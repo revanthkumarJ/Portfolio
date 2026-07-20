@@ -240,6 +240,681 @@ LaunchedEffect(shouldLoadMore) {
       },
     ],
   },
+  {
+    level: "junior",
+    q: "What's the difference between item {}, items(), and itemsIndexed() in a LazyListScope?",
+    a: [
+      {
+        t: "p",
+        text: "Inside a `LazyColumn`/`LazyRow` you don't write children directly — you describe them in a `LazyListScope` using DSL functions. `item { }` adds a single item, `items(list) { }` adds one per element, and `itemsIndexed(list) { index, element -> }` adds one per element with its index.",
+      },
+      {
+        t: "code",
+        title: "The lazy DSL",
+        code: `LazyColumn {
+    item { Header() }                         // one fixed item (header)
+    items(users, key = { it.id }) { user ->   // one per element
+        UserRow(user)
+    }
+    itemsIndexed(users) { index, user ->      // element + index
+        Text("\${index + 1}. \${user.name}")
+    }
+    item { Footer() }                         // one fixed footer
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`item { }`** — a single item; use for headers, footers, or a loading spinner at the end.",
+          "**`items(list) { }`** — the workhorse; pass `key` and `contentType` here for correctness and performance.",
+          "**`itemsIndexed(list) { i, e -> }`** — when you need the position (numbering, alternating backgrounds).",
+          "**Important** — these are *not* composables you loop over with a `for`; they're DSL calls that let the list compose only visible items. Don't call composables directly in the LazyColumn body outside these.",
+        ],
+      },
+      {
+        t: "note",
+        text: "item{} adds one item (headers/footers/spinners); items(list){} one per element (put key + contentType here); itemsIndexed gives index too. They're LazyListScope DSL calls — the list uses them to compose only visible items, so don't hand-loop composables in the body.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What lazy containers exist besides LazyColumn (rows, grids, staggered)?",
+    a: [
+      {
+        t: "p",
+        text: "Compose has a family of lazy containers, all sharing the same key/contentType/state concepts but differing in axis and arrangement. Knowing which to pick avoids reinventing layouts.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`LazyColumn` / `LazyRow`** — vertical / horizontal lists.",
+          "**`LazyVerticalGrid` / `LazyHorizontalGrid`** — grids; you specify `columns`/`rows` as `GridCells.Fixed(n)` or `GridCells.Adaptive(minSize)`.",
+          "**`LazyVerticalStaggeredGrid` / `LazyHorizontalStaggeredGrid`** — Pinterest-style grids where items have varying heights and pack tightly.",
+          "**`FlowRow` / `FlowColumn`** — wrap content onto multiple lines (chips, tags); *not* lazy (composes all children), so only for small counts.",
+        ],
+      },
+      {
+        t: "code",
+        title: "A grid",
+        code: `LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 128.dp)) {
+    items(photos, key = { it.id }) { PhotoCell(it) }
+    item(span = { GridItemSpan(maxLineSpan) }) { SectionHeader() }  // full-width row
+}`,
+      },
+      {
+        t: "note",
+        text: "LazyColumn/LazyRow (lists), LazyVerticalGrid/LazyHorizontalGrid (grids, Fixed(n) or Adaptive(minSize)), LazyStaggeredGrid (varying-height Pinterest style). FlowRow/FlowColumn wrap chips but are NOT lazy — small counts only.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you configure columns in LazyVerticalGrid, and make an item span the full width?",
+    a: [
+      {
+        t: "p",
+        text: "`LazyVerticalGrid` takes a `columns` parameter that decides how many columns and how they size. `GridCells.Fixed(n)` gives exactly n equal columns; `GridCells.Adaptive(minSize)` fits as many columns as possible at ≥ minSize each (responsive). To make an item (like a section header) span all columns, set its `span`.",
+      },
+      {
+        t: "code",
+        title: "Fixed vs Adaptive, and spanning",
+        code: `LazyVerticalGrid(
+    columns = GridCells.Adaptive(minSize = 120.dp),   // responsive column count
+    // columns = GridCells.Fixed(3),                  // always 3 columns
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
+    verticalArrangement = Arrangement.spacedBy(8.dp),
+) {
+    item(span = { GridItemSpan(maxLineSpan) }) { Header() }   // spans all columns
+    items(items, key = { it.id }) { Cell(it) }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`GridCells.Fixed(n)`** — exactly n columns; simple, but not responsive across screen sizes.",
+          "**`GridCells.Adaptive(minSize)`** — as many columns as fit at ≥ minSize; adapts to phone/tablet automatically. Usually preferred.",
+          "**Spanning** — `item(span = { GridItemSpan(maxLineSpan) })` (or per-item in `items(span = ...)`) makes headers/full-width rows.",
+        ],
+      },
+      {
+        t: "note",
+        text: "columns = GridCells.Fixed(n) for exactly n columns, or GridCells.Adaptive(minSize) for responsive (as many as fit ≥ minSize — prefer this). Span the full width with span = { GridItemSpan(maxLineSpan) } on an item — the standard way to add grid section headers.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you add sticky headers to a LazyColumn?",
+    a: [
+      {
+        t: "p",
+        text: "`stickyHeader { }` is a LazyListScope function that pins a header to the top of the viewport while its section scrolls beneath it, then pushes it up when the next section's header arrives — the classic contacts/section-list behavior. You typically group your data and emit a `stickyHeader` before each group's items.",
+      },
+      {
+        t: "code",
+        title: "Sticky section headers",
+        code: `LazyColumn {
+    grouped.forEach { (letter, names) ->
+        stickyHeader { SectionHeader(letter) }   // pinned while this section scrolls
+        items(names, key = { it }) { Name(it) }
+    }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`stickyHeader`** — the header stays visible at the top while its section is on screen.",
+          "**Group first** — build a `Map<Key, List<Item>>` (e.g. by first letter) and iterate, emitting a sticky header per group.",
+          "**Keys still matter** — give items stable keys for correct scrolling/animation; headers can key by their group value.",
+          "**Caveat** — it was experimental for a while; ensure you're on a version where it's stable, and be mindful that heavy header content recomposes as it pins.",
+        ],
+      },
+      {
+        t: "note",
+        text: "stickyHeader { } pins a header to the top while its section scrolls beneath, replaced by the next section's header. Group data (e.g. Map by first letter) and emit a stickyHeader before each group's items(). Keep stable keys; keep header content light.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is contentType in items(), and why does it matter for performance?",
+    a: [
+      {
+        t: "p",
+        text: "`contentType` tells the lazy list what *kind* of item each entry is, so its item-reuse pool can recycle a scrolled-off composable of the same type for a new item — reusing the underlying composition/nodes instead of building fresh. In a list with multiple item types (header, ad, post), providing `contentType` dramatically improves scroll performance.",
+      },
+      {
+        t: "code",
+        title: "contentType in a mixed list",
+        code: `LazyColumn {
+    items(
+        feed,
+        key = { it.id },
+        contentType = { it.type },   // "post", "ad", "header" -> separate reuse pools
+    ) { entry ->
+        when (entry.type) { "post" -> Post(entry); "ad" -> Ad(entry); else -> Header(entry) }
+    }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Enables structural reuse** — Compose keeps reuse pools *per contentType*; scrolling reuses a matching composition, skipping re-creation of the node tree.",
+          "**Only helps with heterogeneous lists** — a single-type list already reuses fine; the win is when types differ (mixed feeds).",
+          "**Wrong/absent contentType** — mixing types in one pool means reuse can't happen (structures differ), so every item rebuilds — visible as jank.",
+          "**Pair with `key`** — `key` is for item identity (state/animation correctness); `contentType` is for reuse efficiency. Provide both in mixed lists.",
+        ],
+      },
+      {
+        t: "note",
+        text: "contentType groups items into per-type reuse pools so scrolling reuses a matching composition instead of rebuilding — a big scroll-perf win for mixed feeds (post/ad/header). Single-type lists reuse fine already. key = identity (state/anim); contentType = reuse. Use both in heterogeneous lists.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you react to scroll state (e.g. first visible item) without recomposing every frame?",
+    a: [
+      {
+        t: "p",
+        text: "`LazyListState` exposes `firstVisibleItemIndex`, `firstVisibleItemScrollOffset`, and `layoutInfo` — but these change on *every* scroll frame. Reading them directly in composition recomposes 60×/second. The fix is `derivedStateOf`, which recomputes on every scroll but only *emits a new value* (triggering recomposition) when your derived boolean/coarse value actually changes.",
+      },
+      {
+        t: "code",
+        title: "derivedStateOf to throttle scroll-driven recomposition",
+        code: `val listState = rememberLazyListState()
+val showScrollToTop by remember {
+    derivedStateOf { listState.firstVisibleItemIndex > 3 }  // only true/false transitions recompose
+}
+if (showScrollToTop) ScrollToTopFab(onClick = { /* scroll to 0 */ })`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Direct read = per-frame recomposition** — `if (listState.firstVisibleItemIndex > 3)` re-reads the raw index every frame.",
+          "**`derivedStateOf`** — computes each frame internally but only recomposes readers when the *result* changes (crossing the threshold), collapsing 60 changes/sec into ~1.",
+          "**`snapshotFlow`** — alternatively, convert the state to a Flow for side effects (analytics, load-more) with `distinctUntilChanged`/`filter`.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Scroll state (firstVisibleItemIndex/offset) changes every frame — reading it directly recomposes 60×/sec. Wrap coarse derivations in derivedStateOf (recomputes each frame, recomposes only when the result changes). Use snapshotFlow for side effects like load-more/analytics.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you animate item insertions, removals, and reordering in a lazy list?",
+    a: [
+      {
+        t: "p",
+        text: "Use `Modifier.animateItem()` (formerly `animateItemPlacement()`) on the item content — the lazy list then animates items sliding to new positions on reorder, and (in newer versions) fading in/out on insert/remove. This *requires* stable `key`s, because animation is driven by tracking each keyed item's position between frames.",
+      },
+      {
+        t: "code",
+        title: "Animated list changes",
+        code: `LazyColumn {
+    items(items, key = { it.id }) { item ->   // stable key is REQUIRED
+        Row(Modifier.animateItem()) { ItemContent(item) }   // animates move/place, and fade on add/remove
+    }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Needs `key`** — without stable keys, the list can't tell which item moved, so nothing animates (and state gets misattributed).",
+          "**`animateItem()`** — animates placement changes (reorder) and, on recent Compose, appearance/disappearance (fade in/out) with configurable specs.",
+          "**Reorder** — when you emit the list in a new order, keyed items animate to their new slots automatically.",
+          "**Caveat** — animations only apply to items that stay in/near the viewport; items far off-screen just appear.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Modifier.animateItem() (was animateItemPlacement) animates reorder/insert/remove in lazy lists — but ONLY with stable keys, since animation tracks keyed positions between frames. Emit the list in the new order and keyed items slide to place. No keys = no animation + state bugs.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you implement pull-to-refresh with a lazy list?",
+    a: [
+      {
+        t: "p",
+        text: "Material3 provides `PullToRefreshBox` (or the `pullToRefresh` modifier + `PullToRefreshState`) that wraps your `LazyColumn`, shows a refresh indicator on over-scroll at the top, and calls your `onRefresh` when the user pulls far enough. You drive it with an `isRefreshing` boolean from your ViewModel.",
+      },
+      {
+        t: "code",
+        title: "PullToRefreshBox",
+        code: `val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+PullToRefreshBox(
+    isRefreshing = isRefreshing,
+    onRefresh = { viewModel.refresh() },
+) {
+    LazyColumn { items(data, key = { it.id }) { Row(it) } }
+}
+// ViewModel sets isRefreshing=true during the fetch, false when done`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Wrap the list** — `PullToRefreshBox` handles the gesture, indicator, and threshold.",
+          "**State-driven** — the indicator shows while your `isRefreshing` state is true; the ViewModel owns that flag around the refresh call.",
+          "**Don't reset scroll** — refreshing should update data in place (keyed items) so the user's scroll position and item animations are preserved.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Wrap the LazyColumn in Material3's PullToRefreshBox (or pullToRefresh modifier); it shows the indicator and calls onRefresh on pull. Drive the spinner with an isRefreshing StateFlow the ViewModel toggles around the fetch. Update data in place (keys) so scroll position is kept.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you handle empty, loading, and error states in a list screen?",
+    a: [
+      {
+        t: "p",
+        text: "A list screen has more states than 'has items' — it can be loading (first load), empty (loaded but zero items), error (load failed), or content. Model these explicitly in your UiState and branch in the UI so users never see a blank screen or a spinner forever.",
+      },
+      {
+        t: "code",
+        title: "Branching on list state",
+        code: `when (val s = uiState) {
+    is UiState.Loading -> FullScreenSpinner()
+    is UiState.Error   -> ErrorView(s.message, onRetry = viewModel::retry)
+    is UiState.Empty   -> EmptyView("No items yet")           // distinct from loading!
+    is UiState.Content -> LazyColumn { items(s.items, key = { it.id }) { Row(it) } }
+}
+// For paging: show inline append spinner/error at the list's end via item {}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Empty ≠ loading** — a loaded-but-empty list needs an empty state (illustration + CTA), not a spinner. Distinguish them.",
+          "**Error with retry** — always give a way to recover; for refresh errors keep existing content and show a snackbar instead of replacing the whole screen.",
+          "**Paging states** — append/prepend loading and errors render as extra `item { }` entries at the list ends (Paging 3's `LoadState`).",
+          "**Skeletons** — for first load, placeholder skeleton items feel faster than a centered spinner.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Model list state as Loading/Empty/Error/Content and branch — empty is NOT the same as loading (show an empty-state CTA). Errors need retry; for refresh keep content + snackbar. Paging append/prepend states render as extra item{} at the ends. Skeletons beat a bare spinner.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you implement swipe-to-dismiss on list items?",
+    a: [
+      {
+        t: "p",
+        text: "Material3's `SwipeToDismissBox` wraps each item; the user swipes it away, revealing a background (e.g. a delete color/icon), and you handle the dismissed state to remove the item. It's driven by a `SwipeToDismissBoxState` per item.",
+      },
+      {
+        t: "code",
+        title: "SwipeToDismissBox per item",
+        code: `items(list, key = { it.id }) { item ->
+    val state = rememberSwipeToDismissBoxState(
+        confirmValueChange = { if (it == SwipeToDismissBoxValue.EndToStart) { viewModel.delete(item.id); true } else false }
+    )
+    SwipeToDismissBox(
+        state = state,
+        backgroundContent = { DeleteBackground() },
+        modifier = Modifier.animateItem(),    // animate the collapse after removal
+    ) { ItemRow(item) }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Per-item state** — each row has its own `SwipeToDismissBoxState`; keyed items keep that state correct as the list changes.",
+          "**`confirmValueChange`** — decide whether the swipe commits (and trigger the delete) or snaps back.",
+          "**Combine with `animateItem()`** — so the list smoothly closes the gap after removal.",
+          "**Offer undo** — deleting on swipe pairs well with a snackbar 'Undo' rather than a confirm dialog.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Wrap rows in Material3 SwipeToDismissBox with a per-item rememberSwipeToDismissBoxState; confirmValueChange commits the delete or snaps back, backgroundContent shows the reveal. Combine with animateItem() to close the gap, and offer snackbar undo. Stable keys keep per-item state right.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you track item impressions/analytics using LazyListState and snapshotFlow?",
+    a: [
+      {
+        t: "p",
+        text: "To log which items became visible (impressions for analytics/ads), observe `LazyListState.layoutInfo.visibleItemsInfo` via `snapshotFlow`. `snapshotFlow` turns snapshot state into a cold Flow that emits when the observed state changes, letting you debounce and dedupe impression events off the UI thread of recomposition.",
+      },
+      {
+        t: "code",
+        title: "Impression tracking",
+        code: `val listState = rememberLazyListState()
+LaunchedEffect(listState) {
+    snapshotFlow { listState.layoutInfo.visibleItemsInfo.map { it.key } }
+        .distinctUntilChanged()
+        .collect { visibleKeys -> analytics.onItemsVisible(visibleKeys) }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`snapshotFlow { }`** — reads snapshot state (the visible items) and emits when it changes; runs in the `LaunchedEffect` coroutine, not per-recomposition.",
+          "**Dedupe/debounce** — `distinctUntilChanged`, `debounce`, or a threshold (e.g. item ≥50% visible for ≥1s) to count a genuine impression, not a fast scroll-by.",
+          "**Use item `key`** — track by stable keys so impressions map to real items across recomposition.",
+          "**Why not recompose-based** — reading visibleItemsInfo in composition recomposes every frame; `snapshotFlow` is the correct side-effect channel.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Track impressions with snapshotFlow { listState.layoutInfo.visibleItemsInfo.map { it.key } } inside a LaunchedEffect, then distinctUntilChanged/debounce and a visibility-duration threshold for real impressions. It emits off the recomposition path — never read visibleItemsInfo directly in composition.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How does a lazy list decide what to compose, and what is item prefetching?",
+    a: [
+      {
+        t: "p",
+        text: "A lazy list composes only the items currently in (or just outside) the viewport, plus a *prefetch* buffer: as the user scrolls, it proactively composes and measures the next item(s) just beyond the visible edge on a background frame, so they're ready to display without a hitch. Items scrolled far away are disposed and their compositions recycled.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Viewport + buffer** — only visible items (and a small ahead-of-scroll prefetch) are composed; the rest exist only as a lightweight description in the `LazyListScope`.",
+          "**Prefetching** — the next item is composed/measured ahead of time during idle frame budget, reducing jank when it scrolls in. This is why smooth debug scrolling can still jank if items are expensive.",
+          "**Disposal + reuse** — items that scroll far off are disposed (their `remember`ed state forgotten unless hoisted); their compositions feed the reuse pool (keyed by `contentType`).",
+          "**Implications** — keep item composition cheap (heavy per-item work defeats prefetch), and never rely on off-screen items keeping state.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Lazy lists compose only visible items plus a prefetch buffer (next items composed ahead on idle frames for smooth scroll-in); far-off items are disposed and their compositions reused (by contentType). Keep item composition cheap or prefetch can't keep up — and don't rely on off-screen item state.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you preserve a list's scroll position across navigation and process death?",
+    a: [
+      {
+        t: "p",
+        text: "`rememberLazyListState()` survives recomposition and, because it's saveable, configuration changes (rotation) — but it's tied to the composable's lifetime. When you navigate away and back, the composable is disposed, so you need the state to be restored: `rememberLazyListState()` uses `rememberSaveable` under the hood, so it restores across config change and process death *as long as the composable is recreated at the same position with the same saver scope*.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Within a screen** — `rememberLazyListState()` already restores scroll position across rotation/process death (it's backed by a Saver).",
+          "**Across navigation** — Navigation Compose saves/restores the back stack entry's saved state; a list state remembered in the composable is restored when you return, provided the destination is recreated (not a fresh instance). If you pop and re-push, it resets.",
+          "**Data must match** — restored scroll index only makes sense if the list has the same items; restore data (e.g. from cache) before or alongside, or the index points at different content.",
+          "**For paged/remote lists** — you may need to re-fetch to the saved position; keying items stably lets the state re-anchor.",
+        ],
+      },
+      {
+        t: "note",
+        text: "rememberLazyListState() is Saver-backed, so it restores scroll position across rotation and process death automatically, and across Navigation Compose back-stack restoration. Caveat: the list must have the same items on restore (load cache first), or the saved index points at different content.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you nest a horizontal list inside a vertical list (e.g. a 'shelf' UI)?",
+    a: [
+      {
+        t: "p",
+        text: "Nesting a `LazyRow` inside a `LazyColumn` is fully supported and common (Play Store / Netflix 'shelves') because the two scroll on *different axes* — there's no ambiguity about which handles a gesture. Each `LazyRow` is one item of the `LazyColumn`. (Contrast with nesting same-axis scrollables, which is what crashes.)",
+      },
+      {
+        t: "code",
+        title: "Vertical list of horizontal shelves",
+        code: `LazyColumn {
+    items(shelves, key = { it.id }) { shelf ->
+        Text(shelf.title)
+        LazyRow {                                    // horizontal — different axis, OK
+            items(shelf.items, key = { it.id }) { Card(it) }
+        }
+    }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Different axes = fine** — `LazyRow` in `LazyColumn` (or vice-versa) works; the outer scrolls vertically, inner horizontally.",
+          "**Give each `LazyRow` its own state** if you need to control/observe its scroll (`rememberLazyListState()` per row — key it by shelf if reused).",
+          "**Same axis = crash** — a `LazyColumn` directly inside a vertically-scrolling parent throws (infinite height constraints). Keep nesting cross-axis.",
+          "**Performance** — each row prefetches independently; keep card content light since many rows may be near the viewport.",
+        ],
+      },
+      {
+        t: "note",
+        text: "LazyRow inside LazyColumn (shelves) is supported — different scroll axes, no gesture conflict. Each LazyRow is one LazyColumn item; give rows their own keyed state if you observe them. Only SAME-axis nesting (LazyColumn in a verticalScroll) crashes on infinite constraints.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you add uniform spacing between lazy list items?",
+    a: [
+      {
+        t: "p",
+        text: "Use the container's `verticalArrangement = Arrangement.spacedBy(dp)` (or `horizontalArrangement` for a LazyRow) to put a consistent gap between items — cleaner than adding padding to each item or emitting Spacers. Combine with `contentPadding` for space at the list's outer edges.",
+      },
+      {
+        t: "code",
+        title: "Spacing done right",
+        code: `LazyColumn(
+    verticalArrangement = Arrangement.spacedBy(12.dp),   // gap BETWEEN items only
+    contentPadding = PaddingValues(16.dp),               // space around the whole content
+) {
+    items(list, key = { it.id }) { Row(it) }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`Arrangement.spacedBy`** — one gap between adjacent items, none at the ends (no leading/trailing extra space).",
+          "**`contentPadding`** — space at the top/bottom (and sides) of the scrollable content, scrolled-through and clipped at the edge.",
+          "**Avoid per-item padding for gaps** — it double-spaces adjacent items and adds padding at the very ends where you may not want it.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Use verticalArrangement/horizontalArrangement = Arrangement.spacedBy(dp) for uniform gaps BETWEEN items (none at the ends), plus contentPadding for outer edge space. Don't put padding on each item for gaps — it double-spaces neighbors and pads the ends.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What's your checklist for keeping a large/complex lazy list smooth?",
+    a: [
+      {
+        t: "p",
+        text: "Lazy-list jank almost always comes from expensive item composition, missing keys/contentType, or reading rapidly-changing state during composition. Here's the practical checklist to keep 60/120fps.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Provide stable `key`** — correct state/animation and better reuse.",
+          "**Provide `contentType`** for mixed lists — enables per-type composition reuse.",
+          "**Keep item content cheap** — no heavy work in the item body; precompute in the ViewModel, hoist derived values, avoid large `Modifier` chains and unnecessary nesting.",
+          "**Ensure items are stable/skippable** — pass immutable data; unstable params force item recomposition on unrelated changes.",
+          "**Don't read scroll state directly** — use `derivedStateOf`/`snapshotFlow` so you don't recompose items every frame.",
+          "**Defer state reads to draw** — use `graphicsLayer { }` lambda for scroll-driven visual effects instead of layout-affecting modifiers.",
+          "**Image loading** — use Coil with proper sizing/placeholders; oversized bitmaps cause GC jank.",
+          "**Generate a Baseline Profile** — precompiles Compose/list code so first scrolls aren't interpreted (huge real-device win).",
+          "**Profile on a release build** on a real mid-tier device — never judge on debug.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Smooth-list checklist: stable key + contentType, cheap/stable item content (immutable data), no direct scroll-state reads (derivedStateOf/snapshotFlow), graphicsLayer for scroll effects, right-sized image loading, a Baseline Profile, and profile on a RELEASE build on a real device. Jank = expensive items or missing keys.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What's the difference between scrollToItem and animateScrollToItem, and how do you use a scroll offset?",
+    a: [
+      {
+        t: "p",
+        text: "Both move a `LazyColumn` to a target item via its `LazyListState`, but `scrollToItem` jumps *instantly* while `animateScrollToItem` *smoothly animates* the scroll. Both are `suspend` functions (call them from a coroutine) and accept an optional pixel `scrollOffset` to fine-tune the final position.",
+      },
+      {
+        t: "code",
+        title: "Programmatic scrolling",
+        code: `val state = rememberLazyListState()
+val scope = rememberCoroutineScope()
+
+scope.launch { state.scrollToItem(index = 0) }               // instant jump to top
+scope.launch { state.animateScrollToItem(index = 20) }       // smooth scroll to item 20
+scope.launch { state.animateScrollToItem(index = 20, scrollOffset = -32) } // 32px above the top edge`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`scrollToItem`** — instant; use for 'jump to top' on tab reselect, or restoring a position without animation.",
+          "**`animateScrollToItem`** — animated; use for user-visible navigation to a section.",
+          "**`scrollOffset`** — pixels to offset the item from the viewport start (e.g. leave room for a sticky header).",
+          "**They're `suspend`** — launch from `rememberCoroutineScope()` (a click handler) or inside a `LaunchedEffect`.",
+        ],
+      },
+      {
+        t: "note",
+        text: "scrollToItem = instant jump, animateScrollToItem = smooth animated; both suspend (launch from a scope) and take a pixel scrollOffset to fine-tune (e.g. leave room under a sticky header). Use instant for jump-to-top/restore, animated for user-facing navigation.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you build a chat-style list that starts at the bottom (reverseLayout)?",
+    a: [
+      {
+        t: "p",
+        text: "Set `reverseLayout = true` on the `LazyColumn` — items are laid out from the bottom up, so index 0 sits at the bottom and the list starts scrolled to the newest message. You typically also reverse (or emit newest-first) your data so the freshest item is at index 0.",
+      },
+      {
+        t: "code",
+        title: "Chat list",
+        code: `LazyColumn(
+    reverseLayout = true,               // index 0 at the bottom; starts at newest
+    verticalArrangement = Arrangement.spacedBy(4.dp),
+) {
+    items(messagesNewestFirst, key = { it.id }) { MessageBubble(it) }
+}
+// On a new message, scroll to keep the newest visible:
+LaunchedEffect(messages.size) { if (atBottom) state.animateScrollToItem(0) }`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`reverseLayout = true`** — bottom-anchored; naturally starts at the newest message and grows upward.",
+          "**Data order** — provide messages newest-first (index 0 = newest) so the reversed layout shows them chronologically.",
+          "**Auto-scroll on new message** — only auto-scroll if the user is already at the bottom (check `firstVisibleItemIndex == 0`), so you don't yank them away while reading history.",
+          "**Load older on scroll up** — detect nearing the end (top, visually) to page in history.",
+        ],
+      },
+      {
+        t: "note",
+        text: "reverseLayout = true anchors the list to the bottom (index 0 at bottom) — ideal for chat: starts at the newest, grows upward. Provide messages newest-first, auto-scroll to item 0 on new messages ONLY if the user is already at the bottom, and page history on scroll-up.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "When should you NOT use a LazyColumn?",
+    a: [
+      {
+        t: "p",
+        text: "Lazy lists have real overhead (the lazy machinery, item reuse pools, scroll state). For a small, fixed number of items you know will all be shown, a plain `Column` (with `verticalScroll` if needed) is simpler and often faster — and it lets children measure normally without lazy constraints.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Small, fixed count** — a handful of items (a settings screen, a form): use `Column`; the lazy overhead isn't worth it.",
+          "**Non-scrolling content** — if it fits on screen, `Column` alone; no scroll container needed.",
+          "**All items always visible** — no benefit to lazy composition when nothing is off-screen.",
+          "**Use `LazyColumn` when** — the list is long, unbounded, or dynamically sized, so composing only visible items matters.",
+          "**Gotcha** — never put a `LazyColumn` inside a `verticalScroll` `Column`; if you need a scrolling screen with a list section, make the whole thing a `LazyColumn` and use `item { }` for the non-list parts.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Use a plain Column (± verticalScroll) for small, fixed, all-visible content (settings, forms) — LazyColumn's machinery is overkill and can't nest in a verticalScroll anyway. Reserve LazyColumn for long/unbounded/dynamic lists where composing only visible items pays off; wrap mixed screens as one LazyColumn with item{}.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you show a loading footer / 'load more' spinner at the end of a list?",
+    a: [
+      {
+        t: "p",
+        text: "Emit an extra `item { }` at the end of the `LazyColumn` that renders a spinner (or an error-with-retry row) based on your append/load-more state. Because it's a real lazy item, it only composes when the user scrolls to the bottom — which is also the natural trigger point for loading the next page.",
+      },
+      {
+        t: "code",
+        title: "Append footer",
+        code: `LazyColumn {
+    items(items, key = { it.id }) { Row(it) }
+    if (appendState == LoadState.Loading) {
+        item { Box(Modifier.fillMaxWidth().padding(16.dp), Alignment.Center) { CircularProgressIndicator() } }
+    }
+    if (appendState is LoadState.Error) {
+        item { RetryRow(onRetry = viewModel::retryAppend) }
+    }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Footer as an `item { }`** — composes only when scrolled into view; render spinner or error/retry from your append state.",
+          "**Paging 3** — exposes this as `loadState.append` (Loading/Error/NotLoading); wire the footer to it instead of hand-rolling.",
+          "**Distinct from refresh** — the *append* footer is separate from the top *refresh* indicator; model both states.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Add a trailing item { } that shows a spinner or retry row based on your append/loadState — it only composes when scrolled to the bottom. Paging 3 gives loadState.append (Loading/Error/NotLoading) to wire it directly. Keep append state separate from top-refresh state.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you scroll a specific item into view when it receives focus or on demand (BringIntoViewRequester)?",
+    a: [
+      {
+        t: "p",
+        text: "`BringIntoViewRequester` lets a child ask its scrollable ancestors to scroll it into the visible area — useful when a field gains focus (so the keyboard doesn't cover it) or when you programmatically need to reveal a nested element whose index you don't track. You attach a requester to the element and call `bringIntoView()` from a coroutine.",
+      },
+      {
+        t: "code",
+        title: "BringIntoViewRequester",
+        code: `val requester = remember { BringIntoViewRequester() }
+val scope = rememberCoroutineScope()
+TextField(
+    modifier = Modifier
+        .bringIntoViewRequester(requester)
+        .onFocusEvent { if (it.isFocused) scope.launch { requester.bringIntoView() } },
+    ...
+)`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Element-driven scrolling** — unlike `animateScrollToItem` (which needs an index), this works from the child; the scroll parents cooperate to reveal it.",
+          "**Common for forms** — bring a focused `TextField` above the IME so it isn't hidden (pair with `imePadding`).",
+          "**Works across nested scrollables** — the request propagates up through scroll parents.",
+        ],
+      },
+      {
+        t: "note",
+        text: "BringIntoViewRequester lets a child ask scroll ancestors to reveal it (call bringIntoView() in a coroutine) — no index needed, unlike animateScrollToItem. Classic use: scroll a focused TextField above the keyboard (with imePadding). It propagates through nested scrollables.",
+      },
+    ],
+  },
 ];
 
 export default qa;

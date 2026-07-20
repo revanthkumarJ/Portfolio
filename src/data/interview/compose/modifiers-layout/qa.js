@@ -237,6 +237,668 @@ Row { // equal-width segmented buttons
       },
     ],
   },
+  {
+    level: "junior",
+    q: "Which Modifiers should every Compose developer know by heart?",
+    a: [
+      {
+        t: "p",
+        text: "Modifiers decorate a composable — sizing, spacing, background, click handling, and more. A handful cover the vast majority of UI. Knowing them (and that *order matters*) lets you build most layouts without reaching for anything exotic.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Sizing** — `size`, `fillMaxWidth`/`fillMaxHeight`/`fillMaxSize`, `width`/`height`, `weight` (in Row/Column), `wrapContentSize`.",
+          "**Spacing** — `padding` (there's no margin; padding + a `Spacer` do it all).",
+          "**Appearance** — `background`, `clip`, `border`, `alpha`, `graphicsLayer`.",
+          "**Interaction** — `clickable`, `pointerInput`, `scrollable`/`verticalScroll`.",
+          "**Positioning** — `offset`, `align` (in a Box scope), `zIndex`.",
+          "**Measurement callbacks** — `onGloballyPositioned`, `onSizeChanged`.",
+        ],
+      },
+      {
+        t: "code",
+        title: "A typical chain",
+        code: `Text(
+    "Hi",
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)          // outer space (order matters!)
+        .background(Color.Blue)  // painted inside the padding
+        .clip(RoundedCornerShape(8.dp))
+        .clickable { onClick() }
+        .padding(12.dp),         // inner space between bg edge and text
+)`,
+      },
+      {
+        t: "note",
+        text: "Core Modifiers: sizing (size/fillMax*/weight), spacing (padding + Spacer — no margins), appearance (background/clip/border), interaction (clickable/pointerInput), positioning (offset/align/zIndex). Order matters — each wraps the next.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What's the difference between size, requiredSize, fillMaxSize, and wrapContentSize?",
+    a: [
+      {
+        t: "p",
+        text: "These all affect sizing but interact with parent *constraints* differently. The key insight: `size` is a *preference* the parent can override via constraints, `requiredSize` *forces* a size ignoring parent constraints, `fillMaxSize` takes all available space, and `wrapContentSize` shrinks to content and can re-center within a larger bound.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`size(100.dp)`** — asks for 100dp, but the parent's constraints win; if the parent forces min 200dp, you get 200dp.",
+          "**`requiredSize(100.dp)`** — forces exactly 100dp even if it violates parent constraints (the child may then be clipped or overflow). Use sparingly.",
+          "**`fillMaxSize()`** — expand to the maximum the parent allows (needs a bounded parent; inside an infinite-height scroll it can crash/misbehave).",
+          "**`wrapContentSize()`** — measure the child at its content size within the incoming constraints, then position it (default center) in the leftover space — handy to center a small child inside a `fillMaxSize` parent.",
+        ],
+      },
+      {
+        t: "code",
+        title: "size vs requiredSize under a constraining parent",
+        code: `Box(Modifier.size(50.dp)) {                 // parent forces 50dp
+    Box(Modifier.size(100.dp))              // -> becomes 50dp (constraint wins)
+    Box(Modifier.requiredSize(100.dp))      // -> stays 100dp (overflows the 50dp box)
+}`,
+      },
+      {
+        t: "note",
+        text: "size = preferred (parent constraints can override); requiredSize = forced (ignores parent, may overflow); fillMaxSize = take all available (needs bounded parent); wrapContentSize = shrink to content and re-position in leftover space. 'size can be overridden' trips people up constantly.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do Constraints work in Compose layout (min/max, bounded, infinity)?",
+    a: [
+      {
+        t: "p",
+        text: "`Constraints` are the bounds a parent passes to a child during measurement: `minWidth`, `maxWidth`, `minHeight`, `maxHeight`. The child must choose a size *within* these bounds. This is the core of Compose's single-pass layout: constraints flow *down*, chosen sizes flow *up*.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Bounded** — a finite max (e.g. maxWidth = screen width). `fillMaxWidth` picks maxWidth.",
+          "**Unbounded / infinity** — `Constraints.Infinity` max (e.g. the child of a vertically scrolling Column has infinite max height — it can be as tall as it wants). `fillMaxHeight` in an infinite-height parent is meaningless/crashes, which is why you can't put a `fillMaxSize` or nested `LazyColumn` directly in a `verticalScroll` Column.",
+          "**Exact (tight) constraints** — min == max, forcing a specific size (what `size()` produces for its child when it resolves).",
+          "**Modifiers reshape constraints** — `padding` shrinks the max passed down; `size` tightens them; `fillMax*` reads the max.",
+        ],
+      },
+      {
+        t: "code",
+        title: "Reading constraints in a custom layout",
+        code: `Layout(content) { measurables, constraints ->
+    // constraints.maxWidth may be a finite number or Constraints.Infinity
+    val childConstraints = constraints.copy(minWidth = 0)  // loosen min
+    val placeables = measurables.map { it.measure(childConstraints) }
+    layout(constraints.maxWidth, placeables.maxOf { it.height }) { /* place */ }
+}`,
+      },
+      {
+        t: "note",
+        text: "Constraints (min/max width & height) flow down; chosen sizes flow up — one pass. Bounded = finite max; unbounded = Constraints.Infinity (a scroll child's cross-axis). fillMax* in an infinite dimension is undefined — that's why fillMaxHeight/nested LazyColumn breaks inside verticalScroll.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "When do you use Box vs Row vs Column?",
+    a: [
+      {
+        t: "p",
+        text: "These are the three fundamental layout composables. `Column` stacks children vertically, `Row` stacks them horizontally, and `Box` overlaps children on top of each other (z-stacked). Choosing among them is the first decision in any layout.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`Column`** — vertical stack. Use `verticalArrangement` (spacing/distribution along the main axis) and `horizontalAlignment` (cross-axis).",
+          "**`Row`** — horizontal stack. `horizontalArrangement` + `verticalAlignment`.",
+          "**`Box`** — overlap children; later children draw on top. Use `contentAlignment` and per-child `Modifier.align()` to position. Great for badges, overlays, backgrounds behind content, centering a single child.",
+        ],
+      },
+      {
+        t: "code",
+        title: "Box for overlap, Column/Row for stacks",
+        code: `Box(contentAlignment = Alignment.Center) {          // overlap + center
+    Image(...)                                       // background layer
+    CircularProgressIndicator()                      // on top, centered
+    Text("NEW", Modifier.align(Alignment.TopEnd))    // badge in a corner
+}
+Column(verticalArrangement = Arrangement.spacedBy(8.dp)) { /* vertical list */ }
+Row(horizontalArrangement = Arrangement.SpaceBetween) { /* horizontal bar */ }`,
+      },
+      {
+        t: "note",
+        text: "Column = vertical stack, Row = horizontal stack, Box = overlapping z-stack (later children on top, align per child). Box is the go-to for overlays, badges, backgrounds, and centering a single child. They're the flex/frame equivalents of Compose.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How does Modifier.clickable work, and how do you customize or remove the ripple?",
+    a: [
+      {
+        t: "p",
+        text: "`Modifier.clickable` makes any composable respond to taps: it adds click handling, a ripple indication, accessibility semantics (role, focus), and keyboard/D-pad support. Because it's a modifier, you can make *anything* clickable — a Box, an Image, a Row — not just buttons.",
+      },
+      {
+        t: "code",
+        title: "clickable and controlling the ripple",
+        code: `// Default: includes ripple + a11y
+Modifier.clickable { onClick() }
+
+// With role/label for accessibility
+Modifier.clickable(
+    onClickLabel = "Open profile",
+    role = Role.Button,
+) { onClick() }
+
+// Remove the ripple (e.g. for a custom-drawn press effect):
+val interaction = remember { MutableInteractionSource() }
+Modifier.clickable(
+    interactionSource = interaction,
+    indication = null,     // no ripple
+) { onClick() }`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Adds more than onClick** — ripple `indication`, semantics (`Role.Button`), focus, and enabled state.",
+          "**Customize the ripple** — pass a custom `indication` (e.g. `ripple(bounded = false, color = ...)`), or `null` to disable.",
+          "**Use `combinedClickable`** for long-press/double-tap; use `pointerInput` + `detectTapGestures` for fully custom gesture handling.",
+          "**Accessibility caveat** — if you strip semantics or use raw `pointerInput`, you may lose the button role/label; add `Modifier.semantics` back.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Modifier.clickable adds tap handling + ripple + accessibility (role/focus/keyboard) to any composable. Customize via indication (custom ripple or null to remove) and an InteractionSource; combinedClickable for long-press/double-tap. Don't lose a11y semantics with raw pointerInput.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do clip, background, and border interact, and why does their order matter?",
+    a: [
+      {
+        t: "p",
+        text: "`clip(shape)` restricts drawing (and touch) to a shape; `background(color, shape)` paints a shape; `border(width, color, shape)` draws an outline. Because modifiers wrap outward-in, the order determines whether the background/border respects the clip and where padding sits relative to them.",
+      },
+      {
+        t: "code",
+        title: "Ordering shapes correctly",
+        code: `// Rounded card: clip first so background AND content are rounded
+Modifier
+    .clip(RoundedCornerShape(12.dp))   // everything after is clipped to rounded
+    .background(Color.White)
+    .border(1.dp, Color.Gray, RoundedCornerShape(12.dp))
+    .padding(16.dp)                    // inner content padding
+
+// background(color, shape) is shorthand that paints a shape without clipping content
+Modifier.background(Color.White, RoundedCornerShape(12.dp))`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`clip` before `background`/content** — so both the fill and the children are rounded. Clipping after background rounds nothing you already painted.",
+          "**`background(color, shape)`** paints a shape but does *not* clip child content — use `clip` if children (like an Image) must be rounded too.",
+          "**Padding position** — padding *before* background = space outside the colored area; padding *after* = space between the background edge and content.",
+        ],
+      },
+      {
+        t: "note",
+        text: "clip restricts drawing to a shape; background paints one; border outlines one. Put clip first so background AND children are clipped to the shape. background(color, shape) paints but doesn't clip content — use clip for rounded images. Padding before vs after background changes what's spaced.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you build a responsive layout that adapts to available width?",
+    a: [
+      {
+        t: "p",
+        text: "Compose gives you the available space at layout time, and you adapt by reading it. The main tools are `BoxWithConstraints` (exposes the incoming constraints so you can branch on `maxWidth`), `WindowSizeClass` (standardized breakpoints for phone/tablet/desktop), and adaptive layout APIs. You branch on size to choose one-pane vs two-pane, grid columns, etc.",
+      },
+      {
+        t: "code",
+        title: "BoxWithConstraints and WindowSizeClass",
+        code: `BoxWithConstraints {
+    if (maxWidth < 600.dp) {
+        SinglePaneList()          // phone
+    } else {
+        Row { ListPane(); DetailPane() }   // tablet: two panes
+    }
+}
+
+// App-level: WindowSizeClass gives semantic breakpoints
+val widthClass = windowSizeClass.widthSizeClass
+when (widthClass) {
+    WindowWidthSizeClass.Compact -> CompactLayout()
+    WindowWidthSizeClass.Medium, WindowWidthSizeClass.Expanded -> WideLayout()
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`BoxWithConstraints`** — local, gives `minWidth`/`maxWidth`/etc. of *this* slot; good for a single component's responsiveness. Note it uses SubcomposeLayout, so it's slightly heavier.",
+          "**`WindowSizeClass`** — app/screen-level standardized breakpoints (Compact/Medium/Expanded); better for top-level navigation decisions.",
+          "**Adaptive APIs** — `androidx.compose.material3.adaptive` (list-detail, supporting-pane scaffolds) for canonical responsive patterns.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Adapt to size with BoxWithConstraints (local maxWidth branching — uses SubcomposeLayout, slightly heavier) or WindowSizeClass (app-level Compact/Medium/Expanded breakpoints for navigation). Material3 adaptive scaffolds give canonical list-detail patterns. Branch on size, don't hardcode.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "Why can't you read a composable's size during composition, and how do you get it?",
+    a: [
+      {
+        t: "p",
+        text: "Composition (building the tree) happens *before* layout (measuring/placing), so at composition time nothing has a size yet — the size doesn't exist until the layout phase runs. To get an actual pixel size you must wait for layout and read it via a callback modifier, then (if you need to react in UI) store it in state.",
+      },
+      {
+        t: "code",
+        title: "onSizeChanged / onGloballyPositioned",
+        code: `var sizePx by remember { mutableStateOf(IntSize.Zero) }
+Box(
+    Modifier.onSizeChanged { sizePx = it }   // called after layout, gives the measured size
+) { /* content */ }
+
+// onGloballyPositioned also gives position in window/root coordinates:
+Modifier.onGloballyPositioned { coords -> val bounds = coords.boundsInWindow() }`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Phase ordering** — composition → layout → draw. Size is a layout-phase result, unknown during composition.",
+          "**`onSizeChanged`** — gives the measured size after layout; store it in state to use it in composition next frame.",
+          "**`onGloballyPositioned`** — gives size *and* position (coordinates), useful for anchoring popups or measuring relative positions.",
+          "**Beware feedback loops** — reading size into state that changes size can loop; and this adds a frame of latency. Prefer a custom `Layout` or intrinsics when you need size *during* layout, not after.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Size is a layout-phase result; composition runs first, so no size exists yet. Read it after layout via onSizeChanged (size) or onGloballyPositioned (size + position), storing in state. Watch for feedback loops and the one-frame lag; use a custom Layout/intrinsics when you need size during layout.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What does Modifier.graphicsLayer do, and when should you prefer it?",
+    a: [
+      {
+        t: "p",
+        text: "`Modifier.graphicsLayer` applies transformations (translation, scale, rotation, alpha, clip, shadow) by drawing the composable into a separate render layer. Crucially, these transforms happen in the *draw* phase without re-triggering layout — so animating them is cheap. It's the performant way to animate movement, fades, and scaling.",
+      },
+      {
+        t: "code",
+        title: "graphicsLayer for cheap animation",
+        code: `val scale by animateFloatAsState(if (pressed) 0.95f else 1f)
+Box(
+    Modifier.graphicsLayer {
+        scaleX = scale; scaleY = scale     // draw-phase only — no relayout per frame
+        alpha = 0.9f
+        rotationZ = 10f
+    }
+)
+// vs Modifier.offset/size in an animation -> re-runs layout every frame (more costly)`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Draw-phase transforms** — translation/scale/rotation/alpha skip layout, so per-frame animation is cheap (no remeasure).",
+          "**Lambda form** — `graphicsLayer { }` reads animated state *inside* the lambda, deferring the state read to the draw phase (avoids recomposition/relayout).",
+          "**Also does** — `clip = true` + `shape`, `shadowElevation`, `compositingStrategy` (offscreen buffer for alpha over overlapping content).",
+          "**Prefer over `offset`/`size` for animation** — animating `offset`/`size` re-runs layout each frame; `graphicsLayer.translationX`/`scale` doesn't.",
+        ],
+      },
+      {
+        t: "note",
+        text: "graphicsLayer applies scale/rotation/translation/alpha/shadow in the DRAW phase — no relayout, so animating it is cheap. Use the lambda form to defer the state read to draw. Prefer graphicsLayer.translationX/scale over animating offset/size (which re-runs layout every frame).",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you conditionally apply modifiers, and what is Modifier.then?",
+    a: [
+      {
+        t: "p",
+        text: "Because a `Modifier` is an immutable, chainable value, you can build it conditionally like any expression. `Modifier.then(other)` concatenates two modifier chains. The clean pattern is to conditionally append a modifier (or `Modifier` — the no-op identity — when the condition is false).",
+      },
+      {
+        t: "code",
+        title: "Conditional modifiers",
+        code: `Modifier
+    .fillMaxWidth()
+    .then(if (selected) Modifier.border(2.dp, Color.Blue) else Modifier)  // Modifier = no-op
+
+// A common helper for readability:
+fun Modifier.conditional(condition: Boolean, block: Modifier.() -> Modifier) =
+    if (condition) this.then(block()) else this
+
+Modifier.conditional(selected) { border(2.dp, Color.Blue) }`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`Modifier` (bare) is the identity** — a no-op you can substitute when a condition is false.",
+          "**`then`** concatenates chains; useful for merging a passed-in `modifier` parameter with local ones — always apply the caller's `modifier` at the right spot.",
+          "**Watch ordering** — where you insert the conditional modifier in the chain still matters (padding vs background etc.).",
+          "**Don't over-engineer** — a plain `if (x) Modifier.a() else Modifier` inside `.then()` is perfectly idiomatic.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Modifiers are immutable values, so build them conditionally: `.then(if (cond) Modifier.x() else Modifier)` — bare `Modifier` is the no-op identity. A `Modifier.conditional{}` extension reads nicely. Ordering within the chain still matters.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What's the difference between offset and padding for moving a composable?",
+    a: [
+      {
+        t: "p",
+        text: "Both can shift a composable, but they work in different phases and have different effects on layout. `padding` reserves space and pushes neighbors (it changes the element's laid-out bounds); `offset` moves the element *visually* during placement without affecting the space it reserved, so it can overlap neighbors.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`padding`** — layout-affecting; adds space that displaces siblings and shrinks the child's available area. Use for genuine spacing.",
+          "**`offset(x, y)`** — placement-phase shift; the element occupies its original slot but is drawn shifted, so it can overlap adjacent content. Use for nudging/overlap effects.",
+          "**`absoluteOffset`** — like offset but ignores layout direction (LTR/RTL).",
+          "**`graphicsLayer { translationX = }`** — draw-phase move, best for *animated* movement (cheapest, no relayout).",
+        ],
+      },
+      {
+        t: "code",
+        title: "offset overlaps; padding displaces",
+        code: `Modifier.padding(start = 20.dp)   // pushes the element right, moves neighbors
+Modifier.offset(x = 20.dp)        // draws it 20dp right, neighbors unaffected (may overlap)
+Modifier.graphicsLayer { translationX = animatedX }  // animated move, no relayout`,
+      },
+      {
+        t: "note",
+        text: "padding reserves space and displaces siblings (layout-affecting); offset shifts placement visually without changing reserved space (can overlap); graphicsLayer.translationX is the cheapest for animated movement (draw-phase). Pick by whether neighbors should move.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do you create a reusable custom modifier, and why prefer Modifier.Node over composed{}?",
+    a: [
+      {
+        t: "p",
+        text: "A reusable modifier is just an extension function on `Modifier` that appends behavior. For *stateless* combinations, a plain factory function is enough. For modifiers that need their own state, coordinate access, or lifecycle, the modern approach is a `Modifier.Node` implementation, which replaced the older `composed { }` factory because `composed` was slow (it created a composition per usage and defeated skipping/reuse).",
+      },
+      {
+        t: "code",
+        title: "Simple factory vs Modifier.Node",
+        code: `// Simple, stateless: just chain existing modifiers
+fun Modifier.card() = this
+    .clip(RoundedCornerShape(12.dp))
+    .background(Color.White)
+    .padding(16.dp)
+
+// Stateful / needs draw or pointer access: Modifier.Node (modern, performant)
+// class MyNode : Modifier.Node(), DrawModifierNode { override fun ContentDrawScope.draw() {...} }
+// then a ModifierNodeElement to create/update it.`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Plain extension function** — for composing existing modifiers with no new state. Cheap, idiomatic.",
+          "**`Modifier.Node` + `ModifierNodeElement`** — for custom draw/layout/pointer/focus behavior or per-usage state. Nodes are allocated once and *updated* in place (not recreated), avoiding recomposition.",
+          "**Why not `composed { }`** — it ran a composable per modifier application, breaking modifier reuse/skipping and hurting performance. `Modifier.Node` is the official replacement.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Reusable modifier = extension fn on Modifier. Stateless combos: a plain factory. Stateful/custom draw-layout-pointer: Modifier.Node + ModifierNodeElement (allocated once, updated in place). Avoid the old composed{} — it spun up a composition per use and killed reuse/skipping.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is Modifier.matchParentSize inside a Box, and how does it differ from fillMaxSize?",
+    a: [
+      {
+        t: "p",
+        text: "Inside a `Box`, `Modifier.matchParentSize()` sizes a child to match the Box's size *without influencing* that size. `fillMaxSize()` fills the max available and *does* participate in measuring. The difference matters when the Box sizes itself to its content: `matchParentSize` won't inflate the Box, `fillMaxSize` can.",
+      },
+      {
+        t: "code",
+        title: "matchParentSize for backgrounds",
+        code: `Box {
+    // This child DECIDES the Box size (e.g. the content):
+    Text("Some content of variable size")
+    // A background that matches the Box without affecting its size:
+    Box(Modifier.matchParentSize().background(Color.LightGray))   // sits behind, same size
+    // fillMaxSize() here would try to fill max constraints and could blow up the Box
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`matchParentSize`** — Box-scope only; measured *after* the Box knows its size, so it matches without contributing to sizing. Perfect for a background layer behind content.",
+          "**`fillMaxSize`** — participates in measurement, filling the incoming max constraints; if it's the only child, the Box becomes max-sized.",
+          "**Draw order** — put the background child before content (earlier = behind), or it covers the content.",
+        ],
+      },
+      {
+        t: "note",
+        text: "matchParentSize (Box-scope) sizes a child to the Box WITHOUT affecting the Box's size — ideal for a background behind variable content. fillMaxSize participates in measuring and fills max constraints (can inflate the Box). Order children so the background draws first.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "How do you handle safe areas, insets, and the status/navigation bars in Compose?",
+    a: [
+      {
+        t: "p",
+        text: "With edge-to-edge display (default on modern Android), your content draws behind the system bars, so you must apply *window insets* to avoid content hiding under the status bar, navigation bar, or IME (keyboard). Compose exposes insets via the `WindowInsets` API and helper modifiers.",
+      },
+      {
+        t: "code",
+        title: "Applying insets",
+        code: `// Pad content away from system bars:
+Modifier.windowInsetsPadding(WindowInsets.systemBars)
+// Common shortcuts:
+Modifier.statusBarsPadding()
+Modifier.navigationBarsPadding()
+Modifier.imePadding()              // move content above the keyboard
+Modifier.safeDrawingPadding()      // all of the above combined
+
+// Scaffold applies insets for you and passes contentPadding:
+Scaffold { innerPadding -> Content(Modifier.padding(innerPadding)) }`,
+      },
+      {
+        t: "list",
+        items: [
+          "**Edge-to-edge is the default** — `enableEdgeToEdge()`; content goes behind bars, so insets are your responsibility.",
+          "**Inset modifiers** — `statusBarsPadding`, `navigationBarsPadding`, `imePadding`, `safeDrawingPadding`, or the general `windowInsetsPadding(insets)`.",
+          "**`Scaffold` handles most of it** — apply the `innerPadding` it gives you; ignoring it causes content under the app bar.",
+          "**`consumeWindowInsets`** — prevents double-applying insets in nested scrollables.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Edge-to-edge draws behind system bars, so apply WindowInsets: statusBarsPadding/navigationBarsPadding/imePadding/safeDrawingPadding, or windowInsetsPadding(insets). Scaffold gives innerPadding — always apply it. Use consumeWindowInsets to avoid double-padding in nested scrolls.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What does Modifier.zIndex do, and how is draw order determined in Compose?",
+    a: [
+      {
+        t: "p",
+        text: "By default, Compose draws children in *declaration order* — later children (and later modifiers) draw on top. `Modifier.zIndex(z)` overrides this within a layout, letting a child draw above siblings regardless of its declaration order, without reordering the layout itself.",
+      },
+      {
+        t: "list",
+        items: [
+          "**Default order = declaration order** — in a Box, the last-declared child is on top. Often the simplest fix is just reordering children.",
+          "**`Modifier.zIndex(z)`** — higher z draws later (on top); affects *drawing* within the same parent, not measurement/placement.",
+          "**Scope** — zIndex only compares siblings in the same layout; it doesn't let a child escape its parent's stacking.",
+          "**Elevation/shadow** — `graphicsLayer { shadowElevation = }` or Material elevation also creates visual depth (and can affect draw order via elevation overlays).",
+        ],
+      },
+      {
+        t: "code",
+        title: "zIndex to lift a child",
+        code: `Box {
+    Card(Modifier.zIndex(1f)) { /* draws above */ }
+    Overlay()                       // declared later but drawn below due to zIndex above
+}`,
+      },
+      {
+        t: "note",
+        text: "Draw order defaults to declaration order (later = on top). Modifier.zIndex(z) overrides draw order among siblings (higher = on top) without reordering layout. It only compares siblings in the same parent. Often just reordering children is simpler than zIndex.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How do alignment lines (like baselines) work, and how do you use them for relational layout?",
+    a: [
+      {
+        t: "p",
+        text: "An *alignment line* is a horizontal or vertical line a composable exposes so parents can align other composables to it — the most common being text `FirstBaseline`/`LastBaseline`. Layouts read children's alignment lines during measurement and can position siblings relative to them, enabling things like aligning a label's baseline to a value's baseline.",
+      },
+      {
+        t: "code",
+        title: "Aligning to a baseline",
+        code: `Row {
+    Text("42", fontSize = 32.sp, modifier = Modifier.alignByBaseline())
+    Text("points", fontSize = 14.sp, modifier = Modifier.alignByBaseline())  // baselines line up
+}
+
+// Custom: read a child's baseline in a Layout
+Layout(content) { measurables, constraints ->
+    val p = measurables.first().measure(constraints)
+    val baseline = p[FirstBaseline]        // access the alignment line value
+    layout(p.width, p.height) { p.place(0, 0) }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`alignByBaseline()`** in a Row aligns children's text baselines — crucial for mixed font sizes looking correct.",
+          "**`paddingFromBaseline`** sets distance from a baseline (Material spacing specs use this).",
+          "**Custom alignment lines** — you can define your own with `AlignmentLine` and expose them from a custom layout for advanced relational positioning.",
+          "**Reading them costs a measure** — accessing an alignment line forces measuring that child, so use judiciously.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Alignment lines (esp. text FirstBaseline/LastBaseline) let parents position siblings relative to a child's line. Use alignByBaseline() in a Row for mixed font sizes, paddingFromBaseline for spec spacing. You can define custom AlignmentLines. Reading one forces measuring that child.",
+      },
+    ],
+  },
+  {
+    level: "junior",
+    q: "What is Spacer, and when do you use it versus padding or Arrangement.spacedBy?",
+    a: [
+      {
+        t: "p",
+        text: "`Spacer` is an empty composable that just occupies space — you give it a size and it creates a gap. It's one of three ways to create spacing (alongside `padding` and `Arrangement.spacedBy`), each suited to a different situation.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`Spacer(Modifier.height(8.dp))`** — an explicit, one-off gap between two specific elements. Also `Spacer(Modifier.weight(1f))` to push elements apart (fill remaining space).",
+          "**`Arrangement.spacedBy(8.dp)`** — uniform gaps between *all* children of a Row/Column; cleaner than a Spacer between each item.",
+          "**`padding`** — space around a single element (inside or outside), independent of siblings.",
+        ],
+      },
+      {
+        t: "code",
+        title: "Three spacing tools",
+        code: `Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {   // uniform gaps
+    ItemA(); ItemB(); ItemC()
+}
+Row {
+    Text("Left")
+    Spacer(Modifier.weight(1f))   // push next item to the far right
+    Text("Right")
+}`,
+      },
+      {
+        t: "note",
+        text: "Spacer is an empty sized composable for one-off gaps (or Spacer(Modifier.weight(1f)) to push items apart). Prefer Arrangement.spacedBy for uniform gaps between all children; padding for space around a single element. There are no margins — these three cover all spacing.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "How does Modifier.layout work, and how is it different from the Layout composable?",
+    a: [
+      {
+        t: "p",
+        text: "`Modifier.layout { measurable, constraints -> }` lets you customize the measurement and placement of a *single* composable inline, without writing a whole custom `Layout`. You measure the (one) incoming measurable, then report a size and place it — adjusting position or reported size. Use it for one-off tweaks; use the `Layout` composable when you're arranging *multiple* children.",
+      },
+      {
+        t: "code",
+        title: "Modifier.layout for a custom padding-like effect",
+        code: `fun Modifier.firstBaselineToTop(top: Dp) = layout { measurable, constraints ->
+    val placeable = measurable.measure(constraints)
+    val baseline = placeable[FirstBaseline]
+    val placeableY = top.roundToPx() - baseline
+    val height = placeable.height + placeableY
+    layout(placeable.width, height) { placeable.placeRelative(0, placeableY) }
+}`,
+      },
+      {
+        t: "list",
+        items: [
+          "**`Modifier.layout`** — one measurable in, one placeable out; customize a single element's size/position inline.",
+          "**`Layout` composable** — multiple children (`measurables`), you measure and place all of them; for building new layout containers (a custom flow row, a radial menu).",
+          "**Both follow the same contract** — measure children within constraints, call `layout(width, height) { place... }`.",
+        ],
+      },
+      {
+        t: "note",
+        text: "Modifier.layout customizes ONE composable's measure/placement inline (one measurable → one placeable). The Layout composable arranges MULTIPLE children into a new container. Same contract (measure within constraints, then layout(w,h){ place }). Reach for Modifier.layout for one-off tweaks.",
+      },
+    ],
+  },
+  {
+    level: "senior",
+    q: "What is contentPadding in scrollable containers, and why not just use Modifier.padding?",
+    a: [
+      {
+        t: "p",
+        text: "Scrollable containers like `LazyColumn` take a `contentPadding` parameter that adds padding *inside* the scroll area — around the items — while still letting items scroll into that padded region. `Modifier.padding` on the LazyColumn instead pads the *whole viewport*, clipping items at the padded edge so they can't scroll through it.",
+      },
+      {
+        t: "list",
+        items: [
+          "**`contentPadding`** — space at the start/end (and sides) of the scrollable content; the first/last items can scroll fully into view *past* the padding, and content is clipped at the true container edge (nice fade-at-edge behavior).",
+          "**`Modifier.padding`** — shrinks the scroll viewport itself; items are clipped at the padded boundary, so you lose the 'scroll under the edge' effect and the first item starts inset permanently.",
+          "**Common use** — `contentPadding = PaddingValues(vertical = 16.dp)` gives breathing room at top/bottom of a list without clipping mid-scroll; also used to offset for a floating app bar / FAB.",
+        ],
+      },
+      {
+        t: "code",
+        title: "contentPadding vs Modifier.padding",
+        code: `LazyColumn(
+    contentPadding = PaddingValues(16.dp),   // items scroll through this space, clipped at edge
+) { items(list) { Row(it) } }
+
+// vs — pads the viewport, items clipped at 16dp inset, no scroll-under:
+LazyColumn(Modifier.padding(16.dp)) { /* ... */ }`,
+      },
+      {
+        t: "note",
+        text: "contentPadding pads INSIDE a scrollable — items scroll through it and clip at the true edge (breathing room top/bottom, offset for FAB/app bar). Modifier.padding shrinks the viewport, clipping items at the inset and killing the scroll-under effect. Use contentPadding for list edges.",
+      },
+    ],
+  },
 ];
 
 export default qa;

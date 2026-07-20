@@ -24,7 +24,11 @@ tip via a `note` block). Category-by-category status:
 
 - ✅ **Architecture** — expanded (MVC 30, MVP 31, MVVM 43, MVI 30, Clean 30,
   Modularization 31). Every topic ≥ 30 questions, teaching-first answers.
-- ⬜ Compose, Coroutines, Flows, Kotlin, Android Core, Data & Storage, Networking,
+- ✅ **Jetpack Compose** — expanded (Fundamentals 30, State 31, Modifiers &
+  Layout 30, Lazy Lists 31, Side Effects 31, Performance & Stability 31, Theming &
+  Animation 31, Navigation/Interop/Testing 31). Every topic ≥ 30 questions,
+  teaching-first answers.
+- ⬜ Coroutines, Flows, Kotlin, Android Core, Data & Storage, Networking,
   DI, Background Work, Testing, Performance, Distribution, Firebase, KMP, System
   Design — pending expansion (many topics already ≥ 30; audit and top up).
 
