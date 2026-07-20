@@ -18,6 +18,7 @@ import performance from "./performance/index.js";
 import distribution from "./distribution/index.js";
 import firebase from "./firebase/index.js";
 import kmp from "./kmp/index.js";
+import systemDesign from "./system-design/index.js";
 
 // Registry for the interview-preparation section. The hub and topic routes
 // render entirely from this — add categories/topics here, never in the JSX.
@@ -44,6 +45,7 @@ export const categories = [
   distribution,
   firebase,
   kmp,
+  systemDesign,
 ];
 
 export function findTopic(categoryId, topicId) {

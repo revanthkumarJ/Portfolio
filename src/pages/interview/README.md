@@ -48,38 +48,22 @@ shippable between categories.
   A-B Testing/App Distribution, Auth & Databases
 - ✅ **Kotlin Multiplatform** — KMP Fundamentals, iOS Interop, Libraries &
   Compose Multiplatform
+- ✅ **Mobile System Design** — Approaching Mobile System Design, Design an
+  Image-Loading Library, Design Offline-First Sync, Design a Feed & Chat
 
-**Pending (planned order — resume here)**
-3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
-   lambdas, scope functions, collections/sequences, generics & variance,
-   delegates, lateinit/lazy, Java interop
-4. **Android Core** — Activity/Fragment lifecycle, Intents, tasks/back stack/
-   launch modes, Services, BroadcastReceivers, ContentProviders, Context,
-   processes, Handler/Looper, permissions, RecyclerView/ViewBinding
-5. **Data & Storage** — Room, DataStore vs SharedPreferences, SQLite, scoped
-   storage, caching, Paging 3
-6. **Networking** — HTTP/REST, Retrofit + OkHttp, Ktor (KMP), JSON serialization,
-   error handling/retries, caching/offline, auth token refresh, WebSockets
-7. **Dependency Injection** — DI concept, Dagger fundamentals, Hilt
-   (components/scopes/modules/VM injection), Koin & KMP DI, testing with DI
-8. **Background Work** — WorkManager (constraints, chaining, unique, expedited,
-   CoroutineWorker), AlarmManager, foreground services, Doze/App Standby,
-   choosing the right tool
-9. **Testing** — test pyramid, JUnit, fakes vs mocks (MockK), coroutine/flow
-   testing, ViewModel/Room tests, Compose UI tests, Espresso, Robolectric, CI
-10. **Performance & Memory** — leaks & LeakCanary, ANRs, profiling, app startup &
-    baseline profiles, jank/rendering, APK/AAB size, battery
-11. **Build, Distribution & Play Store** — Gradle variants/flavors, signing,
-    **AAB vs APK** & split APKs, R8/ProGuard, Play Console tracks & staged
-    rollouts, Play App Signing, versioning, in-app updates, pre-launch reports
-12. **Firebase** — Crashlytics, Analytics, **FCM** (token lifecycle, data vs
-    notification messages), Remote Config/A-B, **App Distribution**, Auth,
-    Firestore/RTDB, Performance Monitoring
-13. **KMP** — expect/actual & source sets, targets, sharing strategies, iOS
-    interop (SKIE), common libs (Ktor, SQLDelight, Room KMP), Compose
-    Multiplatform, umbrella framework
-14. **Mobile System Design** — approach, image-loading library, offline-first
-    sync, pagination/infinite feed, chat app, analytics/logging SDK
+**🎉 Roadmap complete — all 16 planned categories are built.**
+
+The full plan (Kotlin, Architecture, Android Core, Compose, Coroutines, Flows,
+Data & Storage, Networking, DI, Background Work, Testing, Performance,
+Distribution, Firebase, KMP, System Design) is done — ~70 topics, each with a
+teaching-first Content tab and a Junior/Senior Q&A tab, all registered in
+`src/data/interview/index.js` and rendered by the hub/topic routes.
+
+Future work is *deepening* existing categories (more edge-case questions, more
+worked examples) or adding new areas (e.g. RxJava legacy, hardware APIs like
+camera/Bluetooth/location, CI/CD deep-dive) — add them the same way: a folder
+per topic (`content.js` + `qa.js` + `index.js`), a category `index.js`, and one
+line in the registry.
 
 Each pending category is a folder under `src/data/interview/<category>/` with one
 folder per topic (`content.js` + `qa.js` + `index.js`), a category `index.js`,
