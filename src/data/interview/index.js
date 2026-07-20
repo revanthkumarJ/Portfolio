@@ -4,6 +4,7 @@ import mvvm from "./architecture/mvvm/index.js";
 import mvi from "./architecture/mvi/index.js";
 import cleanArchitecture from "./architecture/clean-architecture/index.js";
 import modularization from "./architecture/modularization/index.js";
+import kotlin from "./kotlin/index.js";
 import compose from "./compose/index.js";
 import coroutines from "./coroutines/index.js";
 import flows from "./flows/index.js";
@@ -12,6 +13,7 @@ import flows from "./flows/index.js";
 // render entirely from this — add categories/topics here, never in the JSX.
 // See src/pages/interview/README.md for the schema and checklist.
 export const categories = [
+  kotlin,
   {
     id: "architecture",
     name: "Architecture",

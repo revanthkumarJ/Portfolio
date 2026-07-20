@@ -24,6 +24,9 @@ shippable between categories.
 - ✅ **Coroutines** — Basics & Suspend, Builders & Scopes, Structured Concurrency
   & Jobs, Dispatchers & Context, Cancellation, Exception Handling, Channels &
   Synchronization
+- ✅ **Kotlin Language** — Null Safety & Types, Classes & Objects, Functions/
+  Lambdas/Scope Functions, Collections & Sequences, Generics & Variance,
+  Delegation & Advanced
 
 **Pending (planned order — resume here)**
 3. **Kotlin Language** — null safety, data/sealed/value classes, functions &
