@@ -34,7 +34,10 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Kotlin Flows** — expanded (Basics 31, Operators 31, StateFlow & SharedFlow
   30, Backpressure 30, Context/Conversion 30, Error Handling & Testing 30). Every
   topic ≥ 30 questions, teaching-first answers.
-- ⬜ Kotlin, Android Core, Data & Storage, Networking,
+- ✅ **Kotlin Language** — expanded (Null Safety & Types 31, Classes & Objects 31,
+  Collections & Sequences 30, Delegation & Advanced 31, Functions/Lambdas/Scope 30,
+  Generics & Variance 30). Every topic ≥ 30 questions, teaching-first answers.
+- ⬜ Android Core, Data & Storage, Networking,
   DI, Background Work, Testing, Performance, Distribution, Firebase, KMP, System
   Design — pending expansion (many topics already ≥ 30; audit and top up).
 
