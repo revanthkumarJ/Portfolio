@@ -31,7 +31,10 @@ tip via a `note` block). Category-by-category status:
 - ✅ **Coroutines** — expanded (Basics 31, Builders & Scopes 31, Structured
   Concurrency 31, Dispatchers 32, Cancellation 31, Exception Handling 31, Channels
   & Synchronization 31). Every topic ≥ 30 questions, teaching-first answers.
-- ⬜ Flows, Kotlin, Android Core, Data & Storage, Networking,
+- ✅ **Kotlin Flows** — expanded (Basics 31, Operators 31, StateFlow & SharedFlow
+  30, Backpressure 30, Context/Conversion 30, Error Handling & Testing 30). Every
+  topic ≥ 30 questions, teaching-first answers.
+- ⬜ Kotlin, Android Core, Data & Storage, Networking,
   DI, Background Work, Testing, Performance, Distribution, Firebase, KMP, System
   Design — pending expansion (many topics already ≥ 30; audit and top up).
 
