@@ -50,14 +50,14 @@ export const socials = [
 export const heroStats = [
   { value: 120, suffix: "+", label: "Open-source PRs merged" },
   { value: 98, suffix: "%", label: "PR merge rate" },
-  { value: 230, suffix: "+", label: "Contributor PRs reviewed" },
+  { value: 300, suffix: "+", label: "Contributor PRs reviewed" },
   { value: 1000, suffix: "+", label: "DSA problems solved" },
 ];
 
 export const about = {
   paragraphs: [
     "I'm a Software Engineer from Andhra Pradesh, India, specializing in Android and Kotlin Multiplatform development. Currently SDE 1 – Android Developer at Swipe (YC S21), where I was promoted from intern after migrating 70+ screens to Jetpack Compose and restructuring a monolith into multi-module Clean Architecture.",
-    "I'm an active contributor and mentor at the Mifos Initiative — 120+ merged PRs at a 98% merge rate, 230+ contributor PRs reviewed, and 20+ modules migrated to Kotlin Multiplatform across production fintech apps used worldwide. I was a Mifos Summer of Code 2025 intern and now mentor contributors for GSoC and Code4GovTech.",
+    "I'm an active contributor and mentor at the Mifos Initiative — 120+ merged PRs at a 98% merge rate, 300+ contributor PRs reviewed, and 20+ modules migrated to Kotlin Multiplatform across production fintech apps used worldwide. I was a Mifos Summer of Code 2025 intern and now mentor contributors for GSoC and Code4GovTech.",
     "I hold a B.Tech in CSE from RGUKT RK Valley and qualified GATE CS 2025. Off the keyboard: badminton, chess, and poking at new tools.",
   ],
   quote: "Consistency and curiosity are the keys to growth.",
@@ -139,7 +139,7 @@ export const experience = [
       "Mentoring open-source contributors: reviewing PRs, running standups, conducting GSoC and Code4GovTech interviews, and guiding Kotlin Multiplatform architecture discussions.",
     highlights: [
       "Conduct interviews for Google Summer of Code and Code4GovTech.",
-      "Review contributor pull requests across community projects (230+ reviewed).",
+      "Review contributor pull requests across community projects (300+ reviewed).",
       "Run standups and guide mobile-architecture discussions.",
       "Help new contributors onboard into the Mifos ecosystem.",
     ],
@@ -290,10 +290,9 @@ export const featuredProjects = [
     accent: "emerald",
     links: [
       { text: "GitHub", url: "https://github.com/revanthkumarJ/ExpenseTrackr", kind: "github" },
-      // 🚀 PLAY STORE — app is in closed testing. Uncomment when public:
-      // { text: "Play Store", url: "https://play.google.com/store/apps/details?id=YOUR_APP_ID", kind: "playstore" },
+      { text: "Play Store", url: "https://play.google.com/store/apps/details?id=com.revanthdev.expensetrackr", kind: "playstore" },
     ],
-    badge: "Play Store — closed testing",
+    badge: "Live on Play Store",
   },
   {
     title: "Mifos Mobile — KMP Migration",
@@ -432,7 +431,7 @@ export const achievements = [
 
 export const testimonial = {
   quote:
-    "Revanth brings strong expertise in Kotlin Multiplatform development, with a deep understanding of building efficient, cross-platform architectures. One of his standout strengths is his debugging ability — a sharp eye for identifying complex issues and resolving them with clarity and precision. Beyond his technical skills, he is reliable, proactive, and a great collaborator. I strongly recommend him for any role requiring expertise in Kotlin Multiplatform and robust software architecture.",
+    "I highly recommend Jilakara Revanth Kumar as a Kotlin Multiplatform Developer who consistently delivers high-quality, scalable solutions. Revanth brings strong expertise in Kotlin Multiplatform development, with a deep understanding of building efficient, cross-platform architectures. His approach to system design and architecture is thoughtful, well-structured, and aligned with best practices, ensuring maintainable and future-ready codebases. One of his standout strengths is his debugging ability — he has a sharp eye for identifying complex issues and resolving them with clarity and precision. He approaches challenges methodically and remains solution-oriented, even in high-pressure situations. Beyond his technical skills, Revanth is reliable, proactive, and a great collaborator, making him a valuable asset to any development team. I strongly recommend him for any role requiring expertise in Kotlin Multiplatform and robust software architecture.",
   author: "Rajan Maurya",
   title: "Engineering Manager · Kotlin Multiplatform Expert",
   proofUrl: "https://www.linkedin.com/in/jilakararevanthkumar/details/recommendations/",
@@ -444,6 +443,12 @@ export const testimonial = {
 export const blog = {
   profileUrl: "https://medium.com/@jrevanth101",
   posts: [
+    {
+      title: "From Jetpack Compose App to Play Store: Complete Guide (Signing → Testing → Release)",
+      url: "https://medium.com/@jrevanth101/from-jetpack-compose-app-to-play-store-complete-guide-signing-testing-release-a4a92a6dd3b0",
+      date: "Jul 2026",
+      tags: ["Play Store", "Signing", "Release"],
+    },
     {
       title: "Ship Your Android App to Testers Automatically: A Complete GitHub Actions + Firebase App Distribution Guide",
       url: "https://medium.com/@jrevanth101/ship-your-android-app-to-testers-automatically-a-complete-github-actions-firebase-app-02def952a492",
@@ -461,12 +466,6 @@ export const blog = {
       url: "https://medium.com/@jrevanth101/reducing-boilerplate-in-jetpack-compose-mvi-the-template-i-use-for-every-screen-396fa55cc17d",
       date: "May 2026",
       tags: ["Jetpack Compose", "MVI", "Kotlin"],
-    },
-    {
-      title: "Building a Comma-Separated Decimal Input in Jetpack Compose",
-      url: "https://medium.com/@jrevanth101/building-a-comma-separated-decimal-input-in-jetpack-compose-bbcf82813e9c",
-      date: "Mar 2026",
-      tags: ["Jetpack Compose", "Kotlin"],
     },
   ],
 };
