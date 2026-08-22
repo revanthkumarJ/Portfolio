@@ -14,7 +14,7 @@ const tagColors = {
 export default function Achievements() {
   return (
     <section id="achievements" className="relative w-full px-5 py-28 md:px-10 md:py-36 xl:px-16">
-      <SectionHeading index="04" title="Trophy" accent="wall" />
+      <SectionHeading index="05" title="Trophy" accent="wall" />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {achievements.map((a, i) => (

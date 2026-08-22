@@ -1,0 +1,80 @@
+import React from "react";
+import { Reveal, SectionHeading, Chip, TiltCard, ImageSlot } from "../ui/primitives.jsx";
+import { playStore } from "../data/content.js";
+import { IoLogoGooglePlaystore } from "react-icons/io5";
+import { FiExternalLink } from "react-icons/fi";
+
+const accentText = {
+  violet: "text-violet",
+  cyan: "text-cyan",
+  emerald: "text-emerald",
+  amber: "text-amber",
+};
+
+function AppCard({ app }) {
+  return (
+    <Reveal>
+      <TiltCard max={3} className="glow-card glass h-full overflow-hidden rounded-3xl">
+        <a href={app.url} target="_blank" rel="noopener noreferrer" className="flex h-full flex-col">
+          {/* Feature graphic — 1024×500, renders uncropped */}
+          <div className="relative aspect-[1024/500] w-full overflow-hidden">
+            <ImageSlot src={app.image} alt={`${app.name} on Google Play`} label={app.name} accent={app.accent} />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/40 to-transparent" />
+          </div>
+
+          {/* Copy */}
+          <div className="flex flex-1 flex-col p-6 md:p-7">
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="font-display text-xl font-bold text-bright md:text-2xl">{app.name}</h3>
+              <IoLogoGooglePlaystore className={`${accentText[app.accent] || "text-violet"} shrink-0`} size={20} />
+            </div>
+            <p className={`font-display mt-1.5 text-xs font-semibold uppercase tracking-[0.14em] ${accentText[app.accent] || "text-violet"}`}>
+              {app.tagline}
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-body">{app.blurb}</p>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {app.highlights.map((h) => (
+                <Chip key={h}>{h}</Chip>
+              ))}
+            </div>
+
+            <span className="mt-6 inline-flex items-center gap-2 self-start rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm font-semibold text-emerald transition-colors group-hover:bg-emerald/20">
+              <IoLogoGooglePlaystore size={16} /> Get it on Google Play
+            </span>
+          </div>
+        </a>
+      </TiltCard>
+    </Reveal>
+  );
+}
+
+export default function PlayStoreApps() {
+  return (
+    <section id="apps" className="relative w-full px-5 py-28 md:px-10 md:py-36 xl:px-16">
+      <SectionHeading index="02" title="Play Store" accent="apps" />
+
+      <Reveal className="mb-10 md:mb-14">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <p className="max-w-[60ch] text-base leading-relaxed text-body md:text-lg">
+            Three apps I designed, built, and shipped solo to the Google Play Store — live and downloadable now.
+          </p>
+          <a
+            href={playStore.developerUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium text-body transition-colors hover:text-emerald"
+          >
+            <IoLogoGooglePlaystore size={16} /> View my developer page <FiExternalLink size={14} />
+          </a>
+        </div>
+      </Reveal>
+
+      <div className="grid gap-6 md:grid-cols-3 md:gap-7">
+        {playStore.apps.map((app) => (
+          <AppCard key={app.name} app={app} />
+        ))}
+      </div>
+    </section>
+  );
+}

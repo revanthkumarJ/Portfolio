@@ -10,7 +10,7 @@ export default function Contact() {
     <section id="contact" className="relative w-full px-5 py-28 md:px-10 md:py-40 xl:px-16">
       <div className="blob bottom-[-10%] right-[10%] h-[400px] w-[400px] bg-violet-600/20" />
 
-      <SectionHeading index="06" title="Let's build" accent="together" />
+      <SectionHeading index="07" title="Let's build" accent="together" />
 
       <Reveal>
         <p className="max-w-2xl text-lg leading-relaxed text-body md:text-xl">

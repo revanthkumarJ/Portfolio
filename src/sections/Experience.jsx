@@ -103,7 +103,7 @@ export default function Experience() {
 
   return (
     <section id="experience" className="relative w-full px-5 py-28 md:px-10 md:py-36 xl:px-16">
-      <SectionHeading index="02" title="Where I've" accent="worked" />
+      <SectionHeading index="03" title="Where I've" accent="worked" />
 
       <div ref={lineRef} className="relative">
         {/* Track + scroll-drawn progress line */}

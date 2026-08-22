@@ -7,7 +7,7 @@ import { FaMedium } from "react-icons/fa6";
 export default function Writing() {
   return (
     <section id="writing" className="relative w-full px-5 py-28 md:px-10 md:py-36 xl:px-16">
-      <SectionHeading index="05" title="Things I've" accent="written" />
+      <SectionHeading index="06" title="Things I've" accent="written" />
 
       <div className="grid gap-5 md:grid-cols-2">
         {blog.posts.map((post, i) => (

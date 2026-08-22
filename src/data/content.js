@@ -20,7 +20,10 @@ import iplImg from "../Assets/Projects/ipl.png";
 import departmentImg from "../Assets/Projects/department.png";
 import instaImg from "../Assets/Projects/insta.png";
 import netflixImg from "../Assets/Projects/netflix.png";
-import expenseTrackrImg from "../Assets/images/expense_tracker.png"; // ✅ real banner
+// ✅ Play Store feature graphics (1024×500) — live apps
+import psExpenseTrackrImg from "../Assets/images/playstore_expense_tracker.png";
+import psPocketTunesImg from "../Assets/images/playstore_pocket_tunes.png";
+import psStatusSaverImg from "../Assets/images/playstore_status_saver.png";
 
 import resumePdf from "../Assets/Revanth_final_version.pdf";
 
@@ -53,6 +56,41 @@ export const heroStats = [
   { value: 300, suffix: "+", label: "Contributor PRs reviewed" },
   { value: 1000, suffix: "+", label: "DSA problems solved" },
 ];
+
+// ---------------------------------------------------------------------------
+// PLAY STORE APPS — live, published apps. Shown right after About.
+export const playStore = {
+  developerUrl: "https://play.google.com/store/apps/dev?id=5399113798198807031",
+  apps: [
+    {
+      name: "ExpenseTrackr",
+      tagline: "Track every expense. Take control of your money.",
+      blurb: "Offline, private personal-finance tracker with smart analytics, budgets, categories, and app lock.",
+      highlights: ["100% Offline", "PIN & Biometric Lock", "Smart Analytics"],
+      image: psExpenseTrackrImg,
+      accent: "emerald",
+      url: "https://play.google.com/store/apps/details?id=com.revanthdev.expensetrackr",
+    },
+    {
+      name: "Pocket Tunes",
+      tagline: "Your music, in your pocket.",
+      blurb: "A fast, lightweight offline music player — seamless playback, playlists, and a clean modern UI.",
+      highlights: ["Offline Playback", "Playlists", "Fast & Lightweight"],
+      image: psPocketTunesImg,
+      accent: "emerald",
+      url: "https://play.google.com/store/apps/details?id=com.revanthapps.pocketunes",
+    },
+    {
+      name: "Status Saver",
+      tagline: "No ads. Just save.",
+      blurb: "Save WhatsApp statuses — images & videos — with a built-in gallery and auto refresh. Private, no ads.",
+      highlights: ["No Ads", "Images & Videos", "100% Private"],
+      image: psStatusSaverImg,
+      accent: "cyan",
+      url: "https://play.google.com/store/apps/details?id=com.revanthapps.statussavernoads",
+    },
+  ],
+};
 
 export const about = {
   paragraphs: [
@@ -273,82 +311,40 @@ export const leadership = [
 ];
 
 // ---------------------------------------------------------------------------
-// PROJECTS — first 4 are the FEATURED cinematic cards, in order.
-export const featuredProjects = [
-  {
-    title: "ExpenseTrackr",
-    tagline: "Privacy-first offline finance tracker — one Kotlin codebase, three platforms",
-    description:
-      "A personal finance tracker where every expense, budget, and category lives on-device. Built as a single Kotlin Multiplatform codebase rendering native UI on Android, iOS, and Desktop via Compose Multiplatform — 16 Gradle modules, 18 screens, Clean MVI, 24 languages with an in-app switcher, PIN + biometric app-lock, and CSV backup that survives reinstalls.",
-    metrics: [
-      { value: "16", label: "Gradle modules" },
-      { value: "24", label: "Languages" },
-      { value: "3", label: "Platforms" },
-    ],
-    tech: ["Kotlin Multiplatform", "Compose Multiplatform", "Clean MVI", "Room (KMP)", "Koin", "Material 3"],
-    image: expenseTrackrImg, // 🖼️ null → styled placeholder; swap with real screenshot
-    accent: "emerald",
-    links: [
-      { text: "GitHub", url: "https://github.com/revanthkumarJ/ExpenseTrackr", kind: "github" },
-      { text: "Play Store", url: "https://play.google.com/store/apps/details?id=com.revanthdev.expensetrackr", kind: "playstore" },
-    ],
-    badge: "Live on Play Store",
-  },
+// PROJECTS — one unified grid, most significant first.
+export const gridProjects = [
   {
     title: "Mifos Mobile — KMP Migration",
-    tagline: "Production banking app, migrated to every platform",
     description:
-      "Migrated 7 modules of Mifos Mobile — a self-service banking client used worldwide — to Kotlin Multiplatform and Compose Multiplatform, targeting Android, iOS, Web/WASM, and Desktop. 45+ merged PRs covering module migrations, new Figma-based screens, QR-code binding, and localization.",
-    metrics: [
-      { value: "45+", label: "PRs merged" },
-      { value: "7", label: "Modules migrated" },
-      { value: "5", label: "Platform targets" },
-    ],
-    tech: ["Kotlin Multiplatform", "Compose Multiplatform", "Ktor", "Koin"],
-    image: mifosMobileImg, // 🖼️ swap with device-framed screenshots
-    accent: "violet",
+      "Migrated 7 modules of a worldwide self-service banking app to Kotlin Multiplatform & Compose Multiplatform — Android, iOS, Web/WASM, and Desktop. 45+ merged PRs.",
+    tech: ["KMP", "CMP", "Ktor", "Koin"],
+    image: mifosMobileImg,
     links: [
       { text: "GitHub", url: "https://github.com/openMF/mifos-mobile", kind: "github" },
-      { text: "My contributions", url: "https://github.com/openMF/mifos-mobile/pulls?q=is%3Amerged+is%3Apr+author%3ArevanthkumarJ+", kind: "prs" },
+      { text: "PRs", url: "https://github.com/openMF/mifos-mobile/pulls?q=is%3Amerged+is%3Apr+author%3ArevanthkumarJ+", kind: "prs" },
       { text: "Play Store", url: "https://play.google.com/store/apps/details?id=org.mifos.mobile", kind: "playstore" },
     ],
   },
   {
     title: "Android Client — KMP Migration",
-    tagline: "Field-officer banking app for offline-first microfinance",
     description:
-      "52 merged PRs migrating 10 modules of the Mifos Field Officer app to KMP/CMP — refactoring client screens to the latest Figma designs, adding type-safe navigation, fixing production bugs, and building new UI components for an app processing real financial transactions in remote areas.",
-    metrics: [
-      { value: "52", label: "PRs merged" },
-      { value: "10", label: "Modules migrated" },
-      { value: "100%", label: "Offline-capable" },
-    ],
-    tech: ["Kotlin Multiplatform", "Compose Multiplatform", "Room", "MVI"],
-    image: androidClientImg, // 🖼️ swap with device-framed screenshots
-    accent: "cyan",
+      "52 merged PRs migrating 10 modules of the Mifos Field Officer app to KMP/CMP — Figma redesigns, type-safe navigation, and offline-first flows.",
+    tech: ["KMP", "CMP", "Room", "MVI"],
+    image: androidClientImg,
     links: [
       { text: "GitHub", url: "https://github.com/openMF/android-client", kind: "github" },
-      { text: "My contributions", url: "https://github.com/openMF/android-client/pulls?q=is%3Amerged+is%3Apr+author%3ArevanthkumarJ+", kind: "prs" },
+      { text: "PRs", url: "https://github.com/openMF/android-client/pulls?q=is%3Amerged+is%3Apr+author%3ArevanthkumarJ+", kind: "prs" },
       { text: "Play Store", url: "https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid", kind: "playstore" },
     ],
   },
   {
     title: "Abhiyanth Fest Platform",
-    tagline: "College fest platform — led the frontend team",
     description:
-      "Led the frontend team building the official platform for Abhiyanth 2K25 — React, Redux, and Material UI with Firebase auth and hosting, CashFree payment integration, and a full admin panel. Managed the repo, reviewed PRs, and coordinated with UI/UX.",
-    metrics: [
-      { value: "Lead", label: "Frontend team" },
-      { value: "Live", label: "Payments (CashFree)" },
-    ],
+      "Led the frontend team for the Abhiyanth 2K25 college-fest platform — React, Redux, Firebase auth/hosting, CashFree payments, and a full admin panel.",
     tech: ["React", "Redux", "Firebase", "Material UI"],
-    image: abhiyanthImg, // 🖼️ swap with real site screenshot
-    accent: "amber",
+    image: abhiyanthImg,
     links: [{ text: "GitHub", url: "https://github.com/revanthkumarJ/abhiyanth-client", kind: "github" }],
   },
-];
-
-export const gridProjects = [
   {
     title: "Meme Studio",
     description: "Kotlin Multiplatform meme editor with templates and custom editing, built on Compose Multiplatform.",
@@ -477,6 +473,7 @@ export const github = {
 
 export const navLinks = [
   { label: "About", href: "#about" },
+  { label: "Apps", href: "#apps" },
   { label: "Experience", href: "#experience" },
   { label: "Projects", href: "#projects" },
   { label: "Achievements", href: "#achievements" },

@@ -6,6 +6,7 @@ import TopicPage from "./pages/interview/TopicPage.jsx";
 import Nav from "./sections/Nav.jsx";
 import Hero from "./sections/Hero.jsx";
 import About from "./sections/About.jsx";
+import PlayStoreApps from "./sections/PlayStoreApps.jsx";
 import Experience from "./sections/Experience.jsx";
 import Projects from "./sections/Projects.jsx";
 import Achievements from "./sections/Achievements.jsx";
@@ -50,6 +51,7 @@ function Home() {
       <main>
         <Hero />
         <About />
+        <PlayStoreApps />
         <Experience />
         <Projects />
         <Achievements />
