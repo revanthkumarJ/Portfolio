@@ -25,7 +25,11 @@ export default function PdfViewer({ file }) {
   }, []);
 
   return (
-    <div ref={ref} className="h-full flex-1 overflow-y-auto bg-[#141220] p-2 md:p-4">
+    <div
+      ref={ref}
+      data-lenis-prevent
+      className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[#141220] p-2 md:p-4"
+    >
       <Document
         file={file}
         onLoadSuccess={({ numPages }) => setNumPages(numPages)}

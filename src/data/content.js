@@ -16,10 +16,7 @@ import memeImg from "../Assets/meme.png";
 import swipeAssignImg from "../Assets/swipe_assign.png";
 import kisanImg from "../Assets/Projects/kisan.png";
 import financeImg from "../Assets/Projects/Finance.png";
-import iplImg from "../Assets/Projects/ipl.png";
 import departmentImg from "../Assets/Projects/department.png";
-import instaImg from "../Assets/Projects/insta.png";
-import netflixImg from "../Assets/Projects/netflix.png";
 // ✅ Play Store feature graphics (1024×500) — live apps
 import psExpenseTrackrImg from "../Assets/images/playstore_expense_tracker.png";
 import psPocketTunesImg from "../Assets/images/playstore_pocket_tunes.png";
@@ -46,7 +43,6 @@ export const identity = {
 export const socials = [
   { name: "GitHub", url: "https://github.com/revanthkumarJ", icon: "github" },
   { name: "LinkedIn", url: "https://www.linkedin.com/in/jilakararevanthkumar/", icon: "linkedin" },
-  { name: "Instagram", url: "https://www.instagram.com/revanth_kumar_j", icon: "instagram" },
   { name: "Email", url: "mailto:jrevanth101@gmail.com", icon: "mail" },
 ];
 
@@ -130,8 +126,6 @@ export const techStack = {
 export const codingProfiles = [
   { name: "LeetCode", detail: "Knight · 800+ solved", url: "https://leetcode.com/u/RevanthKumarJ/" },
   { name: "GeeksforGeeks", detail: "Institute Rank 1 · 1000+ solved", url: "https://www.geeksforgeeks.org/user/jrevanth/" },
-  { name: "CodeChef", detail: "3★ Coder", url: "https://www.codechef.com/users/revanthkumarj1" },
-  { name: "HackerRank", detail: "5★ Problem Solving", url: "https://www.hackerrank.com/jrevanth101" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -241,73 +235,6 @@ export const experience = [
       { text: "Byte Wallpaper", url: "https://play.google.com/store/apps/details?id=org.mobilebytesensei.wallpaper" },
     ],
   },
-  {
-    company: "TLDE Technologies",
-    role: "Software Development Intern",
-    period: "Nov 2025 — Dec 2025",
-    summary:
-      "Built onboarding experiences for a Kotlin Multiplatform app using Compose Multiplatform and Lottie animations.",
-    highlights: [],
-    tech: ["Kotlin Multiplatform", "Compose Multiplatform", "Lottie"],
-    links: [],
-  },
-  {
-    company: "Abhiyanth 2K25",
-    role: "Frontend Team Lead & Developer",
-    period: "Dec 2024 — Mar 2025",
-    summary:
-      "Led frontend development of the college fest platform in React — Firebase integration, admin panel, repo management, PR reviews, and UI/UX coordination.",
-    highlights: [],
-    tech: ["React", "Redux", "Firebase", "Material UI"],
-    links: [{ text: "GitHub repo", url: "https://github.com/revanthkumarJ/Abhiyanth-Client" }],
-  },
-  {
-    company: "DevDisplay",
-    role: "Open Source Contributor — React",
-    period: "Jan 2025 — Feb 2025",
-    summary:
-      "10 merged PRs of UI enhancements and page development with React and Tailwind CSS — Sponsors, About Us, and Journey pages.",
-    highlights: [],
-    tech: ["React", "Tailwind CSS"],
-    links: [{ text: "Merged PRs", url: "https://github.com/codeaashu/DevDisplay/pulls?q=is%3Apr+is%3Amerged+author%3ArevanthkumarJ" }],
-  },
-  {
-    company: "GeeksforGeeks",
-    role: "Campus Ambassador",
-    period: "Apr 2024 — Apr 2025",
-    summary:
-      "Promoted coding culture on campus, coordinated contests and events, and was recognized among the top-performing campus ambassadors.",
-    highlights: [],
-    tech: [],
-    links: [],
-  },
-];
-
-export const leadership = [
-  {
-    role: "DSA Coordinator & Mentor",
-    org: "SRC Student Club",
-    period: "Apr 2024 — Mar 2025",
-    note: "Weekly coding contests and mentoring sessions to uplift peers' DSA performance.",
-  },
-  {
-    role: "NSS Unit Coordinator",
-    org: "National Service Scheme",
-    period: "Jan 2024 — Jan 2026",
-    note: "Organized social-outreach activities; maintain the NSS Unit-2 LinkedIn page.",
-  },
-  {
-    role: "Social Media Manager",
-    org: "Dept. of CSE, RGUKT RK Valley",
-    period: "Apr 2024 — Mar 2025",
-    note: "Ran the department's social presence and analytics.",
-  },
-  {
-    role: "Class Representative",
-    org: "Dept. of CSE, RGUKT RK Valley",
-    period: "Jun 2024 — Nov 2024",
-    note: "Bridge between faculty and students for E3 Sem 1.",
-  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -380,35 +307,11 @@ export const gridProjects = [
     ],
   },
   {
-    title: "Sports Auction",
-    description: "Mock IPL auction platform — 250 players, live bidding for 150+ students across 30 teams.",
-    tech: ["React"],
-    image: iplImg,
-    links: [
-      { text: "GitHub", url: "https://github.com/revanthkumarJ/Sports-Auction", kind: "github" },
-      { text: "Live", url: "https://sports-auction.vercel.app/", kind: "demo" },
-    ],
-  },
-  {
     title: "Dept. Resource Manager",
     description: "Kotlin app managing announcements, complaints, and timetables for students, faculty, and HOD.",
     tech: ["Kotlin", "Firebase"],
     image: departmentImg,
     links: [{ text: "GitHub", url: "https://github.com/revanthkumarJ/Departmental-Resource-Management-App", kind: "github" }],
-  },
-  {
-    title: "Instagram UI Clone",
-    description: "Jetpack Compose recreation of the Instagram feed and profile screens.",
-    tech: ["Jetpack Compose"],
-    image: instaImg,
-    links: [{ text: "GitHub", url: "https://github.com/revanthkumarJ/InstaUI", kind: "github" }],
-  },
-  {
-    title: "Netflix UI Clone",
-    description: "Netflix-style UI built with Jetpack Compose — featured rows and layout aesthetics.",
-    tech: ["Jetpack Compose"],
-    image: netflixImg,
-    links: [{ text: "GitHub", url: "https://github.com/revanthkumarJ/NetFlixUI", kind: "github" }],
   },
 ];
 
@@ -420,9 +323,6 @@ export const achievements = [
   { title: "GATE CS 2025", detail: "Qualified — strong command of core CS fundamentals.", tag: "Academics" },
   { title: "LeetCode Knight", detail: "800+ problems solved with a consistent contest rating.", tag: "DSA" },
   { title: "GFG Institute Rank 1", detail: "1000+ problems — first among all institute peers.", tag: "DSA" },
-  { title: "CodeChef 3★", detail: "Consistent contest performance.", tag: "DSA" },
-  { title: "HackerRank 5★", detail: "Problem Solving — 500+ challenges.", tag: "DSA" },
-  { title: "Qualified NMMS", detail: "National Means-cum-Merit Scholarship at school level.", tag: "Academics" },
 ];
 
 export const testimonial = {
@@ -434,11 +334,50 @@ export const testimonial = {
 };
 
 // ---------------------------------------------------------------------------
+// WHY HIRE ME — closing pitch. Evidence-backed value pillars + CTA.
+export const whyHireMe = {
+  lead:
+    "I ship features to production, migrate apps across platforms, and own releases end-to-end. Here's the case, in four points.",
+  pillars: [
+    {
+      icon: "smartphone",
+      title: "Production Android at Swipe (YC S21)",
+      body:
+        "As an SDE 1, I've migrated 20+ features — 100+ screens — to Jetpack Compose and manage the app's Play Store releases for a billing product used by thousands of businesses.",
+    },
+    {
+      icon: "layers",
+      title: "Kotlin Multiplatform, at scale",
+      body:
+        "Migrated 20+ modules to Kotlin Multiplatform & Compose Multiplatform across production fintech apps at Mifos — and reviewed 300+ contributor PRs to keep the quality bar high.",
+    },
+    {
+      icon: "playstore",
+      title: "3 apps shipped solo, end-to-end",
+      body:
+        "Designed, built, and published three apps to the Google Play Store entirely on my own — architecture, UI, CI/CD, release, and store listing.",
+    },
+    {
+      icon: "cpu",
+      title: "Strong CS fundamentals",
+      body:
+        "GATE CS 2025 qualified, LeetCode Knight (800+ solved), and GFG Institute Rank 1 — I clear the DSA bar, not just the UI one.",
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
 // WRITING — Medium posts. Add new posts to the TOP of this list.
 // Feed source: https://medium.com/feed/@jrevanth101
 export const blog = {
   profileUrl: "https://medium.com/@jrevanth101",
   posts: [
+    {
+      title: "Vibe Coders Paste Files Into ChatGPT. Senior Developers Write Three Files Instead.",
+      url: "https://medium.com/@jrevanth101/vibe-coders-paste-files-into-chatgpt-senior-developers-write-three-files-instead-ee0a8ff974b0",
+      date: "Aug 2026",
+      tags: ["AI", "Developer Workflow", "LLMs"],
+    },
     {
       title: "From Jetpack Compose App to Play Store: Complete Guide (Signing → Testing → Release)",
       url: "https://medium.com/@jrevanth101/from-jetpack-compose-app-to-play-store-complete-guide-signing-testing-release-a4a92a6dd3b0",
@@ -457,12 +396,6 @@ export const blog = {
       date: "Jun 2026",
       tags: ["Gradle", "Convention Plugins", "Kotlin"],
     },
-    {
-      title: "Reducing Boilerplate in Jetpack Compose MVI: The Template I Use for Every Screen",
-      url: "https://medium.com/@jrevanth101/reducing-boilerplate-in-jetpack-compose-mvi-the-template-i-use-for-every-screen-396fa55cc17d",
-      date: "May 2026",
-      tags: ["Jetpack Compose", "MVI", "Kotlin"],
-    },
   ],
 };
 
@@ -478,5 +411,6 @@ export const navLinks = [
   { label: "Projects", href: "#projects" },
   { label: "Achievements", href: "#achievements" },
   { label: "Writing", href: "#writing" },
+  { label: "Why Me", href: "#why" },
   { label: "Contact", href: "#contact" },
 ];

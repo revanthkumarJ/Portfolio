@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Reveal, SectionHeading, Chip } from "../ui/primitives.jsx";
-import { experience, leadership } from "../data/content.js";
+import { experience } from "../data/content.js";
 import { FiChevronDown, FiExternalLink } from "react-icons/fi";
 
 function ExperienceCard({ exp, index }) {
@@ -116,29 +116,6 @@ export default function Experience() {
         {experience.map((exp, i) => (
           <ExperienceCard key={`${exp.company}-${exp.role}`} exp={exp} index={i} />
         ))}
-      </div>
-
-      {/* Leadership strip */}
-      <div className="mt-16">
-        <Reveal>
-          <h3 className="font-display mb-8 text-2xl font-bold text-bright">
-            Leadership &amp; <span className="text-gradient">community</span>
-          </h3>
-        </Reveal>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {leadership.map((l, i) => (
-            <Reveal key={l.role + l.org} delay={i * 0.06}>
-              <div className="glow-card glass h-full rounded-2xl p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <span className="font-display font-semibold text-bright">{l.role}</span>
-                  <span className="shrink-0 text-xs text-body/60">{l.period}</span>
-                </div>
-                <div className="mt-1 text-sm text-violet/90">{l.org}</div>
-                <p className="mt-2 text-sm leading-relaxed text-body">{l.note}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
       </div>
     </section>
   );

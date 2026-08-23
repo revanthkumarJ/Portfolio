@@ -38,6 +38,7 @@ export function ResumeProvider({ children }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
+            data-lenis-prevent
             className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/85 p-2 backdrop-blur-sm sm:p-4 md:p-8"
             onClick={() => setOpen(false)}
           >

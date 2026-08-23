@@ -12,6 +12,7 @@ import Projects from "./sections/Projects.jsx";
 import Achievements from "./sections/Achievements.jsx";
 import Writing from "./sections/Writing.jsx";
 import Testimonial from "./sections/Testimonial.jsx";
+import WhyHireMe from "./sections/WhyHireMe.jsx";
 import Contact from "./sections/Contact.jsx";
 import Footer from "./sections/Footer.jsx";
 import { ResumeProvider } from "./ui/resume.jsx";
@@ -57,6 +58,7 @@ function Home() {
         <Achievements />
         <Writing />
         <Testimonial />
+        <WhyHireMe />
         <Contact />
       </main>
       <Footer />
