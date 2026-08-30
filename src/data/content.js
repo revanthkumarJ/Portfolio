@@ -61,8 +61,8 @@ export const playStore = {
     {
       name: "ExpenseTrackr",
       tagline: "Track every expense. Take control of your money.",
-      blurb: "Offline, private personal-finance tracker with smart analytics, budgets, categories, and app lock.",
-      highlights: ["100% Offline", "PIN & Biometric Lock", "Smart Analytics"],
+      blurb: "Offline, private personal-finance tracker with smart analytics, budgets, categories, app lock, and Google AdMob monetization.",
+      highlights: ["100% Offline", "PIN & Biometric Lock", "Smart Analytics", "Google AdMob"],
       image: psExpenseTrackrImg,
       accent: "emerald",
       url: "https://play.google.com/store/apps/details?id=com.revanthdev.expensetrackr",
@@ -127,6 +127,20 @@ export const codingProfiles = [
   { name: "LeetCode", detail: "Knight · 800+ solved", url: "https://leetcode.com/u/RevanthKumarJ/" },
   { name: "GeeksforGeeks", detail: "Institute Rank 1 · 1000+ solved", url: "https://www.geeksforgeeks.org/user/jrevanth/" },
 ];
+
+// ---------------------------------------------------------------------------
+// Company → official website. Company names in Experience link here when present.
+export const companyWebsites = {
+  "Swipe (YC S21)": "https://getswipe.in/",
+  "Mifos Initiative": "https://mifos.org/",
+  "Mobile Byte Sensei": "https://play.google.com/store/apps/dev?id=8035184358048594730",
+};
+
+// Hero company names link to the company's Play Store apps (not website).
+export const companyApps = {
+  swipe: "https://play.google.com/store/apps/details?id=in.swipe.app",
+  mifos: "https://play.google.com/store/apps/developer?id=Mifos+Initiative",
+};
 
 // ---------------------------------------------------------------------------
 // EXPERIENCE — ordered newest first. `highlights` powers the expandable panel.

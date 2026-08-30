@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Magnetic, Counter, ImageSlot } from "../ui/primitives.jsx";
 import { useResume } from "../ui/resume.jsx";
-import { identity, heroStats, socials } from "../data/content.js";
+import { identity, heroStats, socials, companyApps } from "../data/content.js";
 import { FiGithub, FiLinkedin, FiInstagram, FiMail, FiArrowDown } from "react-icons/fi";
 
 const socialIcons = { github: FiGithub, linkedin: FiLinkedin, instagram: FiInstagram, mail: FiMail };
@@ -53,10 +53,26 @@ export default function Hero() {
         <motion.div custom={2} variants={line} initial="hidden" animate="show" className="mt-8">
           <p className="font-display text-xl font-bold text-bright md:text-2xl">{identity.name}</p>
           <p className="mt-1.5 text-base text-body md:text-lg">
-            SDE 1 · Android @ <span className="font-semibold text-violet">Swipe (YC S21)</span>
+            SDE 1 · Android @{" "}
+            <a
+              href={companyApps.swipe}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-violet underline-offset-4 transition-colors hover:text-fuchsia hover:underline"
+            >
+              Swipe (YC S21)
+            </a>
           </p>
           <p className="mt-1 text-base text-body md:text-lg">
-            Mifos <span className="text-bright/90">Open Source Mentor, Maintainer &amp; Contributor</span>
+            <a
+              href={companyApps.mifos}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-violet underline-offset-4 transition-colors hover:text-fuchsia hover:underline"
+            >
+              Mifos
+            </a>{" "}
+            <span className="text-bright/90">Open Source Mentor, Maintainer &amp; Contributor</span>
           </p>
         </motion.div>
 

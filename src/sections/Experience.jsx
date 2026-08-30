@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Reveal, SectionHeading, Chip } from "../ui/primitives.jsx";
-import { experience } from "../data/content.js";
+import { experience, companyWebsites } from "../data/content.js";
 import { FiChevronDown, FiExternalLink } from "react-icons/fi";
 
 function ExperienceCard({ exp, index }) {
@@ -24,7 +24,19 @@ function ExperienceCard({ exp, index }) {
           <div>
             <h3 className="font-display text-xl font-bold text-bright">{exp.role}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-3">
-              <span className="font-medium text-violet">{exp.company}</span>
+              {companyWebsites[exp.company] ? (
+                <a
+                  href={companyWebsites[exp.company]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 font-medium text-violet underline-offset-4 transition-colors hover:text-fuchsia hover:underline"
+                >
+                  {exp.company}
+                  <FiExternalLink size={12} className="opacity-70" />
+                </a>
+              ) : (
+                <span className="font-medium text-violet">{exp.company}</span>
+              )}
               {exp.current && (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald/10 px-2.5 py-0.5 text-xs font-semibold text-emerald">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald" /> Now
