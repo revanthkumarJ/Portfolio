@@ -19,7 +19,7 @@ import financeImg from "../Assets/Projects/Finance.png";
 import departmentImg from "../Assets/Projects/department.png";
 // ✅ Play Store feature graphics (1024×500) — live apps
 import psExpenseTrackrImg from "../Assets/images/playstore_expense_tracker.png";
-import psPocketTunesImg from "../Assets/images/playstore_pocket_tunes.png";
+import psPocketTunesImg from "../Assets/pocketTunes/banner.png";
 import psStatusSaverImg from "../Assets/images/playstore_status_saver.png";
 
 import resumePdf from "../Assets/Revanth_final_version.pdf";
@@ -70,11 +70,12 @@ export const playStore = {
     {
       name: "Pocket Tunes",
       tagline: "Your music, in your pocket.",
-      blurb: "A fast, lightweight offline music player — seamless playback, playlists, and a clean modern UI.",
-      highlights: ["Offline Playback", "Playlists", "Fast & Lightweight"],
+      blurb: "Fully offline local music player with playlists, search and a built-in waveform ringtone trimmer. 17 Gradle modules, 18 languages, no account needed.",
+      highlights: ["100% Offline", "Ringtone Trimmer", "18 Languages", "No Account"],
       image: psPocketTunesImg,
       accent: "emerald",
       url: "https://play.google.com/store/apps/details?id=com.revanthapps.pocketunes",
+      detail: "/apps/pockettunes", // 🔗 full case study page
     },
     {
       name: "Status Saver",

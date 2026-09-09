@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Reveal, SectionHeading, Chip, TiltCard, ImageSlot } from "../ui/primitives.jsx";
 import { playStore } from "../data/content.js";
 import { IoLogoGooglePlaystore } from "react-icons/io5";
-import { FiExternalLink } from "react-icons/fi";
+import { FiArrowRight, FiExternalLink } from "react-icons/fi";
 
 const accentText = {
   violet: "text-violet",
@@ -12,10 +13,25 @@ const accentText = {
 };
 
 function AppCard({ app }) {
+  const accent = accentText[app.accent] || "text-violet";
+
   return (
     <Reveal>
-      <TiltCard max={3} className="glow-card glass h-full overflow-hidden rounded-3xl">
-        <a href={app.url} target="_blank" rel="noopener noreferrer" className="flex h-full flex-col">
+      <TiltCard max={3} className="glow-card glass group relative h-full overflow-hidden rounded-3xl">
+        {/* Whole-card target: the details page when there is one, else the store */}
+        {app.detail ? (
+          <Link to={app.detail} className="absolute inset-0 z-0" aria-label={`${app.name} details`} />
+        ) : (
+          <a
+            href={app.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute inset-0 z-0"
+            aria-label={`${app.name} on Google Play`}
+          />
+        )}
+
+        <div className="pointer-events-none flex h-full flex-col">
           {/* Feature graphic — 1024×500, renders uncropped */}
           <div className="relative aspect-[1024/500] w-full overflow-hidden">
             <ImageSlot src={app.image} alt={`${app.name} on Google Play`} label={app.name} accent={app.accent} />
@@ -26,9 +42,9 @@ function AppCard({ app }) {
           <div className="flex flex-1 flex-col p-6 md:p-7">
             <div className="flex items-start justify-between gap-3">
               <h3 className="font-display text-xl font-bold text-bright md:text-2xl">{app.name}</h3>
-              <IoLogoGooglePlaystore className={`${accentText[app.accent] || "text-violet"} shrink-0`} size={20} />
+              <IoLogoGooglePlaystore className={`${accent} shrink-0`} size={20} />
             </div>
-            <p className={`font-display mt-1.5 text-xs font-semibold uppercase tracking-[0.14em] ${accentText[app.accent] || "text-violet"}`}>
+            <p className={`font-display mt-1.5 text-xs font-semibold uppercase tracking-[0.14em] ${accent}`}>
               {app.tagline}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-body">{app.blurb}</p>
@@ -39,11 +55,27 @@ function AppCard({ app }) {
               ))}
             </div>
 
-            <span className="mt-6 inline-flex items-center gap-2 self-start rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm font-semibold text-emerald transition-colors group-hover:bg-emerald/20">
-              <IoLogoGooglePlaystore size={16} /> Get it on Google Play
-            </span>
+            {/* Actions sit above the overlay link */}
+            <div className="pointer-events-auto relative z-10 mt-6 flex flex-wrap items-center gap-3">
+              <a
+                href={app.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-emerald/40 bg-emerald/10 px-4 py-2 text-sm font-semibold text-emerald transition-colors hover:bg-emerald/20"
+              >
+                <IoLogoGooglePlaystore size={16} /> Google Play
+              </a>
+              {app.detail && (
+                <Link
+                  to={app.detail}
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-bright transition-colors hover:text-violet"
+                >
+                  See details <FiArrowRight size={14} />
+                </Link>
+              )}
+            </div>
           </div>
-        </a>
+        </div>
       </TiltCard>
     </Reveal>
   );
