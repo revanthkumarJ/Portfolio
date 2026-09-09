@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 import Lenis from "lenis";
 import InterviewHome from "./pages/interview/InterviewHome.jsx";
 import TopicPage from "./pages/interview/TopicPage.jsx";
-import PocketTunes from "./pages/apps/PocketTunes.jsx";
+import AppRoute from "./pages/apps/AppRoute.jsx";
 import Nav from "./sections/Nav.jsx";
 import Hero from "./sections/Hero.jsx";
 import About from "./sections/About.jsx";
@@ -84,7 +84,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/interview_preparation" element={<InterviewHome />} />
         <Route path="/interview_preparation/:categoryId/:topicId" element={<TopicPage />} />
-        <Route path="/apps/pockettunes" element={<PocketTunes />} />
+        <Route path="/apps/:slug" element={<AppRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
