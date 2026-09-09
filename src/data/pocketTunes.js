@@ -17,9 +17,13 @@ import shotLanguages from "../Assets/pocketTunes/7.png";
 export const pocketTunes = {
   slug: "pockettunes",
   path: "/apps/pockettunes",
+  accent: "emerald",
 
   name: "Pocket Tunes",
   fullName: "Pocket Tunes: Free Music Player",
+  titleLead: "Pocket",
+  titleAccent: "Tunes",
+  eyebrow: "Play Store app · Solo project",
   tagline: "Your music. In your pocket.",
   shortDescription:
     "Offline music player with a built-in ringtone trimmer. No account, no sign-in.",
@@ -84,6 +88,11 @@ export const pocketTunes = {
     },
   ],
 
+  screensBlurb:
+    "Every screen is Jetpack Compose with Material 3, built dark-first.",
+
+  shotAspect: "9/16",
+
   screenshots: [
     { src: shotPlayer, title: "Always offline", caption: "Full-screen player — album art, favourite, shuffle and repeat. No internet needed." },
     { src: shotLibrary, title: "Your music, organised", caption: "Browse the library by songs, albums or artists." },
@@ -100,17 +109,17 @@ export const pocketTunes = {
       "Pocket Tunes is a multi-module Android app: 17 Gradle modules split into a shared core and four self-contained features, each sliced into domain / data / presentation. Build logic lives in a composite build with six convention plugins, so a new module is three lines of Gradle instead of forty.",
     layers: [
       {
-        name: "core",
+        name: ":core",
         modules: ["domain", "data", "database", "playback", "presentation", "design-system"],
         note: "Models, repositories, the Room database, the Media3 playback service, and the shared Compose design system.",
       },
       {
-        name: "feature",
+        name: ":feature",
         modules: ["library", "player", "playlists", "ringtone"],
         note: "Each feature owns its own domain / data / presentation modules and its own Koin module — nothing leaks sideways.",
       },
       {
-        name: "build-logic",
+        name: ":build-logic",
         modules: ["application", "library", "feature", "compose", "room", "jvm-library"],
         note: "Convention plugins that keep every module's Gradle setup identical and one line long.",
       },
@@ -161,6 +170,12 @@ export const pocketTunes = {
 
   // What the app deliberately does not do.
   nonGoals: ["No streaming", "No cloud sync", "No sign-in", "No subscription"],
+
+  cta: {
+    headlineLead: "Play the music that's",
+    headlineAccent: "already on your phone",
+    body: "Free, fully offline, and no account needed. Available now on Google Play.",
+  },
 };
 
 export default pocketTunes;

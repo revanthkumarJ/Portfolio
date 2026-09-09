@@ -66,6 +66,7 @@ export const playStore = {
       image: psExpenseTrackrImg,
       accent: "emerald",
       url: "https://play.google.com/store/apps/details?id=com.revanthdev.expensetrackr",
+      detail: "/apps/expensetrackr", // 🔗 full details page
     },
     {
       name: "Pocket Tunes",
@@ -85,6 +86,7 @@ export const playStore = {
       image: psStatusSaverImg,
       accent: "cyan",
       url: "https://play.google.com/store/apps/details?id=com.revanthapps.statussavernoads",
+      detail: "/apps/statussaver", // 🔗 full details page
     },
   ],
 };
