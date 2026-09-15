@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Reveal, SectionHeading, Chip, TiltCard, ImageSlot } from "../ui/primitives.jsx";
+import { Reveal, SectionHeading, Chip, TiltCard, ImageSlot, StoreStats } from "../ui/primitives.jsx";
 import { playStore } from "../data/content.js";
 import { IoLogoGooglePlaystore } from "react-icons/io5";
-import { FiArrowRight, FiDownload, FiExternalLink, FiStar } from "react-icons/fi";
+import { FiArrowRight, FiExternalLink } from "react-icons/fi";
 
 const accentText = {
   violet: "text-violet",
@@ -11,9 +11,6 @@ const accentText = {
   emerald: "text-emerald",
   amber: "text-amber",
 };
-
-const pillClass =
-  "inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-ink/70 px-3 py-1 text-[11px] font-semibold tracking-wide text-bright backdrop-blur-md";
 
 function AppCard({ app }) {
   const accent = accentText[app.accent] || "text-violet";
@@ -40,23 +37,12 @@ function AppCard({ app }) {
             <ImageSlot src={app.image} alt={`${app.name} on Google Play`} label={app.name} accent={app.accent} />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent" />
 
-            {/* Store stats — rating only shows for apps that have one yet */}
-            {(app.downloads || app.rating) && (
-              <div className="absolute bottom-3 left-3 flex flex-wrap items-center gap-2">
-                {app.downloads && (
-                  <span className={pillClass}>
-                    <FiDownload className={accent} size={12} />
-                    {app.downloads} downloads
-                  </span>
-                )}
-                {app.rating && (
-                  <span className={pillClass}>
-                    <FiStar className="text-amber" size={12} fill="currentColor" />
-                    {app.rating}
-                  </span>
-                )}
-              </div>
-            )}
+            <StoreStats
+              downloads={app.downloads}
+              rating={app.rating}
+              accent={app.accent}
+              className="absolute bottom-3 left-3"
+            />
           </div>
 
           {/* Copy */}

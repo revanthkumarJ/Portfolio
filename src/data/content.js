@@ -23,6 +23,7 @@ import psPocketTunesImg from "../Assets/pocketTunes/banner.png";
 import psStatusSaverImg from "../Assets/images/playstore_status_saver.png";
 
 import resumePdf from "../Assets/Revanth_final_version.pdf";
+import { playStats } from "./playStats.js";
 
 // ---------------------------------------------------------------------------
 export const identity = {
@@ -65,7 +66,7 @@ export const playStore = {
       highlights: ["100% Offline", "PIN & Biometric Lock", "Smart Analytics", "Google AdMob"],
       image: psExpenseTrackrImg,
       accent: "emerald",
-      downloads: "50+",
+      ...playStats.expensetrackr,
       url: "https://play.google.com/store/apps/details?id=com.revanthdev.expensetrackr",
       detail: "/apps/expensetrackr", // 🔗 full details page
     },
@@ -76,8 +77,7 @@ export const playStore = {
       highlights: ["100% Offline", "Ringtone Trimmer", "18 Languages", "No Account"],
       image: psPocketTunesImg,
       accent: "emerald",
-      downloads: "100+",
-      rating: "4.8",
+      ...playStats.pockettunes,
       url: "https://play.google.com/store/apps/details?id=com.revanthapps.pocketunes",
       detail: "/apps/pockettunes", // 🔗 full case study page
     },
@@ -88,7 +88,7 @@ export const playStore = {
       highlights: ["No Ads", "Images & Videos", "100% Private"],
       image: psStatusSaverImg,
       accent: "cyan",
-      downloads: "50+",
+      ...playStats.statussaver,
       url: "https://play.google.com/store/apps/details?id=com.revanthapps.statussavernoads",
       detail: "/apps/statussaver", // 🔗 full details page
     },

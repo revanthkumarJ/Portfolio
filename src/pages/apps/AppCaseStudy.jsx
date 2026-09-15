@@ -9,8 +9,9 @@ import {
   FiShield,
 } from "react-icons/fi";
 import { IoLogoGooglePlaystore } from "react-icons/io5";
-import { Reveal, Counter, Chip, Monogram, ImageSlot } from "../../ui/primitives.jsx";
+import { Reveal, Counter, Chip, Monogram, ImageSlot, StoreStats } from "../../ui/primitives.jsx";
 import { featureIcons } from "../../data/apps.js";
+import { playStats } from "../../data/playStats.js";
 import { identity } from "../../data/content.js";
 
 /* Accent classes are written out in full so Tailwind can see them at build time. */
@@ -170,6 +171,7 @@ export default function AppCaseStudy({ app }) {
   const ac = ACCENTS[app.accent] || ACCENTS.emerald;
   const shots = app.screenshots || [];
   const shotAspect = SHOT_ASPECT[app.shotAspect] || SHOT_ASPECT["9/16"];
+  const stats = playStats[app.slug] || {};
 
   const step = useCallback(
     (dir) => setLightbox((i) => (i === null ? i : (i + dir + shots.length) % shots.length)),
@@ -224,6 +226,13 @@ export default function AppCaseStudy({ app }) {
           <p className="mt-5 max-w-[62ch] text-base leading-relaxed text-body md:text-lg">
             {app.shortDescription}
           </p>
+          <StoreStats
+            downloads={stats.downloads}
+            rating={stats.rating}
+            accent={app.accent}
+            size="lg"
+            className="mt-6"
+          />
         </Reveal>
 
         <Reveal delay={0.08} className="mt-8">

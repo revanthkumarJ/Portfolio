@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { FiDownload, FiStar } from "react-icons/fi";
 
 /* ---------------- Reveal: fade+rise on scroll into view ---------------- */
 export function Reveal({ children, delay = 0, y = 28, className = "", once = true }) {
@@ -169,6 +170,45 @@ export function ImageSlot({ src, alt, label, className = "", accent = "violet" }
         <path d="m21 15-4.5-4.5L7 20" />
       </svg>
       <span className="px-4 text-center text-xs tracking-wide text-bright/40">{label || alt} — screenshot coming soon</span>
+    </div>
+  );
+}
+
+/* ---------------- StoreStats: install count + rating pills ----------------
+   Shared by the home Play Store cards and the /apps/<slug> case studies so
+   both read identically. Each pill is independently optional — an app with
+   no published rating yet simply renders the install count on its own. */
+const STAT_ACCENT = {
+  violet: "text-violet",
+  cyan: "text-cyan",
+  emerald: "text-emerald",
+  amber: "text-amber",
+};
+
+export function StoreStats({ downloads, rating, accent = "violet", size = "sm", className = "" }) {
+  if (!downloads && !rating) return null;
+
+  const tone = STAT_ACCENT[accent] || STAT_ACCENT.violet;
+  const big = size === "lg";
+  const pill = `inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-ink/70 font-semibold tracking-wide text-bright backdrop-blur-md ${
+    big ? "gap-2 px-4 py-2 text-sm" : "px-3 py-1 text-[11px]"
+  }`;
+  const icon = big ? 15 : 12;
+
+  return (
+    <div className={`flex flex-wrap items-center gap-2 ${className}`}>
+      {downloads && (
+        <span className={pill}>
+          <FiDownload className={tone} size={icon} />
+          {downloads} downloads
+        </span>
+      )}
+      {rating && (
+        <span className={pill}>
+          <FiStar className="text-amber" size={icon} fill="currentColor" />
+          {rating}
+        </span>
+      )}
     </div>
   );
 }
