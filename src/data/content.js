@@ -433,11 +433,11 @@ export const github = {
 
 export const navLinks = [
   { label: "About", href: "#about" },
-  { label: "Apps", href: "#apps" },
+  { label: "Work", href: "#projects" },
   { label: "Experience", href: "#experience" },
-  { label: "Projects", href: "#projects" },
-  { label: "Achievements", href: "#achievements" },
+  { label: "Apps", href: "#apps" },
   { label: "Writing", href: "#writing" },
+  { label: "Achievements", href: "#achievements" },
   { label: "Why Me", href: "#why" },
   { label: "Contact", href: "#contact" },
 ];

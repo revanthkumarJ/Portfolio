@@ -17,7 +17,7 @@ export default function Projects() {
       {/* ambient */}
       <div className="blob right-[-15%] top-[10%] h-[420px] w-[420px] bg-violet-600/15" />
 
-      <SectionHeading index="04" title="My" accent="work" />
+      <SectionHeading index="02" title="My" accent="work" />
 
       {/* Unified grid of projects */}
       <div>

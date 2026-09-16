@@ -7,11 +7,11 @@ import AppRoute from "./pages/apps/AppRoute.jsx";
 import Nav from "./sections/Nav.jsx";
 import Hero from "./sections/Hero.jsx";
 import About from "./sections/About.jsx";
-import PlayStoreApps from "./sections/PlayStoreApps.jsx";
-import Experience from "./sections/Experience.jsx";
 import Projects from "./sections/Projects.jsx";
-import Achievements from "./sections/Achievements.jsx";
+import Experience from "./sections/Experience.jsx";
+import PlayStoreApps from "./sections/PlayStoreApps.jsx";
 import Writing from "./sections/Writing.jsx";
+import Achievements from "./sections/Achievements.jsx";
 import Testimonial from "./sections/Testimonial.jsx";
 import WhyHireMe from "./sections/WhyHireMe.jsx";
 import Contact from "./sections/Contact.jsx";
@@ -53,11 +53,11 @@ function Home() {
       <main>
         <Hero />
         <About />
-        <PlayStoreApps />
-        <Experience />
         <Projects />
-        <Achievements />
+        <Experience />
+        <PlayStoreApps />
         <Writing />
+        <Achievements />
         <Testimonial />
         <WhyHireMe />
         <Contact />

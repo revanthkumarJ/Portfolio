@@ -91,7 +91,7 @@ function AppCard({ app }) {
 export default function PlayStoreApps() {
   return (
     <section id="apps" className="relative w-full px-5 py-28 md:px-10 md:py-36 xl:px-16">
-      <SectionHeading index="02" title="Play Store" accent="apps" />
+      <SectionHeading index="04" title="Play Store" accent="apps" />
 
       <Reveal className="mb-10 md:mb-14">
         <div className="flex flex-wrap items-center justify-between gap-4">
