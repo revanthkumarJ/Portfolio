@@ -1,6 +1,5 @@
 /* Mobile Byte Sensei — condensed case study.
-   The full version (every PR, deep dives, interview notes) is kept outside this
-   repo, in revanthkumarJ/work-records. */
+   The long-form version is kept outside this repo. See CLAUDE.md. */
 export const mobileByteSensei = {
   slug: "mobile-byte-sensei",
   company: "Mobile Byte Sensei",
