@@ -366,31 +366,35 @@ export const testimonial = {
 // WHY HIRE ME — closing pitch. Evidence-backed value pillars + CTA.
 export const whyHireMe = {
   lead:
-    "I ship features to production, migrate apps across platforms, and own releases end-to-end. Here's the case, in four points.",
+    "Four things I'd bring to an Android team — each one backed by work you can go and read.",
   pillars: [
     {
-      icon: "smartphone",
-      title: "Production Android at Swipe (YC S21)",
+      icon: "layers",
+      title: "Architecture",
       body:
-        "As an SDE 1, I've migrated 20+ features — 100+ screens — to Jetpack Compose and manage the app's Play Store releases for a billing product used by thousands of businesses.",
+        "Multi-module MVI and Clean Architecture in production, not in theory. I introduced Gradle convention plugins that cut per-module build boilerplate by ~80%, moved a whole app onto type-safe navigation so route mistakes fail at compile time, and spend most of my review comments on state modelling.",
+      link: { text: "See it at Swipe", href: "/experience/swipe" },
     },
     {
-      icon: "layers",
-      title: "Kotlin Multiplatform, at scale",
+      icon: "smartphone",
+      title: "Modernization",
       body:
-        "Migrated 20+ modules to Kotlin Multiplatform & Compose Multiplatform across production fintech apps at Mifos — and reviewed 300+ contributor PRs to keep the quality bar high.",
+        "XML → Compose and Android → Kotlin Multiplatform, both at scale. 23 feature flows rebuilt in Compose behind staged rollout flags, then the legacy versions deleted; core modules moved to KMP across two fintech apps, including converting a whole network layer from Retrofit to Ktor.",
+      link: { text: "See it at Mifos", href: "/experience/mifos-initiative" },
     },
     {
       icon: "playstore",
-      title: "3 apps shipped solo, end-to-end",
+      title: "Production",
       body:
-        "Designed, built, and published three apps to the Google Play Store entirely on my own — architecture, UI, CI/CD, release, and store listing.",
+        "Crashlytics triage, real debugging and Play Console releases. I've resolved production crash clusters — including a concurrency bug no client-side fix could solve — and shipped three apps to Google Play end to end: architecture, CI, release and store listing.",
+      link: { text: "Apps I've shipped", href: "#apps" },
     },
     {
-      icon: "cpu",
-      title: "Strong CS fundamentals",
+      icon: "users",
+      title: "Open source",
       body:
-        "GATE CS 2025 qualified, LeetCode Knight (800+ solved), and GFG Institute Rank 1 — I clear the DSA bar, not just the UI one.",
+        "Review and maintainer experience at a scale most engineers don't get early: 365 pull requests reviewed across 35 contributors in the Mifos mobile ecosystem, plus mentoring and interviewing for Google Summer of Code and Code4GovTech.",
+      link: { text: "Reviews I've left", href: "/experience/mifos-mentor" },
     },
   ],
 };

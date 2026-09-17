@@ -2,7 +2,8 @@ import React from "react";
 import { Reveal, SectionHeading, Magnetic } from "../ui/primitives.jsx";
 import { whyHireMe, identity } from "../data/content.js";
 import { useResume } from "../ui/resume.jsx";
-import { FiSmartphone, FiLayers, FiCpu, FiFileText, FiArrowRight } from "react-icons/fi";
+import { FiSmartphone, FiLayers, FiCpu, FiUsers, FiFileText, FiArrowRight } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { IoLogoGooglePlaystore } from "react-icons/io5";
 
 const pillarIcons = {
@@ -10,6 +11,7 @@ const pillarIcons = {
   layers: FiLayers,
   playstore: IoLogoGooglePlaystore,
   cpu: FiCpu,
+  users: FiUsers,
 };
 
 export default function WhyHireMe() {
@@ -19,7 +21,7 @@ export default function WhyHireMe() {
     <section id="why" className="relative w-full px-5 py-28 md:px-10 md:py-36 xl:px-16">
       <div className="blob left-[-12%] top-[15%] h-[420px] w-[420px] bg-violet-600/15" />
 
-      <SectionHeading index="07" title="Why" accent="hire me" />
+      <SectionHeading index="07" title="What I" accent="bring" />
 
       <Reveal>
         <p className="max-w-[62ch] text-lg leading-relaxed text-body md:text-xl">{whyHireMe.lead}</p>
@@ -37,6 +39,22 @@ export default function WhyHireMe() {
                 <div>
                   <h3 className="font-display text-lg font-bold text-bright md:text-xl">{p.title}</h3>
                   <p className="mt-2 leading-relaxed text-body">{p.body}</p>
+                  {p.link &&
+                    (p.link.href.startsWith("#") ? (
+                      <a
+                        href={p.link.href}
+                        className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-violet transition-colors hover:text-fuchsia"
+                      >
+                        {p.link.text} <FiArrowRight size={14} />
+                      </a>
+                    ) : (
+                      <Link
+                        to={p.link.href}
+                        className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-violet transition-colors hover:text-fuchsia"
+                      >
+                        {p.link.text} <FiArrowRight size={14} />
+                      </Link>
+                    ))}
                 </div>
               </div>
             </Reveal>
