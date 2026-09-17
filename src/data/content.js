@@ -196,6 +196,7 @@ export const experience = [
     role: "Mentor — GSoC & C4GT",
     period: "Mar 2026 — Present",
     current: true,
+    detailPath: "/experience/mifos-mentor",
     summary:
       "Mentoring open-source contributors: reviewing PRs, running standups, conducting GSoC and Code4GovTech interviews, and guiding Kotlin Multiplatform architecture discussions.",
     highlights: [

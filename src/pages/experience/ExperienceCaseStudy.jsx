@@ -8,6 +8,7 @@ import {
   FiCheck,
   FiChevronDown,
   FiCpu,
+  FiMessageSquare,
   FiDownload,
   FiExternalLink,
   FiGitBranch,
@@ -73,6 +74,15 @@ const ACCENTS = {
     iconBox: "border-emerald/25 bg-emerald/10 text-emerald",
     softBtn: "border-emerald/40 bg-emerald/10 text-emerald hover:bg-emerald/20",
     hoverBorder: "hover:border-emerald/50",
+  },
+  amber: {
+    text: "text-amber",
+    rule: "from-amber/50",
+    blob: "bg-amber/20",
+    border: "border-amber/20",
+    iconBox: "border-amber/25 bg-amber/10 text-amber",
+    softBtn: "border-amber/40 bg-amber/10 text-amber hover:bg-amber/20",
+    hoverBorder: "hover:border-amber/50",
   },
 };
 
@@ -236,6 +246,106 @@ function CategoryCard({ cat, rows, ac }) {
   );
 }
 
+/* ---------------- Drifting wall of real review comments ----------------
+   Three rows loop in alternating directions. Hovering anywhere pauses them all;
+   each card opens the original thread on GitHub. Choosing a theme dims the rest
+   rather than removing them, so the motion never jumps. */
+function ReviewWall({ entry, ac }) {
+  const [theme, setTheme] = useState(null);
+  const themes = [...new Set(entry.reviews.map((r) => r.theme))];
+
+  // Deal the cards across three rows so each row has a different mix.
+  const rows = [[], [], []];
+  entry.reviews.forEach((r, i) => rows[i % 3].push(r));
+  const DURATIONS = ["82s", "104s", "68s"];
+
+  return (
+    <>
+      <Reveal className="mb-8">
+        <p className="max-w-[66ch] text-base leading-relaxed text-body">{entry.reviewsBlurb}</p>
+      </Reveal>
+
+      <Reveal delay={0.06} className="mb-8">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setTheme(null)}
+            className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+              theme === null ? ac.iconBox : "border-line text-body hover:text-bright"
+            }`}
+          >
+            Everything
+          </button>
+          {themes.map((t) => (
+            <button
+              key={t}
+              onClick={() => setTheme(theme === t ? null : t)}
+              className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                theme === t ? ac.iconBox : "border-line text-body hover:text-bright"
+              }`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      </Reveal>
+
+      <div className="-mx-5 space-y-4 md:-mx-8">
+        {rows.map((row, i) => (
+          <div key={i} className="marquee" aria-label={`Review comments, row ${i + 1}`}>
+            <div
+              className="marquee-track"
+              data-dir={i % 2 === 1 ? "right" : "left"}
+              style={{ "--marquee-duration": DURATIONS[i] }}
+            >
+              {[...row, ...row].map((r, j) => {
+                const dim = theme !== null && r.theme !== theme;
+                return (
+                  <a
+                    key={`${r.url}-${j}`}
+                    href={r.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-hidden={j >= row.length ? "true" : undefined}
+                    tabIndex={j >= row.length ? -1 : 0}
+                    className={`glass glow-card group flex w-[300px] shrink-0 flex-col rounded-2xl p-5 transition-all duration-300 md:w-[380px] ${
+                      dim ? "opacity-25 saturate-0" : "opacity-100"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className={`text-[10px] font-semibold uppercase tracking-[0.16em] ${ac.text}`}>
+                        {r.theme}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-[10px] text-body/50">
+                        {r.repo} #{r.pr}
+                        <FiExternalLink size={10} />
+                      </span>
+                    </div>
+
+                    <p className="mt-3 flex-1 text-sm italic leading-relaxed text-bright/90">
+                      <FiMessageSquare size={12} className={`mr-1.5 inline align-[-1px] ${ac.text}`} />
+                      {r.quote}
+                    </p>
+
+                    <p className="mt-3 border-t border-line pt-3 text-xs leading-relaxed text-body">
+                      {r.lesson}
+                    </p>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Reveal delay={0.1} className="mt-6">
+        <p className="text-xs text-body/50">
+          Hover to hold a row still · click any card to open the original thread
+        </p>
+      </Reveal>
+    </>
+  );
+}
+
 export default function ExperienceCaseStudy({ entry }) {
   const ac = ACCENTS[entry.accent] || ACCENTS.violet;
 
@@ -316,6 +426,13 @@ export default function ExperienceCaseStudy({ entry }) {
           </Reveal>
         )}
       </section>
+
+      {/* ---------------- Review wall (mentoring pages) ---------------- */}
+      {entry.reviews?.length > 0 && (
+        <Section id="reviews" index={step()} title="Reviews I've" accentWord="left" ac={ac}>
+          <ReviewWall entry={entry} ac={ac} />
+        </Section>
+      )}
 
       {/* ---------------- Highlights ---------------- */}
       <Section id="work" index={step()} title="The work that" accentWord="mattered" ac={ac}>

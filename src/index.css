@@ -138,3 +138,46 @@ body {
   .animate-marquee { animation: none; }
   html { scroll-behavior: auto; }
 }
+
+/* ---------- drifting review wall ---------- */
+/* The track holds two copies of the row, so translating it half its width
+   loops seamlessly. Hovering the wall pauses every row at once. */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 1rem;
+  animation: marquee-left var(--marquee-duration, 70s) linear infinite;
+  will-change: transform;
+}
+.marquee-track[data-dir="right"] {
+  animation-name: marquee-right;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .marquee-track {
+    animation: none;
+  }
+}
