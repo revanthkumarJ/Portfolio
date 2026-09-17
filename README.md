@@ -1,63 +1,96 @@
 # Revanth Kumar Jilakara — Portfolio
 
-Personal portfolio of **Revanth Kumar Jilakara** (GitHub: [revanthkumarJ](https://github.com/revanthkumarJ)) — SDE 1 · Android Developer at **Swipe (YC S21)**, Kotlin Multiplatform specialist, and open-source mentor at the **Mifos Initiative**.
+Personal portfolio of **Revanth Kumar Jilakara** ([revanthkumarJ](https://github.com/revanthkumarJ)) — SDE 1 · Android Developer at **Swipe (YC S21)**, Kotlin Multiplatform developer, and open-source mentor at the **Mifos Initiative**.
 
-> **⚠️ This README is the single source of truth for the project's context, content, and design decisions.**
-> If you (human or AI assistant) are editing this project in the future, read this file first and keep it updated after major changes.
+Live on Vercel, deployed from `main`.
+
+> **This README is the content source of truth** — identity, numbers, timeline, projects, testimonial and links.
+> **[CLAUDE.md](CLAUDE.md) is the engineering source of truth** — commands, code layout, conventions and the publishing rules.
+> Read both before making changes, and update them after.
 
 ---
 
-## 🎯 Project Goal
+## Stack
 
-Rebuild this portfolio from a generic template into a **top-tier, awwwards-level developer portfolio**. Decisions were finalized on **2026-07-18**.
+Vite 6 · React 18 · Tailwind CSS 4 (`@tailwindcss/vite`, CSS-first config) · Framer Motion · Lenis smooth-scroll · react-router-dom · react-icons · react-pdf. `playwright-core` (dev) drives the installed Chrome for interaction and screenshot checks.
 
-### Locked design decisions
+```bash
+npm run dev      # :5173
+npm run build    # the only real validation — content.js imports images, so plain node can't run it
+npm run preview
+```
 
-| Decision | Choice |
+---
+
+## Routes
+
+| Route | What it is |
 |---|---|
-| Approach | **Full modern rebuild** — replace the old CRA + react-bootstrap + tsparticles template entirely |
-| Target stack | **Vite + React 18 + Tailwind CSS + Framer Motion** (+ Lenis smooth-scroll) |
-| Aesthetic | **Bold / expressive dark** — gradients, glow, depth, cinematic motion, 3D tilt cards, animated counters |
-| Structure | **Single-page scroll**: Hero → About → Experience → Projects → Achievements → Contact, with scroll-spy sticky nav |
-| Quality bar | Awwwards-tier (Bruno Simon / Brittany Chiang level) |
-| Deploy | Vercel (existing pipeline; old site stays live until new one is ready) |
-| Logo | Custom **"RJ" monogram**, designed in-house |
-| Domain | No custom domain for now |
+| `/` | Single-page scroll with a scroll-spy sticky nav |
+| `/apps/:slug` | Play Store app case studies — `pockettunes`, `statussaver`, `expensetrackr` |
+| `/experience/:slug` | Company case studies — `swipe`, `mifos-initiative`, `mobile-byte-sensei` |
+| `/interview_preparation` | Android/Kotlin interview notes — 16 categories, 80 topics |
+| `/interview_preparation/:categoryId/:topicId` | A single topic |
 
-### Section blueprint
+`vercel.json` rewrites everything to `index.html`, so new routes need no config.
 
-- **Hero** — kinetic typography, gradient mesh/glow background (no tsparticles), magnetic CTAs, live stat ticker (120+ PRs · 98% merge · 230+ reviewed)
-- **About** — split editorial layout, count-up stat counters on scroll, interactive tech-stack display
-- **Experience** — scroll-driven vertical timeline with a progress line that draws as you scroll; slide-in detail panels
-- **Projects** — 4 large cinematic featured cards + compact grid for the rest; 3D tilt + glow-on-hover; **Play Store links on every published app**
-- **Achievements** — trophy wall with staggered reveals; coding profiles as badges
-- **Contact** — bold closing statement, oversized email link, socials, "open to opportunities" status
-- **Global** — page-load reveal sequence, custom cursor accent, 90+ Lighthouse target, full mobile polish, OG image
+### Home page section order
+
+Hero → About → **Play Store apps** → **Experience** → **Work** → Writing → Achievements → Testimonial → Why hire me → Contact
+
+Apps come before the writeups deliberately: the first thing after About should be something a visitor can download. Section headings are numbered `01`–`08` and **must be renumbered by hand if the order changes**.
 
 ---
 
-## 👤 Owner Content (source of truth)
+## Company case studies
+
+Each company has two artefacts:
+
+1. **A detailed record**, kept in a separate private repository — the long-form version, written as interview preparation that stands on its own. Not in this repo, and it should stay that way.
+2. **A published page** at `/experience/:slug` — the short, scrubbed version.
+
+To add one: create `src/data/experience/<company>.js`, register it in `src/data/experience/index.js`, and add `detailPath` to the matching entry in `content.js`. Several entries can share one page — both Swipe roles point at `/experience/swipe`, both Mifos roles at `/experience/mifos-initiative`.
+
+`ExperienceCaseStudy.jsx` renders two table shapes from one component, chosen by whether the rows carry a `url`:
+
+- **Public source repo** (Mifos) — a row per pull request, linked, with its Jira ticket
+- **Private source repo** (Swipe) — rows are work areas, with no reference to any individual change
+
+**Publishing rules live in [CLAUDE.md](CLAUDE.md)** and are not optional. In short: never publish pull request links, numbers or titles, internal identifiers, API versioning or partner names from a private repository; lead with impact rather than PR counts; and never narrate what is being withheld. Public repos are exempt — link everything there.
+
+---
+
+## Owner content (source of truth)
 
 ### Identity
 
-- **Name:** Revanth Kumar Jilakara (Jilakara Revanth Kumar)
-- **Hero one-liner (chosen):** *"I build production Android & Kotlin Multiplatform apps used by thousands of businesses."*
-- **Sub-line:** SDE 1 @ Swipe (YC S21) · Mifos open-source mentor
-- From Andhra Pradesh, India. B.Tech CSE, RGUKT RK Valley. Qualified **GATE CS 2025**.
+- **Name:** Revanth Kumar Jilakara · **Monogram:** RJ
+- **Headline:** *"I build production Android & Kotlin Multiplatform apps used by thousands of businesses."*
+- **Subline:** SDE 1 @ Swipe (YC S21) · Mifos open-source mentor
+- Andhra Pradesh, India. B.Tech CSE, RGUKT RK Valley. Qualified **GATE CS 2025**.
+- Status: **open to opportunities** — show prominently.
 
-### Key numbers (verified 2026-07-18)
+### Numbers (re-verified 2026-09-17 from the GitHub API)
 
-- **120+ merged open-source PRs** (older copies of the site said 110+ — outdated)
-- **98% PR merge rate**
-- **230+ contributor PRs reviewed**
-- 1000+ DSA problems · LeetCode Knight · GFG institute rank 1 · CodeChef 3★ · HackerRank 5★
+| Metric | Verified value |
+|---|---|
+| Merged PRs in the Mifos org (`openMF`) | **111** of 123 authored |
+| PRs reviewed in `openMF` | **365** |
+| PRs reviewed across all orgs | 534 |
+| Merged PRs across all non-personal repos | 593 of 665 authored |
+| Merge rate (all non-personal repos) | **~89%** |
+| DSA | 1000+ problems · LeetCode Knight · GFG institute rank 1 · CodeChef 3★ · HackerRank 5★ |
 
-### Experience timeline (corrected dates)
+> ⚠️ **The hero stat strip in `content.js` currently claims a 98% merge rate.** The measured figure is ~89–90% however it is sliced. It also says "300+ contributor PRs reviewed", which is understated — `openMF` alone is 365. Both are worth correcting.
+
+Counts that reach the site must be **derived from real data, not estimated**, and where a total is shown its parts should sum to it.
+
+### Experience timeline
 
 | Role | Org | Period |
 |---|---|---|
-| SDE 1 – Android Developer | Swipe (YC S21) | **Jun 15, 2026 – Present** |
-| Android Developer Intern | Swipe (YC S21) | Dec 2025 – **Jun 14, 2026** |
+| SDE 1 – Android Developer | Swipe (YC S21) | Jun 15, 2026 – Present |
+| Android Developer Intern | Swipe (YC S21) | Dec 2025 – Jun 14, 2026 |
 | Mentor (GSoC / C4GT interviews, PR reviews, standups) | Mifos Initiative | Mar 2026 – Present |
 | Open Source Mobile Developer | Mifos Initiative | Nov 2024 – Present |
 | Mifos Summer of Code 2025 Intern ($2,500 stipend) | Mifos Initiative | Jun 2025 – Sep 2025 |
@@ -67,77 +100,46 @@ Rebuild this portfolio from a generic template into a **top-tier, awwwards-level
 | Open Source Contributor – React | DevDisplay | Jan 2025 – Feb 2025 |
 | Campus Ambassador | GeeksforGeeks | Apr 2024 – Apr 2025 |
 
-Leadership/volunteer: SRC DSA Coordinator & Mentor, Dept. Social Media Manager, NSS Unit Coordinator, Class Representative (all data + LinkedIn proof links live in the old `src/components/Experience/ProffessionalExperience.js`).
+Leadership/volunteer: SRC DSA Coordinator & Mentor, Dept. Social Media Manager, NSS Unit Coordinator, Class Representative.
 
-### Featured projects (the big 4, in order)
+### Featured projects
 
-1. **💰 ExpenseTrackr** *(flagship)* — privacy-first, offline personal finance tracker. Kotlin Multiplatform + Compose Multiplatform; one codebase → Android, iOS, Desktop. Clean MVI, 16 Gradle modules, 18 screens, 15 ViewModels, **24 languages** with in-app switcher, Room (KMP), Koin, DataStore, custom Gradle convention plugins, R8, PIN (SHA-256) + biometric app-lock, CSV backup/restore, Material 3 dynamic color. Android feature-complete, **Play Store closed testing** (public soon). MIT license.
-   - GitHub: <https://github.com/revanthkumarJ/ExpenseTrackr>
-   - Play Store: **placeholder — link is commented out in code; uncomment when the app goes public**
-2. **📱 Mifos-Mobile KMP migration** — 45+ merged PRs, 7 modules migrated to KMP/CMP (Android, iOS, Web/WASM, Desktop). [GitHub](https://github.com/openMF/mifos-mobile) · [Play Store](https://play.google.com/store/apps/details?id=org.mifos.mobile)
-3. **🏦 Android-Client KMP migration** — 52 merged PRs, 10 modules migrated, production banking app. [GitHub](https://github.com/openMF/android-client) · [Play Store](https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid)
-4. **🎪 Abhiyanth Fest website** — frontend team lead; React, Redux, Firebase, Material UI, CashFree payments. [GitHub](https://github.com/revanthkumarJ/abhiyanth-client)
+1. **ExpenseTrackr** *(flagship)* — privacy-first, offline personal finance tracker. KMP + CMP, one codebase → Android, iOS, Desktop. MVI, 16 Gradle modules, 18 screens, 24 languages, Room (KMP), Koin, DataStore, convention plugins, R8, PIN + biometric lock, CSV backup, Material 3 dynamic color. MIT. — [GitHub](https://github.com/revanthkumarJ/ExpenseTrackr) · Play Store link is a **commented-out placeholder** in the data; uncomment when public.
+2. **Mifos Mobile KMP migration** — [GitHub](https://github.com/openMF/mifos-mobile) · [Play Store](https://play.google.com/store/apps/details?id=org.mifos.mobile)
+3. **Field Officer App KMP migration** — production banking app, my MSoC 2025 project. Repo was renamed from `android-client` to [`mifos-x-field-officer-app`](https://github.com/openMF/mifos-x-field-officer-app) · [Play Store](https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid)
+4. **Abhiyanth Fest website** — frontend team lead; React, Redux, Firebase, Material UI, CashFree. [GitHub](https://github.com/revanthkumarJ/abhiyanth-client)
 
-**Compact grid projects:** Meme Studio (KMP/CMP), Swipe assignment app, KisanConnect (client/API/app), Finance client+API, Sports Auction, Departmental Resource Management app, Instagram UI clone, Netflix UI clone — data lives in the old `src/components/Projects/Projects.js`.
+Compact grid: Meme Studio, Swipe assignment app, KisanConnect, Finance client+API, Sports Auction, Departmental Resource Management, Instagram/Netflix UI clones.
 
-### Testimonial (approved for use)
+### Testimonial (approved)
 
-From **Rajan Maurya** — *Engineering Manager | Kotlin Multiplatform Expert | Scaling Cross-Platform Teams | Driving Mobile Innovation*:
+From **Rajan Maurya** — *Engineering Manager | Kotlin Multiplatform Expert*:
 
-> "I highly recommend Jilakara Revanth Kumar as a Kotlin Multiplatform Developer who consistently delivers high-quality, scalable solutions. Revanth brings strong expertise in Kotlin Multiplatform development, with a deep understanding of building efficient, cross-platform architectures. His approach to system design and architecture is thoughtful, well-structured, and aligned with best practices, ensuring maintainable and future-ready codebases. One of his standout strengths is his debugging ability — he has a sharp eye for identifying complex issues and resolving them with clarity and precision. He approaches challenges methodically and remains solution-oriented, even in high-pressure situations. Beyond his technical skills, Revanth is reliable, proactive, and a great collaborator, making him a valuable asset to any development team. I strongly recommend him for any role requiring expertise in Kotlin Multiplatform and robust software architecture."
+> "I highly recommend Jilakara Revanth Kumar as a Kotlin Multiplatform Developer who consistently delivers high-quality, scalable solutions. […] One of his standout strengths is his debugging ability — he has a sharp eye for identifying complex issues and resolving them with clarity and precision."
 
-Proof: <https://www.linkedin.com/in/jilakararevanthkumar/details/recommendations/>
+Full text lives in `content.js`. Proof: [LinkedIn recommendations](https://www.linkedin.com/in/jilakararevanthkumar/details/recommendations/)
 
-### Contact & socials
+### Contact
 
-- Status: **"Open to opportunities"** — show prominently
-- Email: <jrevanth101@gmail.com>
-- LinkedIn: <https://www.linkedin.com/in/jilakararevanthkumar/>
-- Instagram: <https://www.instagram.com/revanth_kumar_j>
-- GitHub: <https://github.com/revanthkumarJ>
-- **No Twitter/X.**
-- Resume PDF: `src/Assets/Revanth_final_version.pdf` (current as of 2026-07-18)
+Email <jrevanth101@gmail.com> · [LinkedIn](https://www.linkedin.com/in/jilakararevanthkumar/) · [GitHub](https://github.com/revanthkumarJ) · [Instagram](https://www.instagram.com/revanth_kumar_j) · **no Twitter/X**. Resume PDF in `src/Assets/`.
 
 ---
 
-## 🖼️ Placeholder Images — IMPORTANT
+## Placeholder images
 
-The rebuild ships with **dummy/placeholder images everywhere** (hero photo, project screenshots, device frames). Revanth will replace them later with real assets:
+The site still ships some placeholder imagery. Every slot is a single entry in a data file, marked with a 🖼️ comment — keep it that way and never bury image paths in components. `ImageSlot` renders a labelled placeholder when `src` is `null`.
 
-- Every placeholder slot must be **clearly marked and easy to swap** (one obvious file path or data entry per image).
-- ✅ ExpenseTrackr featured image is REAL (`src/Assets/images/expense_tracker.png`, added 2026-07-18).
-- Wanted real assets eventually: high-res personal photo; Swipe Compose screens; Mifos before/after migration shots; ExpenseTrackr screens; device-framed mockups.
-- **ExpenseTrackr Play Store link:** keep as a **commented-out placeholder** in the project data — uncomment when the app is public.
+Real assets wanted: high-res personal photo, Compose screens, before/after migration shots, device-framed mockups.
 
 ---
 
-## 🏗️ Codebase Status
+## For future editors (human or AI)
 
-### Old site (pre-rebuild)
+1. Read this file and [CLAUDE.md](CLAUDE.md) before changing anything.
+2. The content facts above are user-confirmed. Don't "fix" them from older code — the old code is outdated.
+3. Numbers must be derived from real data. If you can't verify it, don't publish it.
+4. Follow the publishing rules for anything sourced from a private repository.
+5. `npm run build` is the validation step. Verify interactions with `playwright-core` against real Chrome — plain `chrome --headless` freezes Framer Motion mid-animation and screenshots counters at the wrong value.
+6. Update the "Codebase status" date stamps and these docs after major changes.
 
-- Create React App (react-scripts 5, React 17) + react-bootstrap + react-tsparticles + typewriter-effect — the widely-used "Soumyajit" purple template, customized.
-- Structure: `src/components/{Home,About,Experience,Projects,Achievements,Certificates,Resume}` + `style.css` (743 lines).
-- Known quirks: `Home.js` stacked Experience/Achievements/Resume on the home route *and* they existed as separate routes (duplicated content); Certificates route commented out.
-- **All old content data files remain the reference for copy/links** until fully ported.
-
-### New site (rebuilt 2026-07-18) ✅
-
-- **Stack:** Vite 6 + React 18 + Tailwind CSS 4 (`@tailwindcss/vite`, CSS-first config) + Framer Motion + Lenis smooth-scroll + react-icons. `playwright-core` (dev) for screenshot verification against installed Chrome.
-- **Layout of the code:**
-  - `src/data/content.js` — **ALL site content and image imports live here.** Edit this file to change copy, links, stats, projects. Placeholder images are marked with 🖼️ comments; ExpenseTrackr Play Store link is a commented block here.
-  - `src/index.css` — design tokens in `@theme` (colors: `ink`, `bright`, `body`, `violet`, `fuchsia`, `cyan`, `emerald`, `amber`; fonts: Space Grotesk display / Inter body) + utilities (`.glass`, `.glow-card`, `.text-gradient`, `.noise`, `.blob`, `.pulse-dot`).
-  - `src/ui/primitives.jsx` — `Reveal`, `Counter`, `TiltCard`, `Magnetic`, `SectionHeading`, `Monogram` (the RJ logo, drawn in SVG), `ImageSlot` (renders a labeled placeholder when `src` is null), `Chip`.
-  - `src/sections/` — `Nav` (scroll-spy + mobile menu), `Hero`, `About` (incl. live GitHub contribution calendar via `react-github-calendar`, username in `content.js`), `Experience` (scroll-drawn timeline + "Deep dive" expanders), `Projects` (4 featured tilt cards + grid), `Achievements`, `Writing` (Medium posts — update the `blog.posts` list in `content.js` when new articles publish; feed: medium.com/feed/@jrevanth101), `Testimonial`, `Contact`, `Footer`.
-  - `src/App.jsx` — Lenis setup + section order. `index.html` at repo root (Vite convention; fonts + OG meta here).
-- **Build:** `npm run dev` / `npm run build` (outputs `dist/`; Vercel auto-detects Vite). Verified: production build clean, zero console errors, nav/deep-dive/mobile-menu interactions tested via headless Chrome.
-- Old template assets remain in `src/Assets/` — several serve as project-card placeholder images until real screenshots arrive.
-
----
-
-## 🧭 For Future Editors (AI or human)
-
-1. Read this README fully before changing anything.
-2. Content facts above (dates, numbers, links, testimonial) are **user-confirmed** — don't "fix" them from older code, the old code is outdated.
-3. Keep placeholder image slots swappable; never bury image paths deep in components.
-4. Play Store links: show for every published app; ExpenseTrackr's stays commented until told otherwise.
-5. After major changes, update the "Codebase Status" section and the date stamps here.
+**Last updated:** 2026-09-17 — added `/experience/:slug` case studies, reordered the home page to lead with apps, re-verified the contribution numbers.

@@ -47,10 +47,10 @@ Routes: `/`, `/apps/:slug`, `/experience/:slug`, `/interview_preparation[/:cat/:
 
 Each company has **two** artefacts:
 
-1. **A detailed record** in the private repo `revanthkumarJ/work-records`
-   (cloned at `~/work-records`) — the complete, unscrubbed version, written as
-   interview preparation that stands alone if repo access is ever lost. Never
-   move these into this repository.
+1. **A detailed record**, kept in a separate private repository (cloned at
+   `~/work-records`) — the long-form version, written as interview preparation
+   that stands on its own if access to a source repo is ever lost. Never move
+   these into this repository.
 2. **A published page** at `/experience/<slug>` — the brief, scrubbed version.
 
 To add one: create `src/data/experience/<company>.js`, register it in
