@@ -27,3 +27,6 @@ yarn-error.log*
 
 Server/node_modules
 Server/config.jsdist
+
+# Claude Code skills live in ~/.claude — never commit them here
+.claude/

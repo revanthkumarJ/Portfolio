@@ -157,8 +157,9 @@ export const experience = [
     role: "SDE 1 — Android Developer",
     period: "Jun 15, 2026 — Present",
     current: true,
+    detailPath: "/experience/swipe",
     summary:
-      "Own end-to-end feature flows in the Swipe billing app while driving the large-scale Compose migration, build tooling, Remote Config, and reliability — 100+ merged PRs since converting to full-time.",
+      "Own end-to-end feature flows in the Swipe billing app while driving the large-scale Compose migration, build tooling, Remote Config and reliability. Since converting to full-time: 23 feature flows rebuilt in Compose and the legacy versions deleted, per-module Gradle boilerplate cut by ~80%, and most of the crash and performance work.",
     highlights: [
       "Introduced build-logic convention plugins and centralized navigation, cutting per-module build.gradle boilerplate ~80%.",
       "Led the final wave of the legacy XML → Jetpack Compose migration across settings, product, payment, and profile flows.",
@@ -175,8 +176,9 @@ export const experience = [
     company: "Swipe (YC S21)",
     role: "Android Developer Intern",
     period: "Dec 2025 — Jun 14, 2026",
+    detailPath: "/experience/swipe",
     summary:
-      "Joined as an Android intern on the Swipe billing app and shipped 119 merged PRs — migrating legacy XML screens to Jetpack Compose with fresh Figma designs, building new features, and hardening production reliability for thousands of businesses.",
+      "Joined as an Android intern on the Swipe billing app — migrating legacy XML screens to Jetpack Compose against fresh Figma designs, building new features across document creation, payments, tax compliance and the online store, and hardening production reliability for thousands of businesses.",
     highlights: [
       "Migrated core billing flows from XML to Jetpack Compose per new Figma designs — Onboarding, Bank & Transfer, Document Settings, Create Expense, Record Payment, Bills, and Company Details.",
       "Built Swipe AI bottom sheets for notes & terms in Create Document (with copy/feedback) and Compose-based in-app notifications.",
@@ -210,6 +212,7 @@ export const experience = [
     role: "Open Source Mobile Developer",
     period: "Nov 2024 — Present",
     current: true,
+    detailPath: "/experience/mifos-initiative",
     summary:
       "120+ PRs at a 98% merge rate across 5 production fintech repositories. Migrated 20+ modules to Kotlin Multiplatform in apps focused on financial inclusion.",
     highlights: [
@@ -230,6 +233,7 @@ export const experience = [
     company: "Mifos Initiative",
     role: "Mifos Summer of Code 2025 Intern",
     period: "Jun 2025 — Sep 2025",
+    detailPath: "/experience/mifos-initiative",
     summary:
       "Selected for the competitive MSoC program ($2,500 stipend) — 100+ PRs authored and 150+ reviewed. Led the Kotlin Multiplatform migration of android-client, the Mifos Field Officer app (52+ merged PRs).",
     highlights: [
@@ -248,13 +252,10 @@ export const experience = [
     company: "Mobile Byte Sensei",
     role: "Mobile Development Intern (KMP & CMP)",
     period: "Apr 2025 — Nov 2025",
+    detailPath: "/experience/mobile-byte-sensei",
     summary:
-      "Delivered 7 production-grade Kotlin Multiplatform apps — reusable UI components, file management, Firebase Analytics, and Crashlytics fixes in an Agile team.",
-    highlights: [
-      "Shipped Reels Downloader, Stories Downloader, and Byte Wallpaper to the Play Store.",
-      "Built reusable Compose Multiplatform components and CI/CD pipelines.",
-      "Resolved critical Crashlytics-reported issues in production.",
-    ],
+      "Eight Kotlin Multiplatform products on one shared foundation, three of them shipped to the Play Store. Built whole feature modules from scratch, a Ktorfit networking layer for a fintech lending app and a multiplatform analytics abstraction, localised two apps into 20+ languages, and fixed production crashes surfaced through Crashlytics.",
+    highlights: [],
     tech: ["Kotlin Multiplatform", "Compose Multiplatform", "Firebase", "CI/CD"],
     links: [
       { text: "Reels Downloader", url: "https://play.google.com/store/apps/details?id=com.sensei.social" },
@@ -433,9 +434,9 @@ export const github = {
 
 export const navLinks = [
   { label: "About", href: "#about" },
-  { label: "Work", href: "#projects" },
-  { label: "Experience", href: "#experience" },
   { label: "Apps", href: "#apps" },
+  { label: "Experience", href: "#experience" },
+  { label: "Work", href: "#projects" },
   { label: "Writing", href: "#writing" },
   { label: "Achievements", href: "#achievements" },
   { label: "Why Me", href: "#why" },

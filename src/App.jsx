@@ -4,6 +4,7 @@ import Lenis from "lenis";
 import InterviewHome from "./pages/interview/InterviewHome.jsx";
 import TopicPage from "./pages/interview/TopicPage.jsx";
 import AppRoute from "./pages/apps/AppRoute.jsx";
+import ExperienceRoute from "./pages/experience/ExperienceRoute.jsx";
 import Nav from "./sections/Nav.jsx";
 import Hero from "./sections/Hero.jsx";
 import About from "./sections/About.jsx";
@@ -53,9 +54,9 @@ function Home() {
       <main>
         <Hero />
         <About />
-        <Projects />
-        <Experience />
         <PlayStoreApps />
+        <Experience />
+        <Projects />
         <Writing />
         <Achievements />
         <Testimonial />
@@ -85,6 +86,7 @@ export default function App() {
         <Route path="/interview_preparation" element={<InterviewHome />} />
         <Route path="/interview_preparation/:categoryId/:topicId" element={<TopicPage />} />
         <Route path="/apps/:slug" element={<AppRoute />} />
+        <Route path="/experience/:slug" element={<ExperienceRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

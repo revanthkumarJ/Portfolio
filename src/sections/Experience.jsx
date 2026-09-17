@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Reveal, SectionHeading, Chip } from "../ui/primitives.jsx";
 import { experience, companyWebsites } from "../data/content.js";
-import { FiChevronDown, FiExternalLink } from "react-icons/fi";
+import { FiArrowRight, FiChevronDown, FiExternalLink } from "react-icons/fi";
 
 function ExperienceCard({ exp, index }) {
   const [open, setOpen] = useState(false);
@@ -76,7 +77,7 @@ function ExperienceCard({ exp, index }) {
           )}
         </AnimatePresence>
 
-        {(hasMore || exp.links.length > 0) && (
+        {(hasMore || exp.detailPath || exp.links.length > 0) && (
           <div className="mt-5 flex flex-wrap items-center gap-4">
             {hasMore && (
               <button
@@ -86,6 +87,15 @@ function ExperienceCard({ exp, index }) {
                 {open ? "Show less" : "Deep dive"}
                 <FiChevronDown className={`transition-transform ${open ? "rotate-180" : ""}`} />
               </button>
+            )}
+            {exp.detailPath && (
+              <Link
+                to={exp.detailPath}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-violet transition-colors hover:text-fuchsia"
+              >
+                Read the full case study
+                <FiArrowRight size={14} />
+              </Link>
             )}
             {exp.links.map((l) => (
               <a
