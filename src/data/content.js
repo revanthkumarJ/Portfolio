@@ -441,7 +441,7 @@ export const navLinks = [
   { label: "About", href: "#about" },
   { label: "Apps", href: "#apps" },
   { label: "Experience", href: "#experience" },
-  { label: "Work", href: "#projects" },
+  // { label: "Work", href: "#projects" }, // hidden with the Projects section
   { label: "Writing", href: "#writing" },
   { label: "Achievements", href: "#achievements" },
   { label: "Why Me", href: "#why" },

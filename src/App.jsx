@@ -8,7 +8,7 @@ import ExperienceRoute from "./pages/experience/ExperienceRoute.jsx";
 import Nav from "./sections/Nav.jsx";
 import Hero from "./sections/Hero.jsx";
 import About from "./sections/About.jsx";
-import Projects from "./sections/Projects.jsx";
+// import Projects from "./sections/Projects.jsx"; // hidden — see note below
 import Experience from "./sections/Experience.jsx";
 import PlayStoreApps from "./sections/PlayStoreApps.jsx";
 import Writing from "./sections/Writing.jsx";
@@ -56,7 +56,13 @@ function Home() {
         <About />
         <PlayStoreApps />
         <Experience />
-        <Projects />
+        {/* Work / Projects section is hidden for now — the shipped Play Store apps
+            and the company case studies carry this better at SDE 1 level.
+            To restore: uncomment the import above and this line, re-add the
+            "Work" link in content.js navLinks, point the Hero CTA back at
+            #projects, and renumber the sections below it (Writing 04 -> 05,
+            Achievements 05 -> 06, What I bring 06 -> 07, Contact 07 -> 08). */}
+        {/* <Projects /> */}
         <Writing />
         <Achievements />
         <Testimonial />

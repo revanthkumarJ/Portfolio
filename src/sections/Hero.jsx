@@ -80,7 +80,7 @@ export default function Hero() {
         <motion.div custom={3} variants={line} initial="hidden" animate="show" className="mt-10 flex flex-wrap items-center gap-4">
           <Magnetic>
             <a
-              href="#projects"
+              href="#apps"
               className="font-display inline-block rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 px-8 py-3.5 text-sm font-bold tracking-wide text-white shadow-[0_8px_40px_-8px_rgba(167,139,250,0.7)] transition-shadow hover:shadow-[0_8px_60px_-6px_rgba(232,121,249,0.8)]"
             >
               View my work

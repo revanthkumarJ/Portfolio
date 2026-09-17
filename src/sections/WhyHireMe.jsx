@@ -21,7 +21,7 @@ export default function WhyHireMe() {
     <section id="why" className="relative w-full px-5 py-28 md:px-10 md:py-36 xl:px-16">
       <div className="blob left-[-12%] top-[15%] h-[420px] w-[420px] bg-violet-600/15" />
 
-      <SectionHeading index="07" title="What I" accent="bring" />
+      <SectionHeading index="06" title="What I" accent="bring" />
 
       <Reveal>
         <p className="max-w-[62ch] text-lg leading-relaxed text-body md:text-xl">{whyHireMe.lead}</p>
