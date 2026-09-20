@@ -36,7 +36,7 @@ npm run preview
 
 ### Home page section order
 
-Hero → About → **Play Store apps** → **Experience** → **Work** → Writing → Achievements → Testimonial → Why hire me → Contact
+Hero → About → **Play Store apps** → **Experience** → Writing → Achievements → Testimonial → Why hire me → Contact
 
 Apps come before the writeups deliberately: the first thing after About should be something a visitor can download. Section headings are numbered `01`–`08` and **must be renumbered by hand if the order changes**.
 

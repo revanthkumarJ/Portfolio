@@ -6,6 +6,7 @@ import {
   FiChevronLeft,
   FiChevronRight,
   FiExternalLink,
+  FiFileText,
   FiShield,
 } from "react-icons/fi";
 import { IoLogoGooglePlaystore } from "react-icons/io5";
@@ -227,7 +228,6 @@ export default function AppCaseStudy({ app }) {
             {app.shortDescription}
           </p>
           <StoreStats
-            downloads={stats.downloads}
             rating={stats.rating}
             accent={app.accent}
             size="lg"
@@ -263,6 +263,17 @@ export default function AppCaseStudy({ app }) {
                 className={`inline-flex items-center gap-2 rounded-full border border-line px-6 py-3 text-sm font-medium text-body transition-colors hover:text-bright ${ac.hoverBorder}`}
               >
                 <FiShield size={16} /> Privacy policy <FiExternalLink size={13} />
+              </a>
+            )}
+            {/* Public write-up of how this app was built or shipped */}
+            {app.writeup && (
+              <a
+                href={app.writeup.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center gap-2 rounded-full border border-line px-6 py-3 text-sm font-medium text-body transition-colors hover:text-bright ${ac.hoverBorder}`}
+              >
+                <FiFileText size={16} /> {app.writeup.text} <FiExternalLink size={13} />
               </a>
             )}
           </div>

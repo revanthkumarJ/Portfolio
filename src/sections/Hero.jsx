@@ -45,8 +45,9 @@ export default function Hero() {
           animate="show"
           className="font-display max-w-4xl text-3xl font-bold leading-[1.12] tracking-tight text-bright sm:text-4xl md:text-5xl 2xl:text-6xl"
         >
-          I build <span className="text-gradient">production Android</span> &amp; Kotlin Multiplatform apps used by
-          thousands of businesses.
+          {identity.headline.lead}
+          <span className="text-gradient">{identity.headline.accent}</span>
+          {identity.headline.tail}
         </motion.h1>
 
         {/* Identity lines */}

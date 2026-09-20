@@ -39,6 +39,10 @@ export const swipe = {
       title: "Convention plugins for the Gradle build",
       scale: "~80% less module boilerplate",
       body: "Every feature module carried a near-identical build script — the same Android config, Compose setup and dependency block, copied per module and drifting apart over time. I moved it into Gradle convention plugins so a module declares its plugin and little else, and centralised navigation arguments in the same change, which is where typos used to become runtime crashes.",
+      link: {
+        text: "I wrote up how",
+        url: "https://medium.com/@jrevanth101/how-i-shrunk-every-feature-modules-build-gradle-to-12-lines-c6341a73921f",
+      },
     },
     {
       icon: "layers",

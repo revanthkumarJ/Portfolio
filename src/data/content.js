@@ -9,14 +9,6 @@
 import profileImg from "../Assets/revanth.png"; // 🖼️ swap: about photo
 // ✅ HERO IMAGE — workspace portrait (4:5), right side of the headline
 import heroWorkspaceImg from "../Assets/main_banner_image.jpg";
-import mifosMobileImg from "../Assets/mifos_mobile.png"; // 🖼️ swap: Mifos Mobile shots
-import androidClientImg from "../Assets/android_studio.png"; // 🖼️ swap: Android-Client shots
-import abhiyanthImg from "../Assets/Projects/abhiyanth.png";
-import memeImg from "../Assets/meme.png";
-import swipeAssignImg from "../Assets/swipe_assign.png";
-import kisanImg from "../Assets/Projects/kisan.png";
-import financeImg from "../Assets/Projects/Finance.png";
-import departmentImg from "../Assets/Projects/department.png";
 // ✅ Play Store feature graphics (1024×500) — live apps
 import psExpenseTrackrImg from "../Assets/images/playstore_expense_tracker.png";
 import psPocketTunesImg from "../Assets/pocketTunes/banner.png";
@@ -30,9 +22,13 @@ export const identity = {
   name: "Revanth Kumar Jilakara",
   shortName: "Revanth",
   monogram: "RJ",
-  headline: "I build production Android & Kotlin Multiplatform apps used by thousands of businesses.",
-  subline: "SDE 1 @ Swipe (YC S21) · Mifos open-source mentor",
-  roles: ["Android Engineer", "Kotlin Multiplatform Specialist", "Open-Source Mentor"],
+  // Rendered by the Hero. Split so the accent phrase can carry the gradient
+  // without the headline being duplicated as JSX.
+  headline: {
+    lead: "I build ",
+    accent: "production Android",
+    tail: " & Kotlin Multiplatform apps used by thousands of businesses.",
+  },
   location: "Andhra Pradesh, India",
   openToOpportunities: true,
   email: "jrevanth101@gmail.com",
@@ -41,17 +37,28 @@ export const identity = {
   heroImage: heroWorkspaceImg, // 🖼️ 4:5 workspace portrait (null → placeholder)
 };
 
+// What I'm open to — rendered next to the Contact CTA so a recruiter does not
+// have to write in and ask. Availability/notice is deliberately not listed.
+export const openTo = [
+  { label: "Roles", value: "Android · Kotlin Multiplatform" },
+  { label: "Locations", value: "Hyderabad · Bangalore" },
+];
+
 export const socials = [
   { name: "GitHub", url: "https://github.com/revanthkumarJ", icon: "github" },
   { name: "LinkedIn", url: "https://www.linkedin.com/in/jilakararevanthkumar/", icon: "linkedin" },
   { name: "Email", url: "mailto:jrevanth101@gmail.com", icon: "mail" },
 ];
 
+// Ordered: what I shipped, what I migrated, what I contributed, what I reviewed.
+// The 98% merge rate and the DSA totals are still on the page — in the About
+// paragraph and the Competitive profiles cards — but they lost their slot here
+// to production work, which is what the headline above them claims.
 export const heroStats = [
+  { value: 3, label: "Personal apps shipped to Google Play" },
+  { value: 23, label: "Feature flows rebuilt at Swipe" },
   { value: 120, suffix: "+", label: "Open-source PRs merged" },
-  { value: 98, suffix: "%", label: "PR merge rate" },
-  { value: 300, suffix: "+", label: "Contributor PRs reviewed" },
-  { value: 1000, suffix: "+", label: "DSA problems solved" },
+  { value: 365, suffix: "+", label: "Open-source contributor PRs reviewed" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -67,6 +74,7 @@ export const playStore = {
       image: psExpenseTrackrImg,
       accent: "emerald",
       ...playStats.expensetrackr,
+      signal: "3 platforms · 16 modules",
       url: "https://play.google.com/store/apps/details?id=com.revanthdev.expensetrackr",
       detail: "/apps/expensetrackr", // 🔗 full details page
     },
@@ -78,6 +86,7 @@ export const playStore = {
       image: psPocketTunesImg,
       accent: "emerald",
       ...playStats.pockettunes,
+      signal: "17 modules · 18 languages",
       url: "https://play.google.com/store/apps/details?id=com.revanthapps.pocketunes",
       detail: "/apps/pockettunes", // 🔗 full case study page
     },
@@ -89,6 +98,7 @@ export const playStore = {
       image: psStatusSaverImg,
       accent: "cyan",
       ...playStats.statussaver,
+      signal: "No internet permission",
       url: "https://play.google.com/store/apps/details?id=com.revanthapps.statussavernoads",
       detail: "/apps/statussaver", // 🔗 full details page
     },
@@ -97,8 +107,8 @@ export const playStore = {
 
 export const about = {
   paragraphs: [
-    "I'm a Software Engineer from Andhra Pradesh, India, specializing in Android and Kotlin Multiplatform development. Currently SDE 1 – Android Developer at Swipe (YC S21), where I was promoted from intern after migrating 70+ screens to Jetpack Compose and restructuring a monolith into multi-module Clean Architecture.",
-    "I'm an active contributor and mentor at the Mifos Initiative — 120+ merged PRs at a 98% merge rate, 300+ contributor PRs reviewed, and 20+ modules migrated to Kotlin Multiplatform across production fintech apps used worldwide. I was a Mifos Summer of Code 2025 intern and now mentor contributors for GSoC and Code4GovTech.",
+    "I'm a Software Engineer from Andhra Pradesh, India, specializing in Android and Kotlin Multiplatform development. Currently SDE 1 – Android Developer at Swipe (YC S21), promoted from intern after rebuilding 23 feature flows in Jetpack Compose and deleting the legacy versions behind them, and moving the build onto Gradle convention plugins that cut per-module boilerplate by ~80%.",
+    "I'm an active contributor and mentor at the Mifos Initiative — 120+ merged PRs at a 98% merge rate, 365+ contributor PRs reviewed, and 20+ modules migrated to Kotlin Multiplatform across production fintech apps used worldwide. I was a Mifos Summer of Code 2025 intern and now mentor contributors for GSoC and Code4GovTech.",
     "I hold a B.Tech in CSE from RGUKT RK Valley and qualified GATE CS 2025. Off the keyboard: badminton, chess, and poking at new tools.",
   ],
   quote: "Consistency and curiosity are the keys to growth.",
@@ -109,23 +119,50 @@ export const techStack = {
   primary: {
     title: "Android & Kotlin Multiplatform",
     subtitle: "My core craft — what I ship to production every day",
-    items: [
-      "Kotlin", "Jetpack Compose", "Kotlin Multiplatform", "Compose Multiplatform",
-      "Coroutines & Flow", "MVI", "Clean Architecture", "Multi-module Architecture",
-      "Room (KMP)", "SQLDelight", "DataStore", "Koin", "Dagger / Hilt", "Ktor / Ktorfit", "Retrofit", "WorkManager",
-      "Compose Navigation", "Material 3", "kotlinx.serialization",
-      "Gradle Convention Plugins", "R8 / Play Store Releases",
-      "Firebase Crashlytics & Analytics", "Lottie", "GitHub Actions (CI/CD)",
+    // Grouped the way an Android codebase is actually layered, so the shape of
+    // the list says something rather than just its length.
+    groups: [
+      {
+        title: "Language & UI",
+        items: [
+          "Kotlin", "Jetpack Compose", "Kotlin Multiplatform", "Compose Multiplatform",
+          "Material 3", "Compose Navigation", "Lottie",
+        ],
+      },
+      {
+        title: "Architecture & State",
+        items: [
+          "MVI", "Clean Architecture", "Multi-module Architecture",
+          "Coroutines & Flow", "Koin", "Dagger / Hilt",
+        ],
+      },
+      {
+        title: "Data & Networking",
+        items: [
+          "Room (KMP)", "SQLDelight", "DataStore", "Ktor / Ktorfit",
+          "Retrofit", "kotlinx.serialization", "WorkManager",
+        ],
+      },
+      {
+        title: "Build, Release & Reliability",
+        items: [
+          "Gradle Convention Plugins", "R8 / Play Store Releases",
+          "GitHub Actions (CI/CD)", "Firebase Crashlytics & Analytics",
+        ],
+      },
     ],
   },
+  // States the hierarchy in words, since otherwise it is carried only by the
+  // smaller, dimmer styling of the secondary cards.
+  secondaryNote: "Comfortable in — not specialised in.",
   secondary: [
     {
       title: "Web & Backend",
-      items: ["React", "JavaScript", "TypeScript", "Node.js", "Express", "Tailwind CSS", "Firebase", "MongoDB", "MySQL"],
+      items: ["React", "JavaScript", "TypeScript", "Node.js", "Express", "Tailwind CSS", "MongoDB", "MySQL"],
     },
     {
       title: "Languages & Tools",
-      items: ["Java", "Python", "C", "Git & GitHub", "Postman", "Figma-to-UI"],
+      items: ["Java", "Python", "Git & GitHub", "Postman"],
     },
   ],
 };
@@ -201,7 +238,7 @@ export const experience = [
       "Mentoring open-source contributors: reviewing PRs, running standups, conducting GSoC and Code4GovTech interviews, and guiding Kotlin Multiplatform architecture discussions.",
     highlights: [
       "Conduct interviews for Google Summer of Code and Code4GovTech.",
-      "Review contributor pull requests across community projects (300+ reviewed).",
+      "Review contributor pull requests across community projects (365+ reviewed).",
       "Run standups and guide mobile-architecture discussions.",
       "Help new contributors onboard into the Mifos ecosystem.",
     ],
@@ -256,7 +293,12 @@ export const experience = [
     detailPath: "/experience/mobile-byte-sensei",
     summary:
       "Eight Kotlin Multiplatform products on one shared foundation, three of them shipped to the Play Store. Built whole feature modules from scratch, a Ktorfit networking layer for a fintech lending app and a multiplatform analytics abstraction, localised two apps into 20+ languages, and fixed production crashes surfaced through Crashlytics.",
-    highlights: [],
+    highlights: [
+      "Built a Ktorfit networking layer from zero for a fintech lending app, plus its passcode and session-gating security boundary.",
+      "Designed a multiplatform analytics abstraction as its own core module, so feature code never touched a vendor SDK directly.",
+      "Fixed a production crash inside the analytics path itself — a version-gated field was killing the app on exactly the older devices it was meant to measure.",
+      "Took an app from nothing to the Play Store, and localised two codebases into 20+ languages with RTL support.",
+    ],
     tech: ["Kotlin Multiplatform", "Compose Multiplatform", "Firebase", "CI/CD"],
     links: [
       { text: "Reels Downloader", url: "https://play.google.com/store/apps/details?id=com.sensei.social" },
@@ -267,91 +309,15 @@ export const experience = [
 ];
 
 // ---------------------------------------------------------------------------
-// PROJECTS — one unified grid, most significant first.
-export const gridProjects = [
-  {
-    title: "Mifos Mobile — KMP Migration",
-    description:
-      "Migrated 7 modules of a worldwide self-service banking app to Kotlin Multiplatform & Compose Multiplatform — Android, iOS, Web/WASM, and Desktop. 45+ merged PRs.",
-    tech: ["KMP", "CMP", "Ktor", "Koin"],
-    image: mifosMobileImg,
-    links: [
-      { text: "GitHub", url: "https://github.com/openMF/mifos-mobile", kind: "github" },
-      { text: "PRs", url: "https://github.com/openMF/mifos-mobile/pulls?q=is%3Amerged+is%3Apr+author%3ArevanthkumarJ+", kind: "prs" },
-      { text: "Play Store", url: "https://play.google.com/store/apps/details?id=org.mifos.mobile", kind: "playstore" },
-    ],
-  },
-  {
-    title: "Android Client — KMP Migration",
-    description:
-      "52 merged PRs migrating 10 modules of the Mifos Field Officer app to KMP/CMP — Figma redesigns, type-safe navigation, and offline-first flows.",
-    tech: ["KMP", "CMP", "Room", "MVI"],
-    image: androidClientImg,
-    links: [
-      { text: "GitHub", url: "https://github.com/openMF/android-client", kind: "github" },
-      { text: "PRs", url: "https://github.com/openMF/android-client/pulls?q=is%3Amerged+is%3Apr+author%3ArevanthkumarJ+", kind: "prs" },
-      { text: "Play Store", url: "https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid", kind: "playstore" },
-    ],
-  },
-  {
-    title: "Abhiyanth Fest Platform",
-    description:
-      "Led the frontend team for the Abhiyanth 2K25 college-fest platform — React, Redux, Firebase auth/hosting, CashFree payments, and a full admin panel.",
-    tech: ["React", "Redux", "Firebase", "Material UI"],
-    image: abhiyanthImg,
-    links: [{ text: "GitHub", url: "https://github.com/revanthkumarJ/abhiyanth-client", kind: "github" }],
-  },
-  {
-    title: "Meme Studio",
-    description: "Kotlin Multiplatform meme editor with templates and custom editing, built on Compose Multiplatform.",
-    tech: ["KMP", "CMP"],
-    image: memeImg,
-    links: [{ text: "GitHub", url: "https://github.com/revanthkumarJ/MemeStudio", kind: "github" }],
-  },
-  {
-    title: "Swipe Assignment App",
-    description: "Modern Android app — onboarding, product listing with search, offline-first Room sync, theming.",
-    tech: ["Kotlin", "Room", "Retrofit"],
-    image: swipeAssignImg,
-    links: [{ text: "GitHub", url: "https://github.com/revanthkumarJ/swipe-assignment", kind: "github" }],
-  },
-  {
-    title: "KisanConnect",
-    description: "Platform connecting farmers and customers — role-based UIs with React, Express, and TypeScript.",
-    tech: ["React", "Express", "TypeScript"],
-    image: kisanImg,
-    links: [
-      { text: "Client", url: "https://github.com/revanthkumarJ/kisan_connect_client", kind: "github" },
-      { text: "API", url: "https://github.com/revanthkumarJ/Kisan_connect_API", kind: "github" },
-    ],
-  },
-  {
-    title: "Finance Tracker (Web)",
-    description: "Node.js + TypeScript API with a React/MUI frontend to manage and analyze bank statements.",
-    tech: ["Node.js", "TypeScript", "React"],
-    image: financeImg,
-    links: [
-      { text: "Client", url: "https://github.com/revanthkumarJ/Finance-Client", kind: "github" },
-      { text: "API", url: "https://github.com/revanthkumarJ/Finance-API", kind: "github" },
-    ],
-  },
-  {
-    title: "Dept. Resource Manager",
-    description: "Kotlin app managing announcements, complaints, and timetables for students, faculty, and HOD.",
-    tech: ["Kotlin", "Firebase"],
-    image: departmentImg,
-    links: [{ text: "GitHub", url: "https://github.com/revanthkumarJ/Departmental-Resource-Management-App", kind: "github" }],
-  },
-];
-
-// ---------------------------------------------------------------------------
+// Only things decided by someone else, or not stated anywhere else on the page.
+// PR counts and the DSA numbers deliberately live in the hero stats and the
+// Competitive profiles cards instead — repeating them here read as padding.
 export const achievements = [
   { title: "C4GT 2026 Mentor", detail: "Mentor for the Mifos Pay project under Code for GovTech 2026.", tag: "Mentorship" },
   { title: "Mifos Summer of Code 2025", detail: "Selected for the competitive program with a $2,500 stipend.", tag: "Open Source" },
-  { title: "120+ Open-Source PRs", detail: "Merged across production repos at a 98% merge rate.", tag: "Open Source" },
+  { title: "Claude for Open Source", detail: "Selected by Anthropic for six months of Claude Max (20×) access for open-source work.", tag: "Open Source" },
   { title: "GATE CS 2025", detail: "Qualified — strong command of core CS fundamentals.", tag: "Academics" },
-  { title: "LeetCode Knight", detail: "800+ problems solved with a consistent contest rating.", tag: "DSA" },
-  { title: "GFG Institute Rank 1", detail: "1000+ problems — first among all institute peers.", tag: "DSA" },
+  { title: "B.Tech, Computer Science", detail: "RGUKT RK Valley — admitted through the state-wide entrance process.", tag: "Academics" },
 ];
 
 export const testimonial = {
@@ -393,7 +359,7 @@ export const whyHireMe = {
       icon: "users",
       title: "Open source",
       body:
-        "Review and maintainer experience at a scale most engineers don't get early: 365 pull requests reviewed across 35 contributors in the Mifos mobile ecosystem, plus mentoring and interviewing for Google Summer of Code and Code4GovTech.",
+        "Review and maintainer experience at a scale most engineers don't get early: 365+ pull requests reviewed across 35 contributors in the Mifos mobile ecosystem, plus mentoring and interviewing for Google Summer of Code and Code4GovTech.",
       link: { text: "Reviews I've left", href: "/experience/mifos-mentor" },
     },
   ],
@@ -441,7 +407,6 @@ export const navLinks = [
   { label: "About", href: "#about" },
   { label: "Apps", href: "#apps" },
   { label: "Experience", href: "#experience" },
-  // { label: "Work", href: "#projects" }, // hidden with the Projects section
   { label: "Writing", href: "#writing" },
   { label: "Achievements", href: "#achievements" },
   { label: "Why Me", href: "#why" },

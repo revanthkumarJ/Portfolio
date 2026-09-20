@@ -38,7 +38,7 @@ function AppCard({ app }) {
             <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent" />
 
             <StoreStats
-              downloads={app.downloads}
+              note={app.signal}
               rating={app.rating}
               accent={app.accent}
               className="absolute bottom-3 left-3"

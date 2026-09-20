@@ -454,6 +454,17 @@ export default function ExperienceCaseStudy({ entry }) {
                     </div>
                   </div>
                   <p className="mt-5 text-sm leading-relaxed text-body">{h.body}</p>
+                  {/* Optional public write-up backing this claim */}
+                  {h.link && (
+                    <a
+                      href={h.link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`mt-4 inline-flex items-center gap-1.5 text-sm font-semibold transition-opacity hover:opacity-80 ${ac.text}`}
+                    >
+                      {h.link.text} <FiExternalLink size={13} />
+                    </a>
+                  )}
                 </article>
               </Reveal>
             );

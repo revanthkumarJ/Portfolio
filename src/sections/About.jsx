@@ -54,18 +54,33 @@ export default function About() {
               </div>
               <span className="text-sm text-body/70">{techStack.primary.subtitle}</span>
             </div>
-            <div className="mt-5 flex flex-wrap gap-2.5">
-              {techStack.primary.items.map((t) => (
-                <Chip key={t} className="!border-violet/30 !bg-violet/[0.08] !px-4 !py-1.5 !text-sm !text-bright/90">
-                  {t}
-                </Chip>
+            <div className="mt-7 grid gap-7 sm:grid-cols-2">
+              {techStack.primary.groups.map((group) => (
+                <div key={group.title}>
+                  <div className="font-display mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-body/70">
+                    {group.title}
+                  </div>
+                  <div className="flex flex-wrap gap-2.5">
+                    {group.items.map((t) => (
+                      <Chip
+                        key={t}
+                        className="!border-violet/30 !bg-violet/[0.08] !px-4 !py-1.5 !text-sm !text-bright/90"
+                      >
+                        {t}
+                      </Chip>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         </Reveal>
 
         {/* Secondary skills */}
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
+        <Reveal>
+          <p className="mt-8 text-sm text-body/70">{techStack.secondaryNote}</p>
+        </Reveal>
+        <div className="mt-4 grid gap-6 md:grid-cols-2">
           {techStack.secondary.map((group, gi) => (
             <Reveal key={group.title} delay={gi * 0.1}>
               <div className="glow-card glass h-full rounded-2xl p-6 opacity-90">

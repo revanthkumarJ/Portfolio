@@ -38,6 +38,12 @@ export const expenseTrackr = {
 
   banner,
 
+  // Public write-up of the release process behind this app.
+  writeup: {
+    text: "How I ship to Play",
+    url: "https://medium.com/@jrevanth101/from-jetpack-compose-app-to-play-store-complete-guide-signing-testing-release-a4a92a6dd3b0",
+  },
+
   meta: [
     { label: "Category", value: "Finance" },
     { label: "Version", value: "1.0.7" },

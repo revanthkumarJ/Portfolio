@@ -11,12 +11,12 @@ export const mifosMentor = {
   eyebrow: "Experience · Mentoring",
   titleLead: "I review more code",
   titleAccent: "than I write",
-  tagline: "365 pull requests reviewed across the Mifos mobile apps",
+  tagline: "365+ pull requests reviewed across the Mifos mobile apps",
   summary:
     "I started at Mifos as an outside contributor waiting on review. Now I'm on the other side of it — conducting Google Summer of Code and Code4GovTech interviews, running standups, and reviewing contributor pull requests across seven repositories. Reviewing three times as much as I author has taught me more about architecture than writing ever did: you can ship working code without being able to say why it's right, and review removes that option.",
 
   stats: [
-    { value: 365, label: "Pull requests reviewed" },
+    { value: 365, suffix: "+", label: "Pull requests reviewed" },
     { value: 35, label: "Contributors mentored" },
     { value: 357, label: "Review comments left" },
     { value: 7, label: "Repositories covered" },
@@ -234,7 +234,7 @@ export const mifosMentor = {
 
   links: [
     {
-      text: "All 365 reviews",
+      text: "Every review, on GitHub",
       url: "https://github.com/pulls?q=is%3Apr+reviewed-by%3ArevanthKumarJ+org%3AopenMF+",
     },
     { text: "My openMF PRs", url: "https://github.com/pulls?q=is%3Apr+author%3ArevanthKumarJ+org%3AopenMF+" },

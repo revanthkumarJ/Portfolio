@@ -1,6 +1,6 @@
 import React from "react";
 import { Reveal, SectionHeading, Magnetic } from "../ui/primitives.jsx";
-import { identity, socials } from "../data/content.js";
+import { identity, socials, openTo } from "../data/content.js";
 import { FiGithub, FiLinkedin, FiInstagram, FiMail } from "react-icons/fi";
 
 const socialIcons = { github: FiGithub, linkedin: FiLinkedin, instagram: FiInstagram, mail: FiMail };
@@ -23,6 +23,20 @@ export default function Contact() {
           Whether it's a production Android app, a Kotlin Multiplatform migration, or an open-source collaboration —
           my inbox is always open.
         </p>
+      </Reveal>
+
+      {/* The concrete part — so nobody has to write in to find out */}
+      <Reveal delay={0.08}>
+        <dl className="mt-9 flex flex-wrap gap-x-14 gap-y-6 border-l-2 border-violet/50 pl-6">
+          {openTo.map((item) => (
+            <div key={item.label}>
+              <dt className="font-display text-xs font-semibold uppercase tracking-[0.18em] text-body/60">
+                {item.label}
+              </dt>
+              <dd className="font-display mt-1.5 text-lg font-bold text-bright md:text-xl">{item.value}</dd>
+            </div>
+          ))}
+        </dl>
       </Reveal>
 
       <Reveal delay={0.15}>
