@@ -112,6 +112,10 @@ export const swipeWork = {
       "note": "Removed unneeded permissions and redundant network calls; centralised preference access"
     },
     {
+      "area": "App integrity on sign-in",
+      "note": "Play Integrity attestation attached to sign-in, so the backend can verify a genuine install"
+    },
+    {
       "area": "Build tooling & module boilerplate",
       "note": "Gradle convention plugins and centralised navigation arguments — ~80% less per-module boilerplate"
     }
@@ -119,7 +123,7 @@ export const swipeWork = {
   "crash": [
     {
       "area": "Crashlytics-surfaced crash fixes",
-      "note": "Production crashes traced from Crashlytics — unguarded division, missing fields, unescaped characters"
+      "note": "Production crashes traced from Crashlytics — unguarded division, missing or null fields, unescaped characters, work outliving its screen"
     },
     {
       "area": "Graceful degradation on backend failure",

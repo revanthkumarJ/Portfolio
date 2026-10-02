@@ -20,9 +20,9 @@ export const swipe = {
 
   stats: [
     { value: 25, label: "Feature flows rebuilt in Jetpack Compose" },
-    { value: 10, label: "Legacy flows and feature flags deleted" },
+    { value: 12, label: "Legacy flows and feature flags deleted" },
     { value: 80, suffix: "%", label: "Less per-module Gradle boilerplate" },
-    { value: 10, label: "Production crashes resolved" },
+    { value: 12, label: "Production crashes resolved" },
   ],
 
   meta: [
@@ -53,7 +53,7 @@ export const swipe = {
     {
       icon: "scissors",
       title: "Then actually finishing it",
-      scale: "4 flags · 6 legacy flows deleted",
+      scale: "5 flags · 7 legacy flows deleted",
       body: "A feature flag at full rollout for months is not a safety net — it is an untested branch in every code path and two sets of bugs nobody can tell apart. Once each migrated flow was stable I deleted the flag and the XML screens, layouts and adapters behind it. Every one of these landed after I converted, because deletion is invisible on an intern's scorecard and unavoidable on an owner's.",
     },
     {
@@ -66,7 +66,7 @@ export const swipe = {
       icon: "bug",
       title: "Reliability, including a bug no client could fix",
       scale: "Crashes & resilience",
-      body: "Document numbers could collide when two devices created invoices at the same moment. Client-generated sequence numbers don't survive concurrency and no amount of local locking fixes it — that one had to be resolved server-side. Alongside it: resolving the production crash backlog from Crashlytics, and making the app degrade rather than dead-end when an external government tax portal is unavailable mid-onboarding.",
+      body: "Document numbers could collide when two devices created invoices at the same moment. Client-generated sequence numbers don't survive concurrency and no amount of local locking fixes it — that one had to be resolved server-side. Alongside it: resolving the production crash backlog from Crashlytics, making the app degrade rather than dead-end when an external government tax portal is unavailable mid-onboarding, and adding Play Integrity attestation to sign-in so the backend can tell a genuine install from a tampered one.",
     },
     {
       icon: "globe",

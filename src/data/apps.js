@@ -28,6 +28,7 @@ import {
 import { pocketTunes } from "./pocketTunes.js";
 import { expenseTrackr } from "./expenseTrackr.js";
 import { statusSaver } from "./statusSaver.js";
+import { devClash } from "./devClash.js";
 
 // Feature-card icons, referenced by the `icon` string in each app's features.
 export const featureIcons = {
@@ -50,7 +51,7 @@ export const featureIcons = {
   sparkles: FiStar, // fallback
 };
 
-export const apps = [pocketTunes, expenseTrackr, statusSaver];
+export const apps = [statusSaver, pocketTunes, expenseTrackr, devClash];
 
 export const appsBySlug = Object.fromEntries(apps.map((a) => [a.slug, a]));
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { FiLayers, FiStar } from "react-icons/fi";
+import { FiDownload, FiLayers, FiStar } from "react-icons/fi";
 
 /* ---------------- Reveal: fade+rise on scroll into view ---------------- */
 export function Reveal({ children, delay = 0, y = 28, className = "", once = true }) {
@@ -189,8 +189,8 @@ const STAT_ACCENT = {
    `note` is a one-line engineering fact — install counts are deliberately not
    shown: they judge the apps as products on the one axis that says least about
    the work. A rating is quality signal, so it stays. */
-export function StoreStats({ note, rating, accent = "violet", size = "sm", className = "" }) {
-  if (!note && !rating) return null;
+export function StoreStats({ note, downloads, rating, accent = "violet", size = "sm", className = "" }) {
+  if (!note && !downloads && !rating) return null;
 
   const tone = STAT_ACCENT[accent] || STAT_ACCENT.violet;
   const big = size === "lg";
@@ -201,10 +201,17 @@ export function StoreStats({ note, rating, accent = "violet", size = "sm", class
 
   return (
     <div className={`flex flex-wrap items-center gap-2 ${className}`}>
+      {/* On phone-width cards the note gives way so installs and rating fit one row */}
       {note && (
-        <span className={pill}>
+        <span className={big ? pill : `${pill} max-sm:hidden`}>
           <FiLayers className={tone} size={icon} />
           {note}
+        </span>
+      )}
+      {downloads && (
+        <span className={pill}>
+          <FiDownload className={tone} size={icon} />
+          {downloads} installs
         </span>
       )}
       {rating && (

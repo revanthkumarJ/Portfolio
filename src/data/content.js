@@ -12,7 +12,8 @@ import heroWorkspaceImg from "../Assets/main_banner_image.jpg";
 // ✅ Play Store feature graphics (1024×500) — live apps
 import psExpenseTrackrImg from "../Assets/images/playstore_expense_tracker.png";
 import psPocketTunesImg from "../Assets/pocketTunes/banner.png";
-import psStatusSaverImg from "../Assets/images/playstore_status_saver.png";
+import psStatusSaverImg from "../Assets/images/playstore_status_saver.webp";
+import psDevClashImg from "../Assets/devClash/banner.png";
 
 import resumePdf from "../Assets/Revanth_final_version.pdf";
 import { playStats } from "./playStats.js";
@@ -55,7 +56,7 @@ export const socials = [
 // paragraph and the Competitive profiles cards — but they lost their slot here
 // to production work, which is what the headline above them claims.
 export const heroStats = [
-  { value: 3, label: "Personal apps shipped to Google Play" },
+  { value: 4, label: "Personal apps shipped to Google Play" },
   { value: 25, label: "Feature flows rebuilt at Swipe" },
   { value: 120, suffix: "+", label: "Open-source PRs merged" },
   { value: 365, suffix: "+", label: "Open-source contributor PRs reviewed" },
@@ -63,20 +64,21 @@ export const heroStats = [
 
 // ---------------------------------------------------------------------------
 // PLAY STORE APPS — live, published apps. Shown right after About.
+// Ordered by installs, most first (playStats.js holds the numbers).
 export const playStore = {
   developerUrl: "https://play.google.com/store/apps/dev?id=5399113798198807031",
   apps: [
     {
-      name: "ExpenseTrackr",
-      tagline: "Track every expense. Take control of your money.",
-      blurb: "Offline, private personal-finance tracker with smart analytics, budgets, categories, app lock, and Google AdMob monetization.",
-      highlights: ["100% Offline", "PIN & Biometric Lock", "Smart Analytics", "Google AdMob"],
-      image: psExpenseTrackrImg,
-      accent: "emerald",
-      ...playStats.expensetrackr,
-      signal: "3 platforms · 16 modules",
-      url: "https://play.google.com/store/apps/details?id=com.revanthdev.expensetrackr",
-      detail: "/apps/expensetrackr", // 🔗 full details page
+      name: "Status Saver",
+      tagline: "No ads. Just save.",
+      blurb: "Save WhatsApp statuses — images & videos — with a built-in gallery and auto refresh. Private, no ads.",
+      highlights: ["No Ads", "Images & Videos", "Media Stays on Device"],
+      image: psStatusSaverImg,
+      accent: "cyan",
+      ...playStats.statussaver,
+      signal: "No ads · 25 languages",
+      url: "https://play.google.com/store/apps/details?id=com.revanthapps.statussavernoads",
+      detail: "/apps/statussaver", // 🔗 full details page
     },
     {
       name: "Pocket Tunes",
@@ -91,16 +93,28 @@ export const playStore = {
       detail: "/apps/pockettunes", // 🔗 full case study page
     },
     {
-      name: "Status Saver",
-      tagline: "No ads. Just save.",
-      blurb: "Save WhatsApp statuses — images & videos — with a built-in gallery and auto refresh. Private, no ads.",
-      highlights: ["No Ads", "Images & Videos", "100% Private"],
-      image: psStatusSaverImg,
-      accent: "cyan",
-      ...playStats.statussaver,
-      signal: "No internet permission",
-      url: "https://play.google.com/store/apps/details?id=com.revanthapps.statussavernoads",
-      detail: "/apps/statussaver", // 🔗 full details page
+      name: "ExpenseTrackr",
+      tagline: "Track every expense. Take control of your money.",
+      blurb: "Offline, private personal-finance tracker with smart analytics, budgets, categories, app lock, and Google AdMob monetization.",
+      highlights: ["100% Offline", "PIN & Biometric Lock", "Smart Analytics", "Google AdMob"],
+      image: psExpenseTrackrImg,
+      accent: "emerald",
+      ...playStats.expensetrackr,
+      signal: "3 platforms · 16 modules",
+      url: "https://play.google.com/store/apps/details?id=com.revanthdev.expensetrackr",
+      detail: "/apps/expensetrackr", // 🔗 full details page
+    },
+    {
+      name: "Dev Clash",
+      tagline: "Real developer data. Meaningful comparisons.",
+      blurb: "Compare two developers on public GitHub, LeetCode and Codeforces data — scored across independent categories with no overall winner, and shared as a card or PDF.",
+      highlights: ["Kotlin Multiplatform", "GitHub · LeetCode · Codeforces", "No Overall Winner", "No Account"],
+      image: psDevClashImg,
+      accent: "violet",
+      ...playStats.devclash,
+      signal: "Android + iOS · 14 modules",
+      url: "https://play.google.com/store/apps/details?id=com.revanthdev.devclash",
+      detail: "/apps/devclash", // 🔗 full details page
     },
   ],
 };
@@ -196,7 +210,7 @@ export const experience = [
     current: true,
     detailPath: "/experience/swipe",
     summary:
-      "Own end-to-end feature flows in the Swipe billing app while driving the large-scale Compose migration, build tooling, Remote Config and reliability. Since converting to full-time: 19 feature flows rebuilt in Compose, 10 legacy flows and feature flags deleted, per-module Gradle boilerplate cut by ~80%, multi-currency added across documents and expenses, and most of the crash and performance work.",
+      "Own end-to-end feature flows in the Swipe billing app while driving the large-scale Compose migration, build tooling, Remote Config and reliability. Since converting to full-time: 19 feature flows rebuilt in Compose, 12 legacy flows and feature flags deleted, per-module Gradle boilerplate cut by ~80%, multi-currency added across documents and expenses, Play Integrity attestation added to sign-in, and most of the crash and performance work.",
     highlights: [
       "Introduced build-logic convention plugins and centralized navigation, cutting per-module build.gradle boilerplate ~80%.",
       "Led the final wave of the legacy XML → Jetpack Compose migration across settings, product, payment, expense, profile, and analytics flows.",
@@ -204,8 +218,8 @@ export const experience = [
       "Added multi-currency support across document creation and expenses.",
       "Optimized Firebase Remote Config with a longer fetch interval and realtime updates, sharply cutting fetch volume.",
       "Built AI-assisted features across expense capture, product descriptions, and custom AI instructions, with reason-based feedback on AI output.",
-      "Shipped product-level discounts, B2B/B2C document filters, continuous barcode scanning, custom fields, and paid-plan gating.",
-      "Resolved production crashes, made server and tax-portal outages degrade gracefully, and managed Play Store releases.",
+      "Shipped product-level discounts, B2B/B2C document filters, continuous barcode scanning, custom fields, quotation statistics, and paid-plan and permission gating.",
+      "Resolved production crashes, made server and tax-portal outages degrade gracefully, added Play Integrity attestation to sign-in, and managed Play Store releases.",
     ],
     tech: ["Kotlin", "Jetpack Compose", "MVI", "Koin", "Room", "Convention Plugins", "Remote Config", "Firebase"],
     links: [{ text: "Swipe on Play Store", url: "https://play.google.com/store/apps/details?id=com.swipe.bill" }],
@@ -353,7 +367,7 @@ export const whyHireMe = {
       icon: "playstore",
       title: "Production",
       body:
-        "Crashlytics triage, real debugging and Play Console releases. I've resolved production crash clusters — including a concurrency bug no client-side fix could solve — and shipped three apps to Google Play end to end: architecture, CI, release and store listing.",
+        "Crashlytics triage, real debugging and Play Console releases. I've resolved production crash clusters — including a concurrency bug no client-side fix could solve — and shipped four apps to Google Play end to end: architecture, CI, release and store listing.",
       link: { text: "Apps I've shipped", href: "#apps" },
     },
     {

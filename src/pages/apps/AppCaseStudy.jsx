@@ -153,7 +153,7 @@ function Lightbox({ shots, index, onClose, onStep }) {
         <img
           src={shot.src}
           alt={shot.title}
-          className="max-h-[72vh] w-auto rounded-2xl border border-line object-contain"
+          className="max-h-[72vh] w-auto max-w-full rounded-2xl border border-line object-contain"
         />
         <figcaption className="max-w-md text-center text-sm text-body">
           <span className="font-display block font-semibold text-bright">{shot.title}</span>
@@ -169,14 +169,20 @@ function Lightbox({ shots, index, onClose, onStep }) {
 
 export default function AppCaseStudy({ app }) {
   const [lightbox, setLightbox] = useState(null);
+  const [listingBox, setListingBox] = useState(null);
   const ac = ACCENTS[app.accent] || ACCENTS.emerald;
   const shots = app.screenshots || [];
   const shotAspect = SHOT_ASPECT[app.shotAspect] || SHOT_ASPECT["9/16"];
+  const listings = app.storeListings?.items || [];
   const stats = playStats[app.slug] || {};
 
   const step = useCallback(
     (dir) => setLightbox((i) => (i === null ? i : (i + dir + shots.length) % shots.length)),
     [shots.length]
+  );
+  const stepListing = useCallback(
+    (dir) => setListingBox((i) => (i === null ? i : (i + dir + listings.length) % listings.length)),
+    [listings.length]
   );
 
   useEffect(() => {
@@ -228,6 +234,7 @@ export default function AppCaseStudy({ app }) {
             {app.shortDescription}
           </p>
           <StoreStats
+            downloads={stats.downloads}
             rating={stats.rating}
             accent={app.accent}
             size="lg"
@@ -437,6 +444,48 @@ export default function AppCaseStudy({ app }) {
         )}
       </Section>
 
+      {/* ---------------- Custom store listings (optional) ---------------- */}
+      {listings.length > 0 && (
+        <Section id="listings" index={step2()} title="Store listings," accentWord="localised" ac={ac}>
+          <Reveal className="mb-8">
+            <p className="max-w-[62ch] text-base leading-relaxed text-body">
+              {app.storeListings.blurb} Tap any graphic to open it full size.
+            </p>
+          </Reveal>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {listings.map((l, i) => (
+              <Reveal key={l.title} delay={(i % 2) * 0.06}>
+                <button
+                  onClick={() => setListingBox(i)}
+                  className="glow-card group block w-full overflow-hidden rounded-2xl border border-line bg-ink-2 text-left"
+                  aria-label={`Open the ${l.title} store listing`}
+                >
+                  <div className="aspect-[1024/500] w-full overflow-hidden">
+                    <img
+                      src={l.src}
+                      alt={`${app.name} store listing — ${l.title}`}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <div className="px-5 py-4">
+                    <span className="font-display block text-sm font-semibold text-bright">{l.title}</span>
+                    {l.market && <span className="mt-1 block text-xs text-body">{l.market}</span>}
+                  </div>
+                </button>
+              </Reveal>
+            ))}
+          </div>
+
+          {app.storeListings.footnote && (
+            <Reveal className="mt-6">
+              <p className="text-sm text-body/70">{app.storeListings.footnote}</p>
+            </Reveal>
+          )}
+        </Section>
+      )}
+
       {/* ---------------- Engineering ---------------- */}
       <Section id="engineering" index={step2()} title="Under the" accentWord="hood" ac={ac}>
         <Reveal className="mb-10">
@@ -585,6 +634,9 @@ export default function AppCaseStudy({ app }) {
       <AnimatePresence>
         {lightbox !== null && (
           <Lightbox shots={shots} index={lightbox} onClose={() => setLightbox(null)} onStep={step} />
+        )}
+        {listingBox !== null && (
+          <Lightbox shots={listings} index={listingBox} onClose={() => setListingBox(null)} onStep={stepListing} />
         )}
       </AnimatePresence>
     </div>

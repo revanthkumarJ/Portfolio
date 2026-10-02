@@ -39,6 +39,7 @@ function AppCard({ app }) {
 
             <StoreStats
               note={app.signal}
+              downloads={app.downloads}
               rating={app.rating}
               accent={app.accent}
               className="absolute bottom-3 left-3"
@@ -96,7 +97,7 @@ export default function PlayStoreApps() {
       <Reveal className="mb-10 md:mb-14">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <p className="max-w-[60ch] text-base leading-relaxed text-body md:text-lg">
-            Three apps I designed, built, and shipped solo to the Google Play Store — live and downloadable now.
+            Four apps I designed, built, and shipped solo to the Google Play Store — live and downloadable now.
           </p>
           <a
             href={playStore.developerUrl}
@@ -109,7 +110,7 @@ export default function PlayStoreApps() {
         </div>
       </Reveal>
 
-      <div className="grid gap-6 md:grid-cols-3 md:gap-7">
+      <div className="grid gap-6 md:grid-cols-2 md:gap-7">
         {playStore.apps.map((app) => (
           <AppCard key={app.name} app={app} />
         ))}
