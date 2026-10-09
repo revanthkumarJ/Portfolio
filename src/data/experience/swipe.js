@@ -16,13 +16,13 @@ export const swipe = {
   titleAccent: "the maths has to be right",
   tagline: "From intern to SDE 1 on a YC-backed billing app",
   summary:
-    "Swipe is billing, invoicing and GST-compliance software for Indian businesses. I joined as an Android intern in December 2025 and converted to SDE 1 in June 2026. The work moved with the role: as an intern, features and fixes across the document, payment and compliance flows; since converting, the platform itself — rebuilding 19 feature flows in Compose and then deleting the legacy versions, cutting the build's per-module boilerplate, and taking on the crash and performance work that comes with owning it.",
+    "Swipe is billing, invoicing and GST-compliance software for Indian businesses. I joined as an Android intern in December 2025 and converted to SDE 1 in June 2026. The work moved with the role: as an intern, features and fixes across the document, payment and compliance flows; since converting, the platform itself — 21 of the 27 feature flows I've rebuilt in Compose, then deleting the legacy versions, cutting the build's per-module boilerplate, and taking on the crash and performance work that comes with owning it.",
 
   stats: [
-    { value: 25, label: "Feature flows rebuilt in Jetpack Compose" },
+    { value: 27, label: "Feature flows rebuilt in Jetpack Compose" },
     { value: 12, label: "Legacy flows and feature flags deleted" },
     { value: 80, suffix: "%", label: "Less per-module Gradle boilerplate" },
-    { value: 12, label: "Production crashes resolved" },
+    { value: 13, label: "Production crashes resolved" },
   ],
 
   meta: [
@@ -47,8 +47,8 @@ export const swipe = {
     {
       icon: "layers",
       title: "Leading the tail of the Compose migration",
-      scale: "25 feature flows rebuilt",
-      body: "The app was legacy XML/Views. Each flow was rebuilt in Compose against new designs and shipped behind a remote flag, so old and new ran side by side in production and traffic moved gradually. A flow is rarely one screen — a product or settings flow is several, plus its sheets and dialogs. I shipped roughly a third of the migration, across settings, products, payments, expenses and analytics.",
+      scale: "27 feature flows rebuilt",
+      body: "The app was legacy XML/Views. Each flow was rebuilt in Compose against new designs and shipped behind a remote flag, so old and new ran side by side in production and traffic moved gradually. A flow is rarely one screen — a product or settings flow is several, plus its sheets and dialogs. I shipped roughly a third of the migration, across settings, products, payments, expenses, the online store and analytics.",
     },
     {
       icon: "scissors",

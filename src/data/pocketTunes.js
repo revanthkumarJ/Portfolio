@@ -57,8 +57,31 @@ export const pocketTunes = {
   stats: [
     { value: 17, suffix: "", label: "Gradle modules" },
     { value: 18, suffix: "", label: "Languages shipped" },
-    { value: 6, suffix: "", label: "Audio formats" },
+    { value: 100, suffix: "%", label: "Crash-free users" },
     { value: 0, suffix: "", label: "Data collected" },
+  ],
+
+  // Play Store reviews, quoted verbatim. Reviewers are shortened to first name
+  // and initial — they posted on Play, not on this site.
+  reviews: [
+    {
+      name: "Venkata V.",
+      date: "2 Oct 2026",
+      rating: 5,
+      text: "It focuses on playing local music without annoying ads and subscriptions. The interface is easy to use, songs load quickly, and the playback controls work smoothly. The ringtone trimming feature is also a nice addition. Definitely worth trying if you just want a simple app to play music stored on your phone.",
+    },
+    {
+      name: "Pronay S.",
+      date: "3 Sep 2026",
+      rating: 5,
+      text: "The UI is nice and app is bug free, one of the best music players out there.",
+    },
+    {
+      name: "LayaSree V.",
+      date: "18 Sep 2026",
+      rating: 5,
+      text: "Really amazing music app...The app is simple, smooth, and easy to use. I love the clean interface and the overall listening experience. It works well and makes enjoying music more convenient. Great app with a lot of potential. Keep up the good work 🎵❤️",
+    },
   ],
 
   features: [

@@ -8,6 +8,7 @@ import {
   FiExternalLink,
   FiFileText,
   FiShield,
+  FiStar,
 } from "react-icons/fi";
 import { IoLogoGooglePlaystore } from "react-icons/io5";
 import { Reveal, Counter, Chip, Monogram, ImageSlot, StoreStats } from "../../ui/primitives.jsx";
@@ -443,6 +444,42 @@ export default function AppCaseStudy({ app }) {
           </div>
         )}
       </Section>
+
+      {/* ---------------- Play Store reviews (optional) ---------------- */}
+      {app.reviews?.length > 0 && (
+        <Section id="reviews" index={step2()} title="What users" accentWord="say" ac={ac}>
+          <div className="grid gap-5 md:grid-cols-3">
+            {app.reviews.map((r, i) => (
+              <Reveal key={r.name} delay={i * 0.06}>
+                <figure className="glass flex h-full flex-col rounded-2xl p-6">
+                  <div className={`flex gap-1 ${ac.text}`} aria-label={`${r.rating} out of 5 stars`}>
+                    {Array.from({ length: r.rating }, (_, s) => (
+                      <FiStar key={s} size={15} className="fill-current" />
+                    ))}
+                  </div>
+                  <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-body">
+                    “{r.text}”
+                  </blockquote>
+                  <figcaption className="mt-5 flex items-baseline justify-between gap-3 border-t border-line pt-4">
+                    <span className="font-display text-sm font-semibold text-bright">{r.name}</span>
+                    <span className="text-xs text-body/60">{r.date}</span>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="mt-6">
+            <a
+              href={app.storeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex items-center gap-2 text-sm font-medium transition-colors hover:text-bright ${ac.text}`}
+            >
+              All reviews on Google Play <FiExternalLink size={13} />
+            </a>
+          </Reveal>
+        </Section>
+      )}
 
       {/* ---------------- Custom store listings (optional) ---------------- */}
       {listings.length > 0 && (

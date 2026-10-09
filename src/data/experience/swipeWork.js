@@ -69,7 +69,7 @@ export const swipeWork = {
     },
     {
       "area": "Product & inventory flows",
-      "note": "Product list, create and edit flows"
+      "note": "Product list, create, edit and variant flows"
     },
     {
       "area": "Payments & banking flows",
@@ -78,6 +78,10 @@ export const swipeWork = {
     {
       "area": "Expense flows",
       "note": "Expense creation and detail flows"
+    },
+    {
+      "area": "Online store",
+      "note": "Storefront setup and management flows"
     },
     {
       "area": "Notifications & system states",

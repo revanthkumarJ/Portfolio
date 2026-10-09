@@ -56,8 +56,31 @@ export const statusSaver = {
   stats: [
     { value: 3, label: "Screens, no more" },
     { value: 25, label: "Languages shipped" },
-    { value: 24, suffix: "h", label: "Before statuses expire" },
+    { value: 100, suffix: "%", label: "Crash-free users" },
     { value: 0, label: "Ads, ever" },
+  ],
+
+  // Play Store reviews, quoted verbatim. Reviewers are shortened to first name
+  // and initial — they posted on Play, not on this site.
+  reviews: [
+    {
+      name: "LayaSree V.",
+      date: "18 Sep 2026",
+      rating: 5,
+      text: "Really useful and easy-to-use the app. The interface is simple, the status saving process is quick, and photos and videos can be saved without any hassle. Everything works smoothly and the app is very convenient for everyday use. Great work by the developer.",
+    },
+    {
+      name: "Venkata V.",
+      date: "2 Oct 2026",
+      rating: 5,
+      text: "I’ve been using this for a while and really like it. It’s simple, quick, and has no annoying ads. Just works without any hassle. Saving photos and videos is simple and quick.",
+    },
+    {
+      name: "Bharath K.",
+      date: "2 Sep 2026",
+      rating: 5,
+      text: "It's a good app. able to download the whatsapp statuses soo easily",
+    },
   ],
 
   features: [
