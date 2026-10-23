@@ -210,7 +210,7 @@ export const experience = [
     current: true,
     detailPath: "/experience/swipe",
     summary:
-      "Own end-to-end feature flows in the Swipe billing app while driving the large-scale Compose migration, build tooling, Remote Config and reliability. Since converting to full-time: 21 feature flows rebuilt in Compose, 12 legacy flows and feature flags deleted, per-module Gradle boilerplate cut by ~80%, multi-currency added across documents and expenses, Play Integrity attestation added to sign-in, and most of the crash and performance work.",
+      "Own end-to-end feature flows in the Swipe billing app while driving the large-scale Compose migration, build tooling, Remote Config and reliability. Since converting to full-time: 21 feature flows rebuilt in Compose, 16 legacy flows and feature flags deleted, per-module Gradle boilerplate cut by ~80%, and 23 production crashes resolved — taking crash-free users from 99.39% to 99.46% (99.60% on the latest releases) and cutting monthly fatal crashes ~14% — plus multi-currency across documents and expenses and Play Integrity attestation on sign-in.",
     highlights: [
       "Introduced build-logic convention plugins and centralized navigation, cutting per-module build.gradle boilerplate ~80%.",
       "Led the final wave of the legacy XML → Jetpack Compose migration across settings, product and variant, payment, expense, online store, profile, and analytics flows.",
@@ -218,8 +218,9 @@ export const experience = [
       "Added multi-currency support across document creation and expenses.",
       "Optimized Firebase Remote Config with a longer fetch interval and realtime updates, sharply cutting fetch volume.",
       "Built AI-assisted features across expense capture, product descriptions, and custom AI instructions, with reason-based feedback on AI output.",
-      "Shipped product-level discounts, B2B/B2C document filters, continuous barcode scanning, custom fields, quotation statistics, and paid-plan and permission gating.",
-      "Resolved production crashes, made server and tax-portal outages degrade gracefully, added Play Integrity attestation to sign-in, and managed Play Store releases.",
+      "Shipped product-level discounts, B2B/B2C document filters, continuous barcode scanning, custom fields, additional-charge slabs, quotation statistics, and paid-plan and permission gating.",
+      "Owned the Crashlytics fatal-crash backlog: 23 production crashes resolved, crash-free users up from 99.39% to 99.46% (99.60% on the latest releases), crash-free sessions up to 99.86%, and monthly fatal crashes down ~14%.",
+      "Made server and tax-portal outages degrade gracefully, added Play Integrity attestation to sign-in, and managed Play Store releases.",
     ],
     tech: ["Kotlin", "Jetpack Compose", "MVI", "Koin", "Room", "Convention Plugins", "Remote Config", "Firebase"],
     links: [{ text: "Swipe on Play Store", url: "https://play.google.com/store/apps/details?id=com.swipe.bill" }],
