@@ -121,7 +121,7 @@ export const playStore = {
 
 export const about = {
   paragraphs: [
-    "I'm a Software Engineer from Andhra Pradesh, India, specializing in Android and Kotlin Multiplatform development. Currently SDE 1 – Android Developer at Swipe (YC S21), promoted from intern, where I've rebuilt 27 feature flows in Jetpack Compose and deleted the legacy versions behind them, and moved the build onto Gradle convention plugins that cut per-module boilerplate by ~80%.",
+    "I'm a Software Engineer from Andhra Pradesh, India, specializing in Android and Kotlin Multiplatform development. Currently SDE 1 – Android Developer at Swipe (YC S21), promoted from intern, where I've rebuilt 28 feature flows in Jetpack Compose and deleted the legacy versions behind them, and moved the build onto Gradle convention plugins that cut per-module boilerplate by ~80%.",
     "I'm an active contributor and mentor at the Mifos Initiative — 120+ merged PRs at a 98% merge rate, 365+ contributor PRs reviewed, and 20+ modules migrated to Kotlin Multiplatform across production fintech apps used worldwide. I was a Mifos Summer of Code 2025 intern and now mentor contributors for GSoC and Code4GovTech.",
     "I hold a B.Tech in CSE from RGUKT RK Valley and qualified GATE CS 2025. Off the keyboard: badminton, chess, and poking at new tools.",
   ],
@@ -210,16 +210,16 @@ export const experience = [
     current: true,
     detailPath: "/experience/swipe",
     summary:
-      "Own end-to-end feature flows in the Swipe billing app while driving the large-scale Compose migration, build tooling, Remote Config and reliability. Since converting to full-time: 21 feature flows rebuilt in Compose, 16 legacy flows and feature flags deleted, per-module Gradle boilerplate cut by ~80%, and 23 production crashes resolved — taking crash-free users from 99.39% to 99.46% (99.60% on the latest releases) and cutting monthly fatal crashes ~14% — plus multi-currency across documents and expenses and Play Integrity attestation on sign-in.",
+      "Own end-to-end feature flows in the Swipe billing app while driving the large-scale Compose migration, build tooling, Remote Config and reliability. Since converting to full-time: 22 feature flows rebuilt in Compose, 16 legacy flows and feature flags deleted, per-module Gradle boilerplate cut by ~80%, and 24 production crashes resolved — cutting the crash rate ~60% on the latest release (crash-free sessions 99.84% → 99.94%, crash-free users 99.56% → 99.84%) — plus multi-currency across documents and expenses and Play Integrity attestation on sign-in.",
     highlights: [
       "Introduced build-logic convention plugins and centralized navigation, cutting per-module build.gradle boilerplate ~80%.",
-      "Led the final wave of the legacy XML → Jetpack Compose migration across settings, product and variant, payment, expense, online store, profile, and analytics flows.",
+      "Led the final wave of the legacy XML → Jetpack Compose migration across settings, product and variant, payment, expense, online store, profile, analytics, and activity history flows.",
       "Deleted legacy XML flows and stale feature flags once each Compose migration was stable, along with screens left unreachable.",
       "Added multi-currency support across document creation and expenses.",
       "Optimized Firebase Remote Config with a longer fetch interval and realtime updates, sharply cutting fetch volume.",
       "Built AI-assisted features across expense capture, product descriptions, and custom AI instructions, with reason-based feedback on AI output.",
-      "Shipped product-level discounts, B2B/B2C document filters, continuous barcode scanning, custom fields, additional-charge slabs, quotation statistics, and paid-plan and permission gating.",
-      "Owned the Crashlytics fatal-crash backlog: 23 production crashes resolved, crash-free users up from 99.39% to 99.46% (99.60% on the latest releases), crash-free sessions up to 99.86%, and monthly fatal crashes down ~14%.",
+      "Shipped product-level discounts, B2B/B2C document filters, continuous barcode scanning, custom fields, additional-charge slabs, quotation statistics, a unified downloads section, and paid-plan and permission gating.",
+      "Owned the Crashlytics fatal-crash backlog: resolved 24 production crashes, cutting the crash rate ~60% on the latest release — crash-free sessions 99.84% → 99.94% and crash-free users 99.56% → 99.84%.",
       "Made server and tax-portal outages degrade gracefully, added Play Integrity attestation to sign-in, and managed Play Store releases.",
     ],
     tech: ["Kotlin", "Jetpack Compose", "MVI", "Koin", "Room", "Convention Plugins", "Remote Config", "Firebase"],
@@ -361,7 +361,7 @@ export const whyHireMe = {
       icon: "smartphone",
       title: "Modernization",
       body:
-        "XML → Compose and Android → Kotlin Multiplatform, both at scale. 27 feature flows rebuilt in Compose behind staged rollout flags, then the legacy versions deleted; core modules moved to KMP across two fintech apps, including converting a whole network layer from Retrofit to Ktor.",
+        "XML → Compose and Android → Kotlin Multiplatform, both at scale. 28 feature flows rebuilt in Compose behind staged rollout flags, then the legacy versions deleted; core modules moved to KMP across two fintech apps, including converting a whole network layer from Retrofit to Ktor.",
       link: { text: "See it at Mifos", href: "/experience/mifos-initiative" },
     },
     {

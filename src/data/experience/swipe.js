@@ -16,7 +16,7 @@ export const swipe = {
   titleAccent: "the maths has to be right",
   tagline: "From intern to SDE 1 on a YC-backed billing app",
   summary:
-    "Swipe is billing, invoicing and GST-compliance software for Indian businesses. I joined as an Android intern in December 2025 and converted to SDE 1 in June 2026. The work moved with the role: as an intern, features and fixes across the document, payment and compliance flows; since converting, the platform itself — 21 of the 27 feature flows I've rebuilt in Compose, then deleting the legacy versions, cutting the build's per-module boilerplate, and taking on the crash and performance work that comes with owning it.",
+    "Swipe is billing, invoicing and GST-compliance software for Indian businesses. I joined as an Android intern in December 2025 and converted to SDE 1 in June 2026. The work moved with the role: as an intern, features and fixes across the document, payment and compliance flows; since converting, the platform itself — 22 of the 28 feature flows I've rebuilt in Compose, then deleting the legacy versions, cutting the build's per-module boilerplate, and taking on the crash and performance work that comes with owning it.",
 
   stats: [
     { value: 27, label: "Feature flows rebuilt in Jetpack Compose" },
@@ -47,7 +47,7 @@ export const swipe = {
     {
       icon: "layers",
       title: "Leading the tail of the Compose migration",
-      scale: "27 feature flows rebuilt",
+      scale: "28 feature flows rebuilt",
       body: "The app was legacy XML/Views. Each flow was rebuilt in Compose against new designs and shipped behind a remote flag, so old and new ran side by side in production and traffic moved gradually. A flow is rarely one screen — a product or settings flow is several, plus its sheets and dialogs. I shipped roughly a third of the migration, across settings, products, payments, expenses, the online store and analytics.",
     },
     {
@@ -65,8 +65,8 @@ export const swipe = {
     {
       icon: "bug",
       title: "Reliability, including a bug no client could fix",
-      scale: "99.46% crash-free users",
-      body: "Document numbers could collide when two devices created invoices at the same moment. Client-generated sequence numbers don't survive concurrency and no amount of local locking fixes it — that one had to be resolved server-side. Alongside it: working through the fatal-crash backlog in Crashlytics — 23 resolved, taking crash-free users from 99.39% to 99.46% (99.60% on the latest releases), crash-free sessions to 99.86%, and monthly fatal crashes down ~14%. Plus making the app degrade rather than dead-end when an external government tax portal is unavailable mid-onboarding, and adding Play Integrity attestation to sign-in so the backend can tell a genuine install from a tampered one.",
+      scale: "~60% lower crash rate",
+      body: "Document numbers could collide when two devices created invoices at the same moment. Client-generated sequence numbers don't survive concurrency and no amount of local locking fixes it — that one had to be resolved server-side. Alongside it: working through the fatal-crash backlog in Crashlytics — 24 resolved, cutting the crash rate ~60% on the latest release — crash-free sessions 99.84% → 99.94% and crash-free users 99.56% → 99.84%. Plus making the app degrade rather than dead-end when an external government tax portal is unavailable mid-onboarding, and adding Play Integrity attestation to sign-in so the backend can tell a genuine install from a tampered one.",
     },
     {
       icon: "globe",
