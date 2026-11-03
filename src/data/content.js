@@ -57,7 +57,7 @@ export const socials = [
 // to production work, which is what the headline above them claims.
 export const heroStats = [
   { value: 4, label: "Personal apps shipped to Google Play" },
-  { value: 27, label: "Feature flows rebuilt at Swipe" },
+  { value: 28, label: "Feature flows rebuilt at Swipe" },
   { value: 120, suffix: "+", label: "Open-source PRs merged" },
   { value: 365, suffix: "+", label: "Open-source contributor PRs reviewed" },
 ];
@@ -70,13 +70,13 @@ export const playStore = {
   apps: [
     {
       name: "Status Saver",
-      tagline: "No ads. Just save.",
-      blurb: "Save WhatsApp statuses — images & videos — with a built-in gallery and auto refresh. Private, no ads.",
-      highlights: ["No Ads", "Images & Videos", "Media Stays on Device"],
+      tagline: "Save WhatsApp statuses in one tap.",
+      blurb: "Save WhatsApp statuses — images & videos — then trim, crop, make GIFs and collages, or lock them in a vault. Every feature free, media stays on device.",
+      highlights: ["Images & Videos", "On-device Tools", "Media Stays on Device"],
       image: psStatusSaverImg,
       accent: "cyan",
       ...playStats.statussaver,
-      signal: "No ads · 25 languages",
+      signal: "6 tools · 25 languages",
       url: "https://play.google.com/store/apps/details?id=com.revanthapps.statussavernoads",
       detail: "/apps/statussaver", // 🔗 full details page
     },
@@ -210,7 +210,7 @@ export const experience = [
     current: true,
     detailPath: "/experience/swipe",
     summary:
-      "Own end-to-end feature flows in the Swipe billing app while driving the large-scale Compose migration, build tooling, Remote Config and reliability. Since converting to full-time: 22 feature flows rebuilt in Compose, 16 legacy flows and feature flags deleted, per-module Gradle boilerplate cut by ~80%, and 24 production crashes resolved — cutting the crash rate ~60% on the latest release (crash-free sessions 99.84% → 99.94%, crash-free users 99.56% → 99.84%) — plus multi-currency across documents and expenses and Play Integrity attestation on sign-in.",
+      "Own end-to-end feature flows in the Swipe billing app while driving the large-scale Compose migration, build tooling, Remote Config and reliability. Since converting to full-time: 22 feature flows rebuilt in Compose, 16 legacy flows and feature flags deleted, per-module Gradle boilerplate cut by ~80%, and 24 production crashes resolved — cutting the crash rate ~65% on the latest releases (crash-free sessions 99.84% → 99.95%, crash-free users 99.56% → 99.83%) — plus multi-currency across documents and expenses and Play Integrity attestation on sign-in.",
     highlights: [
       "Introduced build-logic convention plugins and centralized navigation, cutting per-module build.gradle boilerplate ~80%.",
       "Led the final wave of the legacy XML → Jetpack Compose migration across settings, product and variant, payment, expense, online store, profile, analytics, and activity history flows.",
@@ -218,8 +218,8 @@ export const experience = [
       "Added multi-currency support across document creation and expenses.",
       "Optimized Firebase Remote Config with a longer fetch interval and realtime updates, sharply cutting fetch volume.",
       "Built AI-assisted features across expense capture, product descriptions, and custom AI instructions, with reason-based feedback on AI output.",
-      "Shipped product-level discounts, B2B/B2C document filters, continuous barcode scanning, custom fields, additional-charge slabs, quotation statistics, a unified downloads section, and paid-plan and permission gating.",
-      "Owned the Crashlytics fatal-crash backlog: resolved 24 production crashes, cutting the crash rate ~60% on the latest release — crash-free sessions 99.84% → 99.94% and crash-free users 99.56% → 99.84%.",
+      "Shipped product-level discounts, B2B/B2C document filters, continuous barcode scanning, custom fields, additional-charge slabs, quotation statistics, a unified downloads section, a referral leaderboard, one-tap upgrade checkout, more reliable Bluetooth thermal printing, and paid-plan and permission gating.",
+      "Owned the Crashlytics fatal-crash backlog: resolved 24 production crashes, cutting the crash rate ~65% on the latest releases — crash-free sessions 99.84% → 99.95% and crash-free users 99.56% → 99.83%.",
       "Made server and tax-portal outages degrade gracefully, added Play Integrity attestation to sign-in, and managed Play Store releases.",
     ],
     tech: ["Kotlin", "Jetpack Compose", "MVI", "Koin", "Room", "Convention Plugins", "Remote Config", "Firebase"],

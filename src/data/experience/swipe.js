@@ -19,10 +19,10 @@ export const swipe = {
     "Swipe is billing, invoicing and GST-compliance software for Indian businesses. I joined as an Android intern in December 2025 and converted to SDE 1 in June 2026. The work moved with the role: as an intern, features and fixes across the document, payment and compliance flows; since converting, the platform itself — 22 of the 28 feature flows I've rebuilt in Compose, then deleting the legacy versions, cutting the build's per-module boilerplate, and taking on the crash and performance work that comes with owning it.",
 
   stats: [
-    { value: 27, label: "Feature flows rebuilt in Jetpack Compose" },
+    { value: 28, label: "Feature flows rebuilt in Jetpack Compose" },
     { value: 16, label: "Legacy flows and feature flags deleted" },
     { value: 80, suffix: "%", label: "Less per-module Gradle boilerplate" },
-    { value: 23, label: "Production crashes resolved" },
+    { value: 24, label: "Production crashes resolved" },
   ],
 
   meta: [
@@ -38,7 +38,7 @@ export const swipe = {
       icon: "gitBranch",
       title: "Convention plugins for the Gradle build",
       scale: "~80% less module boilerplate",
-      body: "Every feature module carried a near-identical build script — the same Android config, Compose setup and dependency block, copied per module and drifting apart over time. I moved it into Gradle convention plugins so a module declares its plugin and little else, and centralised navigation arguments in the same change, which is where typos used to become runtime crashes.",
+      body: "Moved shared module build config into Gradle convention plugins and centralised navigation arguments.",
       link: {
         text: "I wrote up how",
         url: "https://medium.com/@jrevanth101/how-i-shrunk-every-feature-modules-build-gradle-to-12-lines-c6341a73921f",
@@ -48,43 +48,43 @@ export const swipe = {
       icon: "layers",
       title: "Leading the tail of the Compose migration",
       scale: "28 feature flows rebuilt",
-      body: "The app was legacy XML/Views. Each flow was rebuilt in Compose against new designs and shipped behind a remote flag, so old and new ran side by side in production and traffic moved gradually. A flow is rarely one screen — a product or settings flow is several, plus its sheets and dialogs. I shipped roughly a third of the migration, across settings, products, payments, expenses, the online store and analytics.",
+      body: "Rebuilt settings, product, payment, expense, online store and analytics flows in Jetpack Compose.",
     },
     {
       icon: "scissors",
       title: "Then actually finishing it",
       scale: "7 flags · 9 legacy flows deleted",
-      body: "A feature flag at full rollout for months is not a safety net — it is an untested branch in every code path and two sets of bugs nobody can tell apart. Once each migrated flow was stable I deleted the flag and the XML screens, layouts and adapters behind it. Every one of these landed after I converted, because deletion is invisible on an intern's scorecard and unavoidable on an owner's.",
+      body: "Deleted migration flags and the legacy XML screens behind them once each Compose flow was stable.",
     },
     {
       icon: "activity",
       title: "Cutting remote-config fetch volume",
       scale: "Fleet-wide performance",
-      body: "Configuration was being fetched far more often than it needed to be, and every fetch is a network round trip paid for by every device in the fleet. I moved it to a much longer minimum fetch interval backed by realtime updates, so changes still propagate promptly without the app effectively polling — then gated the config logging and removed redundant activation calls.",
+      body: "Longer fetch interval with realtime updates, so config changes still arrive without constant polling.",
     },
     {
       icon: "bug",
-      title: "Reliability, including a bug no client could fix",
-      scale: "~60% lower crash rate",
-      body: "Document numbers could collide when two devices created invoices at the same moment. Client-generated sequence numbers don't survive concurrency and no amount of local locking fixes it — that one had to be resolved server-side. Alongside it: working through the fatal-crash backlog in Crashlytics — 24 resolved, cutting the crash rate ~60% on the latest release — crash-free sessions 99.84% → 99.94% and crash-free users 99.56% → 99.84%. Plus making the app degrade rather than dead-end when an external government tax portal is unavailable mid-onboarding, and adding Play Integrity attestation to sign-in so the backend can tell a genuine install from a tampered one.",
+      title: "Crash fixes & reliability",
+      scale: "~65% lower crash rate",
+      body: "Resolved 24 production crashes from Crashlytics — crash-free sessions 99.84% → 99.95%, users 99.56% → 99.83%.",
     },
     {
       icon: "globe",
       title: "Multi-currency across the whole app",
       scale: "Cross-cutting change",
-      body: "Currency touches everything: document totals, tax calculation, payment recording, expenses, list filtering and PDF output. Adding it to an app that had assumed a single denomination meant finding every place an amount was implicitly in rupees — the kind of change that is only partly about writing code and mostly about knowing where to look.",
+      body: "Added multi-currency support across documents, payments, expenses and PDFs.",
     },
     {
       icon: "grid",
       title: "Tax compliance is the hard part, not the UI",
       scale: "GST · E-way bill · E-invoice",
-      body: "GST, E-way bills, E-invoices, TDS and TCS have rules that are unforgiving: get the maths wrong and a business files an incorrect return. A meaningful share of my bug fixes were compliance-logic bugs wearing a UI bug's clothes, and you cannot fix those without actually learning the domain.",
+      body: "Features and fixes across GST, E-way bills, E-invoices, TDS and TCS.",
     },
     {
       icon: "cpu",
       title: "Shipping AI features people can correct",
       scale: "Product AI",
-      body: "AI assistance for notes, terms, product descriptions and expense capture — plus the two parts that decide whether it is useful: user-level standing instructions so output matches how a business actually writes, and reason-based feedback rather than thumbs up or down, because a thumbs-down tells you something is wrong and a reason tells you what to fix.",
+      body: "AI for notes, terms, product descriptions and expense capture, with custom instructions and feedback.",
     },
   ],
 

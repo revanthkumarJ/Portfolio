@@ -10,7 +10,7 @@
 export const playStats = {
   expensetrackr: { downloads: "70+", rating: null },
   pockettunes: { downloads: "300+", rating: "5.0" },
-  statussaver: { downloads: "500+", rating: "4.3" },
+  statussaver: { downloads: "700+", rating: "4.5" },
   devclash: { downloads: "10+", rating: null },
 };
 
